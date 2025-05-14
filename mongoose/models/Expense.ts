@@ -1,6 +1,7 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export interface Expense extends Document {
+// This interface represents the properties of an Expense document
+interface IExpense {
   description: string;
   price: number;
   quantity: number;
@@ -9,7 +10,15 @@ export interface Expense extends Document {
   updatedAt: Date;
 }
 
-const ExpenseSchema: Schema = new Schema(
+// This interface represents an Expense document with Mongoose methods
+interface ExpenseDocument extends IExpense, Document {}
+
+// This interface represents the Expense model with static methods
+interface ExpenseModel extends Model<ExpenseDocument> {
+  // Add any static methods here
+}
+
+const ExpenseSchema = new Schema<ExpenseDocument>(
   {
     description: {
       type: String,
@@ -37,5 +46,9 @@ const ExpenseSchema: Schema = new Schema(
   }
 );
 
-export default mongoose.models.Expense ||
-  mongoose.model<Expense>('Expense', ExpenseSchema);
+// This is the key part - we need to specify both the document type and model type
+const Expense =
+  (mongoose.models.Expense as ExpenseModel) ||
+  mongoose.model<ExpenseDocument, ExpenseModel>('Expense', ExpenseSchema);
+
+export default Expense;
