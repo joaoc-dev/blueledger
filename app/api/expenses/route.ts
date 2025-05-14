@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongoose';
+import dbConnect from '@/mongoose/client';
+import Expense from '@/mongoose/models/Expense';
 
 export async function POST(request: NextRequest) {
   await dbConnect();
 
-  return NextResponse.json({ message: 'Expense created' }, { status: 201 });
+  const { description, price, quantity, totalPrice } = await request.json();
+
+  const expense = await Expense.create({
+    description,
+    price,
+    quantity,
+    totalPrice,
+  });
+
+  return NextResponse.json(expense, { status: 201 });
 }
