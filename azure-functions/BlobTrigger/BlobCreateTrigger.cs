@@ -1,17 +1,12 @@
-using System;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Azure.Identity;
 using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.Storage.Blobs;
-using Azure.Storage.Sas;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Azure.Storage.Blobs.Models;
-using Google.Protobuf;
 
 namespace Company.Function;
 
@@ -37,7 +32,7 @@ public class BlobTrigger
 
             string documentIntelligenceEndpoint = _config["DocumentIntelligenceEndpoint"] ?? "";
             string storageAccountURL = _config["storageaccountblueledger_URL"] ?? "";
-            string blobContainerName = _config["BlobContainerName"]??"";
+            string blobContainerName = _config["BlobContainerName"] ?? "";
 
             DefaultAzureCredential credential = new();
 
@@ -57,7 +52,7 @@ public class BlobTrigger
 
             _logger.LogInformation("Uploading json");
             // Serialize result
-            JsonSerializerOptions jsonSerializerOptions= new(){ WriteIndented = true };
+            JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
             var jsonOutput = JsonSerializer.Serialize(result, jsonSerializerOptions);
 
             // Save the result as a .json file
