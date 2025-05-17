@@ -13,11 +13,14 @@ import { Input } from '@/components/ui/input';
 import { Expense, expenseSchema } from '@/schemas/expenseSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { useForm } from 'react-hook-form';
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const NewExpensePage = () => {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<Expense>({
     resolver: zodResolver(expenseSchema),
@@ -36,9 +39,11 @@ const NewExpensePage = () => {
     };
 
     try {
+      setIsSubmitting(true);
       await axios.post('/api/expenses', expense);
       router.push('/expenses');
     } catch (error) {
+      setIsSubmitting(false);
       console.error(error);
     }
   };
@@ -103,8 +108,14 @@ const NewExpensePage = () => {
             </FormItem>
           )}
         />
-        <Button className="mt-6 w-full" type="submit">
-          Submit
+        <Button className="mt-6 w-full" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="animate-spin" /> Submitting...
+            </>
+          ) : (
+            'Submit'
+          )}
         </Button>
       </form>
     </Form>

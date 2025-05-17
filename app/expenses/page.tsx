@@ -18,7 +18,7 @@ const ExpensesPage = async () => {
 
   return (
     <div>
-      <div className="flex justify-end">
+      <div className="flex justify-end mb-4">
         <Button asChild>
           <Link href="/expenses/new">New Expense</Link>
         </Button>
