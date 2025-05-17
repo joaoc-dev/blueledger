@@ -1,5 +1,7 @@
+import { Button } from '@/components/ui/button';
 import dbConnect from '@/mongoose/client';
 import Expense from '@/mongoose/models/Expense';
+import Link from 'next/link';
 
 const ExpensesPage = async () => {
   await dbConnect();
@@ -8,6 +10,9 @@ const ExpensesPage = async () => {
 
   return (
     <div>
+      <Button asChild>
+        <Link href="/expenses/new">New Expense</Link>
+      </Button>
       <ul>
         {expenses.map((expense) => (
           <li key={expense._id?.toString()}>
