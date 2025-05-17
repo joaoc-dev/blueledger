@@ -10,6 +10,27 @@ export const expenseSchema = z.object({
   quantity: z.number().min(1, { message: 'Quantity must be greater than 0' }),
 });
 
+export const patchExpenseSchema = z.object({
+  params: z.object({
+    id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
+  }),
+  body: z.object({
+    description: z
+      .string()
+      .min(1, { message: 'Description is required' })
+      .max(200, { message: 'Description must be less than 200 characters' })
+      .optional(),
+    price: z
+      .number()
+      .min(1, { message: 'Price must be greater than 0' })
+      .optional(),
+    quantity: z
+      .number()
+      .min(1, { message: 'Quantity must be greater than 0' })
+      .optional(),
+  }),
+});
+
 export const deleteExpenseSchema = z.object({
   params: z.object({
     id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
