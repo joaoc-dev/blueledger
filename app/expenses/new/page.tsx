@@ -36,7 +36,7 @@ const NewExpensePage = () => {
     };
 
     try {
-      await axios.post('/api/ex3penses', expense);
+      await axios.post('/api/expenses', expense);
       router.push('/expenses');
     } catch (error) {
       console.error(error);
