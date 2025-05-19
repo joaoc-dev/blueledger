@@ -1,20 +1,25 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { DialogTrigger } from '@/components/ui/dialog';
-import { Dialog } from '@/components/ui/dialog';
-import { TableCell } from '@/components/ui/table';
-import React from 'react';
 import ConfirmationDialog from '@/app/components/confirmation-dialog';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { TableCell } from '@/components/ui/table';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const ExpenseRowActions = ({ id }: { id: string }) => {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
-    await axios.delete(`/api/expenses/${id}`);
-    router.refresh();
+    try {
+      await axios.delete(`/api/expenses/${id}`);
+      router.refresh();
+      toast.success('Expense deleted successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to delete expense');
+    }
   };
 
   return (

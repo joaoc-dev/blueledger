@@ -17,6 +17,7 @@ import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const NewExpensePage = () => {
   const router = useRouter();
@@ -41,10 +42,13 @@ const NewExpensePage = () => {
     try {
       setIsSubmitting(true);
       await axios.post('/api/expenses', expense);
+
       router.push('/expenses');
+      toast.success('Successfully created expense');
     } catch (error) {
       setIsSubmitting(false);
       console.error(error);
+      toast.error('Failed to create expense');
     }
   };
 
