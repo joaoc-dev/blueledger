@@ -11,7 +11,7 @@ interface IExpense {
 }
 
 // This interface represents an Expense document with Mongoose methods
-interface ExpenseDocument extends IExpense, Document {}
+export interface ExpenseDocument extends IExpense, Document {}
 
 // This interface represents the Expense model with static methods
 interface ExpenseModel extends Model<ExpenseDocument> {
