@@ -21,4 +21,6 @@ const ExpensesPage = async () => {
   );
 };
 
+export const dynamic = 'force-dynamic';
+
 export default ExpensesPage;
