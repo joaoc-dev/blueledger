@@ -6,7 +6,7 @@ export const expenseSchema = z.object({
     .string()
     .min(1, { message: 'Description is required' })
     .max(200, { message: 'Description must be less than 200 characters' }),
-  price: z.number().min(1, { message: 'Price must be greater than 0' }),
+  price: z.number().min(0, { message: 'Price cannot be negative' }),
   quantity: z.number().min(1, { message: 'Quantity must be greater than 0' }),
 });
 
@@ -22,7 +22,7 @@ export const patchExpenseSchema = z.object({
       .optional(),
     price: z
       .number()
-      .min(1, { message: 'Price must be greater than 0' })
+      .min(0, { message: 'Price cannot be negative' })
       .optional(),
     quantity: z
       .number()

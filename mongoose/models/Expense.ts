@@ -29,7 +29,7 @@ const ExpenseSchema = new Schema<ExpenseDocument>(
     price: {
       type: Number,
       required: [true, 'Price is required'],
-      min: [1, 'Price must be at least 1'],
+      min: [0, 'Price cannot be negative'],
     },
     quantity: {
       type: Number,
