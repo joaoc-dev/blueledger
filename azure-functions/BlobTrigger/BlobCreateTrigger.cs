@@ -2,13 +2,11 @@ using System.Text.Json;
 using Azure.Identity;
 using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
-using Azure.Storage.Blobs;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Azure.Storage.Blobs.Models;
 
-namespace Company.Function;
+namespace BlueLedger.Function;
 
 public class BlobTrigger
 {
@@ -22,45 +20,31 @@ public class BlobTrigger
     }
 
     [Function(nameof(BlobTrigger))]
-    public async Task Run(
-        [BlobTrigger("%BlobContainerName%/{name}", Connection = "storage-account-blueledger-connection-string")] Stream stream,
-        string name)
+    [BlobOutput("%ResultBlobContainerName%/{name}.json", Connection = "storage-account-blueledger-connection-string")]
+    public async Task<string> Run(
+    [BlobTrigger("%BlobContainerName%/{name}", Connection = "storage-account-blueledger-connection-string")] byte[] myBlob,
+    string name)
     {
         _logger.LogInformation("Processing uploaded file: {name}", name);
-        if (!name.Contains(".json"))
-        {
+        string documentIntelligenceEndpoint = _config["DocumentIntelligenceEndpoint"] ?? "";
+        DefaultAzureCredential credential = new();
 
-            string documentIntelligenceEndpoint = _config["DocumentIntelligenceEndpoint"] ?? "";
-            string storageAccountURL = _config["storageaccountblueledger_URL"] ?? "";
-            string blobContainerName = _config["BlobContainerName"] ?? "";
+        _logger.LogInformation("Sending document to Azure Document Intelligence...");
 
-            DefaultAzureCredential credential = new();
+        DocumentAnalysisClient documentAnalysisClient = new(new Uri(documentIntelligenceEndpoint), credential);
 
-            _logger.LogInformation("Generating Blob URI SAS token");
+        // Create a MemoryStream from the byte array
+        using MemoryStream stream = new MemoryStream(myBlob);
 
-            var blobServiceClient = new BlobServiceClient(new Uri(storageAccountURL), credential);
-            var containerClient = blobServiceClient.GetBlobContainerClient(blobContainerName);
-            var blobClient = containerClient.GetBlobClient(name);
-            UserDelegationKey userDelegationKey = await StorageAccountAccessor.RequestUserDelegationKey(blobServiceClient);
-            Uri blobSASRUI = StorageAccountAccessor.CreateUserDelegationSASContainer(blobClient, userDelegationKey);
+        var operation = await documentAnalysisClient.AnalyzeDocumentAsync(WaitUntil.Completed, "prebuilt-receipt", stream);
+        var result = operation.Value;
 
-            _logger.LogInformation("Sending document to Azure Document Intelligence...");
+        _logger.LogInformation("Finished analyzing document");
+        // Serialize result
+        JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
+        var jsonOutput = JsonSerializer.Serialize(result, jsonSerializerOptions);
 
-            DocumentAnalysisClient documentAnalysisClient = new(new Uri(documentIntelligenceEndpoint), credential);
-            var operation = await documentAnalysisClient.AnalyzeDocumentFromUriAsync(WaitUntil.Completed, "prebuilt-receipt", blobSASRUI);
-            var result = operation.Value;
-
-            _logger.LogInformation("Uploading json");
-            // Serialize result
-            JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
-            var jsonOutput = JsonSerializer.Serialize(result, jsonSerializerOptions);
-
-            // Save the result as a .json file
-            var jsonBlobClient = containerClient.GetBlobClient(Path.ChangeExtension(name, ".json"));
-            using var outputStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(jsonOutput));
-            await jsonBlobClient.UploadAsync(outputStream, overwrite: true);
-
-            _logger.LogInformation("Analysis result saved as {0}", jsonBlobClient.Uri);
-        }
+        _logger.LogInformation("Uploading json");
+        return jsonOutput;
     }
 }
