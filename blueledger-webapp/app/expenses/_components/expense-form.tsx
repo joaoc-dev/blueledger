@@ -129,7 +129,11 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
             </FormItem>
           )}
         />
-        <Button className="mt-6 w-full" type="submit" disabled={isSubmitting}>
+        <Button
+          className="mt-6 w-full cursor-pointer"
+          type="submit"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="animate-spin" /> Submitting...
