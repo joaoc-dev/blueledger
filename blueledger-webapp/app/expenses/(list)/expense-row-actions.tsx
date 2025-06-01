@@ -29,6 +29,13 @@ const ExpenseRowActions = ({ id }: { id: string }) => {
   return (
     <>
       <TableCell>
+        <Button variant="outline" asChild>
+          <Link href={`/expenses/edit/${id}`}>
+            <SquarePen />
+          </Link>
+        </Button>
+      </TableCell>
+      <TableCell>
         <Dialog>
           <DialogTrigger asChild>
             <Button className="cursor-pointer" variant="destructive">
@@ -43,13 +50,6 @@ const ExpenseRowActions = ({ id }: { id: string }) => {
             cancelButtonText="Cancel"
           />
         </Dialog>
-      </TableCell>
-      <TableCell>
-        <Button variant="outline" asChild>
-          <Link href={`/expenses/edit/${id}`}>
-            <SquarePen />
-          </Link>
-        </Button>
       </TableCell>
     </>
   );
