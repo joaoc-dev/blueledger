@@ -105,6 +105,9 @@
   --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1),
     0 8px 10px -1px hsl(0 0% 0% / 0.1);
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+
+  --nav-underline-x: 0px;
+  --nav-underline-w: 0.1;
 }
 
 .dark {
@@ -164,5 +167,30 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .nav {
+    @apply flex items-center justify-between gap-4 p-4;
+  }
+
+  .nav__brand {
+    @apply flex items-center gap-3;
+  }
+
+  .nav__list {
+    @apply relative flex items-center gap-12;
+  }
+
+  .nav__list::after {
+    @apply absolute content-[''] w-full h-0.5 bg-foreground bottom-0 left-0 top-8 origin-left;
+    translate: var(--nav-underline-x) 0;
+    scale: var(--nav-underline-w) 1;
+    transition: translate 0.3s, scale 0.3s;
+  }
+
+  .nav__item {
+    @apply px-2 text-muted-foreground transition-colors duration-250;
   }
 }
