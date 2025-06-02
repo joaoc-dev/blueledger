@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { HandCoins } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
+import { usePathname } from 'next/navigation';
 
 const links = [
   {
@@ -23,6 +26,8 @@ const links = [
 ];
 
 const NavBar = () => {
+  const pathname = usePathname();
+
   return (
     <nav className="flex items-center justify-between gap-4 p-4">
       <div className="flex items-center gap-12">
@@ -33,7 +38,8 @@ const NavBar = () => {
       </div>
       <ul className="flex items-center gap-16">
         {links.map((link) => {
-          return renderMenuItem(link);
+          const isActive = pathname === link.href;
+          return renderMenuItem(link, isActive);
         })}
       </ul>
       <ThemeToggle />
@@ -41,10 +47,15 @@ const NavBar = () => {
   );
 };
 
-const renderMenuItem = (link: { label: string; href: string }) => {
+const renderMenuItem = (
+  link: { label: string; href: string },
+  isActive: boolean
+) => {
   return (
     <li key={link.label}>
-      <Link href={link.href}>{link.label}</Link>
+      <Link className={`${isActive ? 'text-blue-600' : ''}`} href={link.href}>
+        {link.label}
+      </Link>
     </li>
   );
 };
