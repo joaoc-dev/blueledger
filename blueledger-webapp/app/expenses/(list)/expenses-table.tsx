@@ -19,9 +19,9 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
       <TableHeader>
         <TableRow>
           <TableHead>Description</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead>Quantity</TableHead>
-          <TableHead>Total Price</TableHead>
+          <TableHead className="text-right">Price</TableHead>
+          <TableHead className="text-right">Quantity</TableHead>
+          <TableHead className="text-right">Total Price</TableHead>
           <TableHead></TableHead>
           <TableHead></TableHead>
         </TableRow>
@@ -30,9 +30,15 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
         {expenses.map((expense) => (
           <TableRow key={expense._id?.toString()}>
             <TableCell>{expense.description as string}</TableCell>
-            <TableCell>{expense.price as number}</TableCell>
-            <TableCell>{expense.quantity as number}</TableCell>
-            <TableCell>{expense.totalPrice as number}</TableCell>
+            <TableCell className="w-30 text-right">
+              {expense.price as number}
+            </TableCell>
+            <TableCell className="w-30 text-right">
+              {expense.quantity as number}
+            </TableCell>
+            <TableCell className="w-30 text-right">
+              {expense.totalPrice as number}
+            </TableCell>
             <ExpenseRowActions id={expense._id?.toString() as string} />
           </TableRow>
         ))}

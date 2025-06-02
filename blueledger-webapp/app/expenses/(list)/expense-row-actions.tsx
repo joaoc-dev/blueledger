@@ -28,17 +28,17 @@ const ExpenseRowActions = ({ id }: { id: string }) => {
 
   return (
     <>
-      <TableCell>
-        <Button variant="outline" asChild>
+      <TableCell className="w-20 text-right">
+        <Button variant="ghost" asChild>
           <Link href={`/expenses/edit/${id}`}>
             <SquarePen />
           </Link>
         </Button>
       </TableCell>
-      <TableCell>
+      <TableCell className="w-20 text-center">
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="cursor-pointer" variant="destructive">
+            <Button className="cursor-pointer" variant="ghost">
               <Trash2 />
             </Button>
           </DialogTrigger>

@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Home() {
   return (
-    <Card className='w-[550px]'>
+    <Card className="w-[550px] mx-auto">
       <CardHeader>
         <CardTitle>Blue Ledger</CardTitle>
       </CardHeader>
