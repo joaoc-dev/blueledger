@@ -63,7 +63,10 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="space-y-4 max-w-sm mx-auto"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="description"

@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} 
-          antialiased h-screen flex justify-center items-center`}
+          antialiased px-12`}
       >
         <ThemeProvider
           attribute="class"
@@ -36,8 +36,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster />
+          <div className="max-w-screen-xl mx-auto min-h-screen grid grid-rows-[auto_1fr] ">
+            <header className="border-4 mb-20"></header>
+            <main>{children}</main>
+            <Toaster />
+          </div>
         </ThemeProvider>
       </body>
     </html>
