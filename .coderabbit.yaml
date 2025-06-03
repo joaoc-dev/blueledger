@@ -1,0 +1,23 @@
+language: en-US
+early_access: false
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  assess_linked_issues: true
+  related_issues: true
+  path_instructions:
+    - path: 'blueledger-webapp/app/**/*.{ts,tsx}'
+      instructions: 'Review the Typescript and React code according to conventions and best practices.'
+    - path: 'blueledger-webapp/app/api/**'
+      instructions: 'Verify API routes handle errors gracefully and follow RESTful conventions.'
+    - path: 'blueledger-webapp/app/**/*.test.{ts,tsx}'
+      instructions: 'Ensure that test files effectively cover various scenarios and edge cases, and follow testing conventions.'
+  auto_review:
+    enabled: true
+    drafts: false
+chat:
+  auto_reply: true
