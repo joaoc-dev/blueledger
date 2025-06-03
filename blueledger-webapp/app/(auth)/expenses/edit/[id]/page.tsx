@@ -2,7 +2,7 @@ import Expense from '@/mongoose/models/Expense';
 import { notFound } from 'next/navigation';
 import React from 'react';
 import mongoose from 'mongoose';
-import ExpenseForm from '@/app/expenses/_components/expense-form';
+import ExpenseForm from '../../_components/expense-form';
 
 const EditExpensePage = async ({
   params,

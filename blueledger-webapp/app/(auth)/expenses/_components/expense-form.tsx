@@ -63,7 +63,10 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="space-y-4 max-w-sm mx-auto"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="description"
@@ -129,7 +132,11 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
             </FormItem>
           )}
         />
-        <Button className="mt-6 w-full" type="submit" disabled={isSubmitting}>
+        <Button
+          className="mt-6 w-full cursor-pointer"
+          type="submit"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="animate-spin" /> Submitting...

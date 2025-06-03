@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { TableCell } from '@/components/ui/table';
 import axios from 'axios';
+import { SquarePen, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -27,10 +28,19 @@ const ExpenseRowActions = ({ id }: { id: string }) => {
 
   return (
     <>
-      <TableCell>
+      <TableCell className="w-20 text-right">
+        <Button variant="ghost" asChild>
+          <Link href={`/expenses/edit/${id}`}>
+            <SquarePen />
+          </Link>
+        </Button>
+      </TableCell>
+      <TableCell className="w-20 text-center">
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="destructive">Delete</Button>
+            <Button className="cursor-pointer" variant="ghost">
+              <Trash2 />
+            </Button>
           </DialogTrigger>
           <ConfirmationDialog
             title="Are you sure you want to delete this expense?"
@@ -40,11 +50,6 @@ const ExpenseRowActions = ({ id }: { id: string }) => {
             cancelButtonText="Cancel"
           />
         </Dialog>
-      </TableCell>
-      <TableCell>
-        <Button variant="outline" asChild>
-          <Link href={`/expenses/edit/${id}`}>Edit</Link>
-        </Button>
       </TableCell>
     </>
   );
