@@ -1,6 +1,15 @@
-# Blueleder is a showcase application. It gives users the possibility of managing their expenses with the help of analytics and AI-features.
+# Blueleder is a showcase application.
 
-- 🐰 AI Code Reviews
+It gives users the possibility of managing their expenses with the help of analytics and AI-features.
+
+### Built with:
+
+- ⚛️ Next.js 15
+- 🧩 Composable utility classes by Tailwind
+- 🎨 Customized Shadcn UI components
+- 🍃 MongoDB + 📦 Mongoose ODM
+- 🐰 AI Code Reviews by CodeRabbit
+- 🛰️ Performance monitoring and error tracking by Sentry
 
 ## ai-service
 
