@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { HandCoins, Moon } from 'lucide-react';
+import { HandCoins } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import HamburgerButton from './hamburger-button';
 import MobileNavMenu from './mobile-nav-menu';
@@ -23,9 +23,10 @@ const MobileNavBar = ({ links }: MobileNavBarProps) => {
       <nav className="nav nav--mobile">
         <HamburgerButton isOpen={isNavMenuOpen} onClick={handleClick} />
 
-        <Link href="/" className="nav__brand nav__item hover:text-foreground">
+        <Link href="/" className="icon-button">
           <HandCoins />
         </Link>
+
         <ThemeToggle />
       </nav>
       <MobileNavMenu
