@@ -180,7 +180,7 @@
   }
 
   .nav__list {
-    @apply relative flex items-center gap-12;
+    @apply relative flex items-center gap-6;
   }
 
   .nav__list::after {

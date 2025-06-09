@@ -6,7 +6,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
       <header className="mb-20">
         <NavBar />
       </header>
-      <main>{children}</main>
+      <main className="p-10">{children}</main>
     </div>
   );
 };
