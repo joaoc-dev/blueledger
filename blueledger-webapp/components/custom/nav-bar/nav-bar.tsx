@@ -1,5 +1,6 @@
 import React from 'react';
 import DesktopNavBar from './desktop-nav-bar';
+import MobileNavBar from './mobile-nav-bar';
 
 const links = [
   {
@@ -24,7 +25,7 @@ const NavBar = () => {
   return (
     <>
       <div className="relative block md:hidden">
-        {/* <MobileNavBar links={links} /> */}
+        <MobileNavBar links={links} />
       </div>
       <div className="hidden md:block">
         <DesktopNavBar links={links} />

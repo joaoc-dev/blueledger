@@ -1,4 +1,4 @@
-import NavBar from './nav-bar';
+import NavBar from '@/components/custom/nav-bar/nav-bar';
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
