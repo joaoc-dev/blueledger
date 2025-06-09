@@ -26,7 +26,7 @@ const MobileNavMenu = ({ links, isOpen, onClose }: MobileNavMenuProps) => {
                 onClick={onClose}
                 className={`nav__item px-6 py-2 hover:text-foreground ${
                   isActive
-                    ? 'text-foreground border-l-1 border-foreground'
+                    ? 'text-foreground border-l border-foreground'
                     : 'text-muted-foreground'
                 }`}
                 href={link.href}
