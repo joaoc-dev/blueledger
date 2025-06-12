@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Table,
   TableBody,
@@ -8,12 +10,30 @@ import {
 } from '@/components/ui/table';
 import ExpenseRowActions from './expense-row-actions';
 import { ExpenseType } from '@/types/expense';
+import { toast } from 'sonner';
+import { deleteExpense } from '@/services/expenses';
+import { useState } from 'react';
 
 interface ExpensesTableProps {
   expenses: ExpenseType[];
 }
 
 const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
+  const [localExpenses, setLocalExpenses] = useState(expenses);
+
+  const handleDelete = async (id: string) => {
+    const originalExpenses = [...localExpenses];
+    try {
+      setLocalExpenses(localExpenses.filter((expense) => expense.id !== id));
+      await deleteExpense(id);
+
+      toast.success('Expense deleted successfully');
+    } catch (error) {
+      setLocalExpenses(originalExpenses);
+      console.error(error);
+      toast.error('Failed to delete expense');
+    }
+  };
   return (
     <Table>
       <TableHeader>
@@ -27,7 +47,7 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {expenses.map((expense) => (
+        {localExpenses.map((expense) => (
           <TableRow key={expense.id}>
             <TableCell>{expense.description as string}</TableCell>
             <TableCell className="w-30 text-right">
@@ -39,7 +59,10 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
             <TableCell className="w-30 text-right">
               {expense.totalPrice as number}
             </TableCell>
-            <ExpenseRowActions id={expense.id} />
+            <ExpenseRowActions
+              id={expense.id}
+              onDelete={() => handleDelete(expense.id)}
+            />
           </TableRow>
         ))}
       </TableBody>
