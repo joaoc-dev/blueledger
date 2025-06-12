@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
-import dbConnect from '@/mongoose/client';
-import Expense from '@/mongoose/models/Expense';
+import dbConnect from '@/lib/db/client';
+import Expense from '@/models/expense';
 import Link from 'next/link';
 import ExpensesTable from './expenses-table';
 

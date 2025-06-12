@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ExpenseDocument } from '@/mongoose/models/Expense';
+import { ExpenseDocument } from '@/models/expense';
 import ExpenseRowActions from './expense-row-actions';
 
 interface ExpensesTableProps {

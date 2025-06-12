@@ -1,6 +1,6 @@
 'use client';
 
-import ConfirmationDialog from '@/app/components/confirmation-dialog';
+import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { TableCell } from '@/components/ui/table';

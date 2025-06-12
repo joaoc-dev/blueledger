@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Expense, expenseSchema } from '@/schemas/expenseSchema';
+import { Expense, expenseSchema } from '@/lib/validations/expense-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
