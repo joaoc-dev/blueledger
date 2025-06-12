@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 import { z } from 'zod';
+import { EXPENSE_CATEGORIES } from '@/constants/expense-category';
 
 export const expenseSchema = z.object({
   id: z.string().optional(),
@@ -9,6 +10,7 @@ export const expenseSchema = z.object({
     .max(200, { message: 'Description must be less than 200 characters' }),
   price: z.number().min(0, { message: 'Price cannot be negative' }),
   quantity: z.number().min(1, { message: 'Quantity must be greater than 0' }),
+  category: z.enum(EXPENSE_CATEGORIES),
 });
 
 export const patchExpenseSchema = z.object({
@@ -29,6 +31,7 @@ export const patchExpenseSchema = z.object({
       .number()
       .min(1, { message: 'Quantity must be greater than 0' })
       .optional(),
+    category: z.enum(EXPENSE_CATEGORIES).optional(),
   }),
 });
 

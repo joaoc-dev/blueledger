@@ -14,6 +14,7 @@ export const useExpenseForm = (expense?: ExpenseType) => {
       description: expense?.description || '',
       price: expense?.price || 0,
       quantity: expense?.quantity || 0,
+      category: expense?.category || 'Other',
     },
   });
 

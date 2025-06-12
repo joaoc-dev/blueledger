@@ -10,15 +10,15 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import axios from 'axios';
+import { useExpenseForm } from '@/hooks/use-expense-form';
+import { ExpenseFormData } from '@/lib/validations/expense-schema';
+import { createExpense, updateExpense } from '@/services/expenses';
+import { ExpenseType } from '@/types/expense';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useExpenseForm } from '@/hooks/use-expense-form';
-import { ExpenseType } from '@/types/expense';
-import { ExpenseFormData } from '@/lib/validations/expense-schema';
-import { createExpense, updateExpense } from '@/services/expenses';
+import { ExpenseCategorySelect } from './expense-category-select';
 
 interface ExpenseFormProps {
   expense?: ExpenseType;
@@ -114,6 +114,22 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
                       field.onChange(number);
                     }
                   }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <FormControl>
+                <ExpenseCategorySelect
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               </FormControl>
               <FormMessage />

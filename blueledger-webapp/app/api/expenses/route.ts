@@ -17,13 +17,14 @@ export async function POST(request: NextRequest) {
 
     await dbConnect();
 
-    const { description, price, quantity } = validation.data;
+    const { description, price, quantity, category } = validation.data;
     const totalPrice = price * quantity;
     const expense = await Expense.create({
       description,
       price,
       quantity,
       totalPrice,
+      category,
     });
 
     return NextResponse.json(expense, { status: 201 });
