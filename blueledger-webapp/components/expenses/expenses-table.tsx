@@ -6,11 +6,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ExpenseDocument } from '@/models/expense';
 import ExpenseRowActions from './expense-row-actions';
+import { ExpenseType } from '@/types/expense';
 
 interface ExpensesTableProps {
-  expenses: ExpenseDocument[];
+  expenses: ExpenseType[];
 }
 
 const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
@@ -28,7 +28,7 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
       </TableHeader>
       <TableBody>
         {expenses.map((expense) => (
-          <TableRow key={expense._id?.toString()}>
+          <TableRow key={expense.id}>
             <TableCell>{expense.description as string}</TableCell>
             <TableCell className="w-30 text-right">
               {expense.price as number}
@@ -39,7 +39,7 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
             <TableCell className="w-30 text-right">
               {expense.totalPrice as number}
             </TableCell>
-            <ExpenseRowActions id={expense._id?.toString() as string} />
+            <ExpenseRowActions id={expense.id} />
           </TableRow>
         ))}
       </TableBody>

@@ -4,7 +4,7 @@ import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { TableCell } from '@/components/ui/table';
-import axios from 'axios';
+import { deleteExpense } from '@/services/expenses';
 import { SquarePen, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -15,7 +15,7 @@ const ExpenseRowActions = ({ id }: { id: string }) => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`/api/expenses/${id}`);
+      await deleteExpense(id);
       router.refresh();
 
       toast.success('Expense deleted successfully');

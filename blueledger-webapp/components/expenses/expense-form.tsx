@@ -10,45 +10,33 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Expense, expenseSchema } from '@/lib/validations/expense-schema';
-import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { useExpenseForm } from '@/hooks/use-expense-form';
+import { ExpenseType } from '@/types/expense';
+import { ExpenseFormData } from '@/lib/validations/expense-schema';
+import { createExpense, updateExpense } from '@/services/expenses';
 
 interface ExpenseFormProps {
-  expense?: {
-    id: string;
-    description: string;
-    price: number;
-    quantity: number;
-  };
+  expense?: ExpenseType;
 }
 
 const ExpenseForm = ({ expense }: ExpenseFormProps) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const form = useExpenseForm(expense);
 
-  const form = useForm<Expense>({
-    resolver: zodResolver(expenseSchema),
-    defaultValues: {
-      description: expense?.description || '',
-      price: expense?.price || 0,
-      quantity: expense?.quantity || 0,
-    },
-  });
-
-  const onSubmit = async (data: Expense) => {
+  const onSubmit = async (data: ExpenseFormData) => {
     try {
       setIsSubmitting(true);
       if (expense?.id) {
-        await axios.patch(`/api/expenses/${expense.id}`, data);
+        await updateExpense(expense.id, data);
         toast.success('Successfully updated expense');
       } else {
-        await axios.post('/api/expenses', data);
+        await createExpense(data);
         toast.success('Successfully created expense');
       }
 

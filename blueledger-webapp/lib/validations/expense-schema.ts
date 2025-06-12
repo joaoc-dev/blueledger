@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 import { z } from 'zod';
 
 export const expenseSchema = z.object({
+  id: z.string().optional(),
   description: z
     .string()
     .min(1, { message: 'Description is required' })
@@ -37,4 +38,6 @@ export const deleteExpenseSchema = z.object({
   }),
 });
 
-export type Expense = z.infer<typeof expenseSchema>;
+export const expenseFormSchema = expenseSchema;
+
+export type ExpenseFormData = z.infer<typeof expenseFormSchema>;

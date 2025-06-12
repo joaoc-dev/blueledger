@@ -1,5 +1,5 @@
 import dbConnect from '@/lib/db/client';
-import Expense from '@/models/expense';
+import Expense from '@/models/expense.model';
 import { expenseSchema } from '@/lib/validations/expense-schema';
 import { NextRequest, NextResponse } from 'next/server';
 
