@@ -6,26 +6,11 @@ import { HandCoins } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { usePathname } from 'next/navigation';
 
-const links = [
-  {
-    label: 'Dashboard',
-    href: '/dashboard',
-  },
-  {
-    label: 'Expenses',
-    href: '/expenses',
-  },
-  {
-    label: 'Groups',
-    href: '/groups',
-  },
-  {
-    label: 'Friends',
-    href: '/friends',
-  },
-];
+interface DesktopNavBarProps {
+  links: { label: string; href: string }[];
+}
 
-const NavBar = () => {
+const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
   const pathname = usePathname();
   const activeLinkRef = useRef<HTMLAnchorElement>(null);
   const navListRef = useRef<HTMLUListElement>(null);
@@ -33,6 +18,19 @@ const NavBar = () => {
   const [underlineW, setUnderlineW] = useState(0);
 
   useEffect(() => {
+    const handleResize = () => {
+      renderUnderline();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    renderUnderline();
+  }, [pathname]);
+
+  const renderUnderline = () => {
     const activeLinkElement = activeLinkRef.current;
     const navListElement = navListRef.current;
 
@@ -46,7 +44,7 @@ const NavBar = () => {
         setUnderlineW(linkWidth / navListWidth);
       }
     }
-  }, [pathname]);
+  };
 
   return (
     <nav className="nav">
@@ -57,7 +55,7 @@ const NavBar = () => {
         </Link>
       </div>
       <ul
-        className="nav__list"
+        className="nav__list--desktop lg:gap-12"
         ref={navListRef}
         style={
           {
@@ -89,4 +87,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default DesktopNavBar;

@@ -1,4 +1,4 @@
-import NavBar from './nav-bar';
+import NavBar from '@/components/custom/nav-bar/nav-bar';
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -6,7 +6,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
       <header className="mb-20">
         <NavBar />
       </header>
-      <main>{children}</main>
+      <main className="p-10">{children}</main>
     </div>
   );
 };

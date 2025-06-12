@@ -171,23 +171,43 @@
 }
 
 @layer components {
+  .icon-button {
+    @apply relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-250;
+  }
+
+  .icon-button:hover {
+    @apply bg-muted;
+  }
+
+  .icon-button:focus-visible {
+    @apply ring-3 ring-primary/50 outline-none;
+  }
+
   .nav {
-    @apply flex items-center justify-between gap-4 p-4;
+    @apply flex items-center justify-between p-4;
+  }
+
+  .nav--mobile {
+    @apply bg-background relative z-50;
+  }
+
+  .nav__list--mobile {
+    @apply flex flex-col px-8 py-8 space-y-8 absolute top-full left-0 w-full max-h-screen overflow-y-auto border-t border-b bg-background transform transition-transform duration-300 ease-in-out z-40;
+  }
+
+  .nav__list--desktop {
+    @apply relative flex items-center gap-6;
+  }
+
+  .nav__list--desktop::after {
+    @apply absolute content-[''] w-full h-0.5 bg-foreground bottom-0 left-0 top-8 origin-left transform;
+    transform: translate(var(--nav-underline-x), 0)
+      scaleX(var(--nav-underline-w));
+    transition: transform 0.3s;
   }
 
   .nav__brand {
     @apply flex items-center gap-3;
-  }
-
-  .nav__list {
-    @apply relative flex items-center gap-12;
-  }
-
-  .nav__list::after {
-    @apply absolute content-[''] w-full h-0.5 bg-foreground bottom-0 left-0 top-8 origin-left;
-    translate: var(--nav-underline-x) 0;
-    scale: var(--nav-underline-w) 1;
-    transition: translate 0.3s, scale 0.3s;
   }
 
   .nav__item {
