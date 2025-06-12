@@ -1,6 +1,6 @@
-import dbConnect from '@/mongoose/client';
-import Expense from '@/mongoose/models/Expense';
-import { expenseSchema } from '@/schemas/expenseSchema';
+import dbConnect from '@/lib/db/client';
+import Expense from '@/models/expense.model';
+import { expenseSchema } from '@/lib/validations/expense-schema';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {

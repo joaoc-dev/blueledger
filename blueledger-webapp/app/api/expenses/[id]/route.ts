@@ -1,9 +1,9 @@
-import dbConnect from '@/mongoose/client';
-import Expense from '@/mongoose/models/Expense';
+import dbConnect from '@/lib/db/client';
+import Expense from '@/models/expense.model';
 import {
   deleteExpenseSchema,
   patchExpenseSchema,
-} from '@/schemas/expenseSchema';
+} from '@/lib/validations/expense-schema';
 import { NextResponse } from 'next/server';
 
 export async function PATCH(

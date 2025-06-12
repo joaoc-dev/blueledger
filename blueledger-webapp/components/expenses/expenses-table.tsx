@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Table,
   TableBody,
@@ -6,14 +8,32 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ExpenseDocument } from '@/mongoose/models/Expense';
 import ExpenseRowActions from './expense-row-actions';
+import { ExpenseType } from '@/types/expense';
+import { toast } from 'sonner';
+import { deleteExpense } from '@/services/expenses';
+import { useState } from 'react';
 
 interface ExpensesTableProps {
-  expenses: ExpenseDocument[];
+  expenses: ExpenseType[];
 }
 
 const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
+  const [localExpenses, setLocalExpenses] = useState(expenses);
+
+  const handleDelete = async (id: string) => {
+    const originalExpenses = [...localExpenses];
+    try {
+      setLocalExpenses(localExpenses.filter((expense) => expense.id !== id));
+      await deleteExpense(id);
+
+      toast.success('Expense deleted successfully');
+    } catch (error) {
+      setLocalExpenses(originalExpenses);
+      console.error(error);
+      toast.error('Failed to delete expense');
+    }
+  };
   return (
     <Table>
       <TableHeader>
@@ -27,8 +47,8 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {expenses.map((expense) => (
-          <TableRow key={expense._id?.toString()}>
+        {localExpenses.map((expense) => (
+          <TableRow key={expense.id}>
             <TableCell>{expense.description as string}</TableCell>
             <TableCell className="w-30 text-right">
               {expense.price as number}
@@ -39,7 +59,10 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
             <TableCell className="w-30 text-right">
               {expense.totalPrice as number}
             </TableCell>
-            <ExpenseRowActions id={expense._id?.toString() as string} />
+            <ExpenseRowActions
+              id={expense.id}
+              onDelete={() => handleDelete(expense.id)}
+            />
           </TableRow>
         ))}
       </TableBody>

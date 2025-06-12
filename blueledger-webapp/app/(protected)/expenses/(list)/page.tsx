@@ -1,14 +1,10 @@
 import { Button } from '@/components/ui/button';
-import dbConnect from '@/mongoose/client';
-import Expense from '@/mongoose/models/Expense';
 import Link from 'next/link';
-import ExpensesTable from './expenses-table';
+import ExpensesTable from '@/components/expenses/expenses-table';
+import { getExpenses } from '@/lib/data/expenses';
 
 const ExpensesPage = async () => {
-  await dbConnect();
-
-  const expenses = await Expense.find();
-
+  const expenses = await getExpenses();
   return (
     <div>
       <div className="flex justify-end mb-4">

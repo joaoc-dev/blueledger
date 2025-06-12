@@ -1,31 +1,19 @@
 'use client';
 
-import ConfirmationDialog from '@/app/components/confirmation-dialog';
+import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { TableCell } from '@/components/ui/table';
-import axios from 'axios';
 import { SquarePen, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
-const ExpenseRowActions = ({ id }: { id: string }) => {
-  const router = useRouter();
+interface ExpenseRowActionsProps {
+  id: string;
+  onDelete: () => void;
+}
 
-  const handleDelete = async (id: string) => {
-    try {
-      await axios.delete(`/api/expenses/${id}`);
-      router.refresh();
-
-      toast.success('Expense deleted successfully');
-    } catch (error) {
-      console.error(error);
-
-      toast.error('Failed to delete expense');
-    }
-  };
-
+const ExpenseRowActions = ({ id, onDelete }: ExpenseRowActionsProps) => {
   return (
     <>
       <TableCell className="w-20 text-right">
@@ -45,7 +33,7 @@ const ExpenseRowActions = ({ id }: { id: string }) => {
           <ConfirmationDialog
             title="Are you sure you want to delete this expense?"
             description="This operation is irreversible."
-            onConfirm={() => handleDelete(id)}
+            onConfirm={onDelete}
             confirmButtonText="Delete"
             cancelButtonText="Cancel"
           />
