@@ -1,12 +1,12 @@
 import dbConnect from '@/lib/db/client';
 import Expense from '@/models/expense.model';
-import { expenseSchema } from '@/lib/validations/expense-schema';
+import { createExpenseSchema } from '@/lib/validations/expense-schema';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const validation = expenseSchema.safeParse(body);
+    const validation = createExpenseSchema.safeParse(body);
 
     if (!validation.success) {
       return NextResponse.json(
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     await dbConnect();
 
-    const { description, price, quantity, category } = validation.data;
+    const { description, price, quantity, category, date } = validation.data;
     const totalPrice = price * quantity;
     const expense = await Expense.create({
       description,
@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
       quantity,
       totalPrice,
       category,
+      date,
     });
 
     return NextResponse.json(expense, { status: 201 });

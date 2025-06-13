@@ -7,6 +7,7 @@ interface IExpense {
   quantity: number;
   totalPrice: number;
   category: string;
+  date: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -46,6 +47,11 @@ const ExpenseSchema = new Schema<ExpenseDocument>(
       required: [true, 'Category is required'],
       maxLength: [50, 'Category must be less than 50 characters'],
       trim: true,
+    },
+    date: {
+      type: Date,
+      required: [true, 'Date is required'],
+      default: Date.now,
     },
   },
   {

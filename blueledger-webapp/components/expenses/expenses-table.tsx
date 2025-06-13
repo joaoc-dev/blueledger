@@ -15,6 +15,7 @@ import { deleteExpense } from '@/services/expenses';
 import { useState } from 'react';
 import { CATEGORY_ICONS, ExpenseCategory } from '@/constants/expense-category';
 import { CircleEllipsis } from 'lucide-react';
+import { formatLocalizedDate } from '@/lib/utils';
 
 interface ExpensesTableProps {
   expenses: ExpenseType[];
@@ -43,6 +44,7 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
         <TableRow>
           <TableHead>Description</TableHead>
           <TableHead>Category</TableHead>
+          <TableHead>Date</TableHead>
           <TableHead className="text-right">Price</TableHead>
           <TableHead className="text-right">Quantity</TableHead>
           <TableHead className="text-right">Total Price</TableHead>
@@ -64,6 +66,9 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
                   <Icon className="h-4 w-4" />
                   {expense.category ? expense.category : 'Other'}
                 </div>
+              </TableCell>
+              <TableCell>
+                {expense.date ? formatLocalizedDate(expense.date) : ''}
               </TableCell>
               <TableCell className="w-30 text-right">
                 {expense.price as number}

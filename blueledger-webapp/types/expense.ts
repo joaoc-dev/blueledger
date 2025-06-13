@@ -7,6 +7,7 @@ export interface ExpenseType {
   quantity: number;
   totalPrice: number;
   category: ExpenseCategory;
+  date: Date;
   createdAt: Date;
   updatedAt: Date;
 }

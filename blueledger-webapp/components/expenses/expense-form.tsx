@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ExpenseCategorySelect } from './expense-category-select';
+import { DateTimePicker } from '../shared/date-time-picker';
 
 interface ExpenseFormProps {
   expense?: ExpenseType;
@@ -131,6 +132,19 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
                   value={field.value}
                   onChange={field.onChange}
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Date</FormLabel>
+              <FormControl>
+                <DateTimePicker value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
