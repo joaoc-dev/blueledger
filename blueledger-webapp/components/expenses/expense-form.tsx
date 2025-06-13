@@ -131,6 +131,8 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
                 <ExpenseCategorySelect
                   value={field.value}
                   onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
                 />
               </FormControl>
               <FormMessage />

@@ -13,19 +13,21 @@ import {
   CATEGORY_ICONS,
   EXPENSE_CATEGORIES,
 } from '@/constants/expense-category';
+import { ExpenseFormData } from '@/lib/validations/expense-schema';
 
 interface ExpenseCategorySelectProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ExpenseFormData['category'] | undefined;
+  onChange: (value: ExpenseFormData['category']) => void;
+  onBlur: () => void;
 }
 
-export function ExpenseCategorySelect({
-  value,
-  onChange,
-}: ExpenseCategorySelectProps) {
+export const ExpenseCategorySelect = React.forwardRef<
+  HTMLButtonElement,
+  ExpenseCategorySelectProps
+>(({ value, onChange, onBlur }, ref) => {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-full">
+      <SelectTrigger ref={ref} onBlur={onBlur} className="w-full">
         <SelectValue placeholder="Select a category" />
       </SelectTrigger>
       <SelectContent>
@@ -46,4 +48,6 @@ export function ExpenseCategorySelect({
       </SelectContent>
     </Select>
   );
-}
+});
+
+ExpenseCategorySelect.displayName = 'ExpenseCategorySelect';
