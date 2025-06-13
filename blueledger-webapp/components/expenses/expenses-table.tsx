@@ -54,9 +54,10 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
       </TableHeader>
       <TableBody>
         {localExpenses.map((expense) => {
-          const Icon = expense.category
-            ? CATEGORY_ICONS[expense.category as ExpenseCategory]
-            : CircleEllipsis;
+          const Icon =
+            expense.category && expense.category in CATEGORY_ICONS
+              ? CATEGORY_ICONS[expense.category as ExpenseCategory]
+              : CircleEllipsis;
 
           return (
             <TableRow key={expense.id}>

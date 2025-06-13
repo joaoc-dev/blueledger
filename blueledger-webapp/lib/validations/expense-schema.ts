@@ -43,7 +43,7 @@ const dateStringToDateSchema = z
   .transform((str) => new Date(str))
   .refine((date) => !isNaN(date.getTime()), { message: 'Invalid date' });
 
-export const createExpenseSchema = z.object({
+export const createExpenseSchema = z.strictObject({
   ...baseFields,
   date: dateStringToDateSchema,
 });
@@ -55,7 +55,7 @@ export const patchExpenseSchema = z.object({
     id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
   }),
   body: z
-    .object({
+    .strictObject({
       description: descriptionSchema.optional(),
       price: priceSchema.optional(),
       quantity: quantitySchema.optional(),
@@ -70,7 +70,7 @@ export const patchExpenseSchema = z.object({
     ),
 });
 
-export const deleteExpenseSchema = z.object({
+export const deleteExpenseSchema = z.strictObject({
   params: z.object({
     id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
   }),

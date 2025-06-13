@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import { isValid, parseISO } from 'date-fns';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -6,7 +7,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatLocalizedDate(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
+  const parsedDate = typeof date === 'string' ? parseISO(date) : date;
+
+  if (!isValid(parsedDate)) return '—';
 
   const formatter = new Intl.DateTimeFormat(undefined, {
     day: '2-digit',
@@ -17,5 +20,5 @@ export function formatLocalizedDate(date: Date | string): string {
     hour12: false,
   });
 
-  return formatter.format(d);
+  return formatter.format(parsedDate);
 }
