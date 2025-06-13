@@ -1,39 +1,48 @@
 'use client';
 
 import { Input } from '@/components/ui/input';
+import React from 'react';
 import { DatePicker } from './date-picker';
 
 interface DateTimePickerProps {
   value: Date;
   onChange: (date: Date) => void;
+  onBlur: () => void;
 }
 
-export function DateTimePicker({ value, onChange }: DateTimePickerProps) {
-  const timeValue = `${value.getHours().toString().padStart(2, '0')}:${value
-    .getMinutes()
-    .toString()
-    .padStart(2, '0')}:${value.getSeconds().toString().padStart(2, '0')}`;
+export const DateTimePicker = React.forwardRef<
+  HTMLButtonElement,
+  DateTimePickerProps
+>(({ value, onChange, onBlur }, ref) => {
+  const pad = (num: number) => num.toString().padStart(2, '0');
+
+  const timeValue = `${pad(value.getHours())}:${pad(value.getMinutes())}:${pad(
+    value.getSeconds()
+  )}`;
 
   const handleDateChange = (date: Date | undefined) => {
     if (!date) return;
-    const updated = new Date(date);
-    updated.setHours(value.getHours(), value.getMinutes(), value.getSeconds());
-    onChange(updated);
+    const newDate = new Date(date);
+    newDate.setHours(value.getHours(), value.getMinutes(), value.getSeconds());
+    onChange(newDate);
   };
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const [hours, minutes, seconds] = e.target.value.split(':').map(Number);
-    const updated = new Date(value);
-    updated.setHours(hours);
-    updated.setMinutes(minutes);
-    updated.setSeconds(seconds || 0);
-    onChange(updated);
+    const newDate = new Date(value);
+    newDate.setHours(hours, minutes, seconds || 0);
+    onChange(newDate);
   };
 
   return (
     <div className="flex gap-1">
       <div className="w-full">
-        <DatePicker value={value} onChange={handleDateChange} />
+        <DatePicker
+          value={value}
+          onChange={handleDateChange}
+          onBlur={onBlur}
+          ref={ref}
+        />
       </div>
       <div className="">
         <Input
@@ -41,10 +50,13 @@ export function DateTimePicker({ value, onChange }: DateTimePickerProps) {
           id="time"
           step="1"
           value={timeValue}
+          onBlur={onBlur}
           onChange={handleTimeChange}
           className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
         />
       </div>
     </div>
   );
-}
+});
+
+DateTimePicker.displayName = 'DateTimePicker';

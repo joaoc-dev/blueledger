@@ -146,7 +146,12 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
             <FormItem>
               <FormLabel>Date</FormLabel>
               <FormControl>
-                <DateTimePicker value={field.value} onChange={field.onChange} />
+                <DateTimePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

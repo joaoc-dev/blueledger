@@ -12,12 +12,12 @@ import {
 import {
   CATEGORY_ICONS,
   EXPENSE_CATEGORIES,
+  ExpenseCategory,
 } from '@/constants/expense-category';
-import { ExpenseFormData } from '@/lib/validations/expense-schema';
 
 interface ExpenseCategorySelectProps {
-  value: ExpenseFormData['category'] | undefined;
-  onChange: (value: ExpenseFormData['category']) => void;
+  value: ExpenseCategory | undefined;
+  onChange: (value: ExpenseCategory) => void;
   onBlur: () => void;
 }
 
