@@ -2,8 +2,6 @@ import { Types } from 'mongoose';
 import { z } from 'zod';
 import { EXPENSE_CATEGORIES } from '@/constants/expense-category';
 
-const idSchema = z.string().optional();
-
 const descriptionSchema = z
   .string()
   .min(1, { message: 'Description is required' })
@@ -23,7 +21,6 @@ const dateSchema = z.date({
 });
 
 const baseFields = {
-  id: idSchema,
   description: descriptionSchema,
   price: priceSchema,
   quantity: quantitySchema,

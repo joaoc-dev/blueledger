@@ -39,7 +39,7 @@ export async function PATCH(
       new: true,
     });
 
-    return NextResponse.json(expense);
+    return NextResponse.json(expense, { status: 200 });
   } catch (error) {
     console.log('Error patching expense', error);
     return NextResponse.json(
@@ -71,7 +71,7 @@ export async function DELETE(
     if (!expense)
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
 
-    return NextResponse.json(expense);
+    return NextResponse.json(expense, { status: 200 });
   } catch (error) {
     console.log('Error deleting expense', error);
     return NextResponse.json(

@@ -9,12 +9,12 @@ import {
 } from 'lucide-react';
 
 export const EXPENSE_CATEGORIES = [
+  'Other',
   'Food',
   'Entertainment',
   'Shopping',
   'Travel',
   'Bills & Utilities',
-  'Other',
 ] as const;
 
 export type ExpenseCategory = (typeof EXPENSE_CATEGORIES)[number];

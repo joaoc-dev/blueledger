@@ -18,8 +18,8 @@ import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { ExpenseCategorySelect } from './expense-category-select';
 import { DateTimePicker } from '../shared/date-time-picker';
+import { ExpenseCategorySelect } from './expense-category-select';
 
 interface ExpenseFormProps {
   expense?: ExpenseType;
@@ -43,10 +43,9 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
 
       router.push('/expenses');
     } catch (error) {
-      console.error(error);
-
       setIsSubmitting(false);
       toast.error('Failed to create expense');
+      console.log(error);
     }
   };
 
