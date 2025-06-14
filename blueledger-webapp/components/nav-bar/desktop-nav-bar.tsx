@@ -5,12 +5,18 @@ import Link from 'next/link';
 import { HandCoins } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { usePathname } from 'next/navigation';
+// import UserAvatar from './user-avatar';
+import { Button } from '../ui/button';
+// import { signIn, signOut } from '@/lib/auth/auth';
+import { signIn, signOut } from 'next-auth/react';
+import { User } from 'next-auth';
 
 interface DesktopNavBarProps {
   links: { label: string; href: string }[];
+  user: User | undefined;
 }
 
-const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
+const DesktopNavBar = ({ links, user }: DesktopNavBarProps) => {
   const pathname = usePathname();
   const activeLinkRef = useRef<HTMLAnchorElement>(null);
   const navListRef = useRef<HTMLUListElement>(null);
@@ -82,7 +88,17 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
           );
         })}
       </ul>
-      <ThemeToggle />
+      <div className="flex items-center gap-2">
+        {user ? (
+          <div className="flex items-center gap-2">
+            <span>{user.name}</span>
+            <Button onClick={() => signOut()}>Sign out</Button>
+          </div>
+        ) : (
+          <Button onClick={() => signIn()}>Sign in</Button>
+        )}
+        <ThemeToggle />
+      </div>
     </nav>
   );
 };

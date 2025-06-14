@@ -8,6 +8,9 @@ It gives users the possibility of managing their expenses with the help of analy
 - 🧩 Composable utility classes by Tailwind
 - 🎨 Customized Shadcn UI components
 - 🍃 MongoDB + 📦 Mongoose ODM
+- 🔒 Auth.js
+  - JWT Strategy
+  - GitHub OAuth
 - 🐰 AI Code Reviews by CodeRabbit
 - 🛰️ Performance monitoring and error tracking by Sentry
 - 📝 Form handling by React Hook Form
