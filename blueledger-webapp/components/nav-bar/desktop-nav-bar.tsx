@@ -10,6 +10,7 @@ import { Button } from '../ui/button';
 // import { signIn, signOut } from '@/lib/auth/auth';
 import { signIn, signOut } from 'next-auth/react';
 import { User } from 'next-auth';
+import { DesktopNavUser } from './desktop-nav-user';
 
 interface DesktopNavBarProps {
   links: { label: string; href: string }[];
@@ -49,6 +50,8 @@ const DesktopNavBar = ({ links, user }: DesktopNavBarProps) => {
 
         setUnderlineW(linkWidth / navListWidth);
       }
+    } else {
+      setUnderlineW(0);
     }
   };
 
@@ -89,14 +92,7 @@ const DesktopNavBar = ({ links, user }: DesktopNavBarProps) => {
         })}
       </ul>
       <div className="flex items-center gap-2">
-        {user ? (
-          <div className="flex items-center gap-2">
-            <span>{user.name}</span>
-            <Button onClick={() => signOut()}>Sign out</Button>
-          </div>
-        ) : (
-          <Button onClick={() => signIn()}>Sign in</Button>
-        )}
+        {user && <DesktopNavUser user={user} />}
         <ThemeToggle />
       </div>
     </nav>
