@@ -1,6 +1,12 @@
 import NavBar from '@/components/nav-bar';
+import AuthRedirectClient from '@/components/shared/auth-redirect-client';
+import { auth } from '@/lib/auth/auth';
 
-const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await auth();
+
+  if (!session) return <AuthRedirectClient />;
+
   return (
     <div className="max-w-screen-xl mx-auto min-h-screen grid grid-rows-[auto_1fr] ">
       <header className="mb-20">
