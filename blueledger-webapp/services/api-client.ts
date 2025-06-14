@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export const apiClient = axios.create({
   baseURL: '/api',
@@ -7,27 +7,35 @@ export const apiClient = axios.create({
   },
 });
 
-apiClient.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
+async function apiRequest<T>(request: Promise<AxiosResponse<T>>): Promise<T> {
+  try {
+    const response = await request;
+    return response.data;
+  } catch (err) {
+    const error = err as AxiosError<{ error: string }>;
+
     let message =
       error.response?.data?.error ||
       error.message ||
       'An unknown error occurred';
 
     if (typeof message === 'object') {
-      message = JSON.stringify(message);
+      try {
+        message = JSON.stringify(message);
+      } catch {
+        message = 'An unknown error occurred';
+      }
     }
 
-    return Promise.reject(new Error(message));
+    throw new Error(message);
   }
-);
+}
 
 export function apiGet<T>(
   url: string,
   config?: AxiosRequestConfig
 ): Promise<T> {
-  return apiClient.get(url, config) as Promise<T>;
+  return apiRequest(apiClient.get<T>(url, config));
 }
 
 export function apiPost<T>(
@@ -35,7 +43,7 @@ export function apiPost<T>(
   data?: unknown,
   config?: AxiosRequestConfig
 ): Promise<T> {
-  return apiClient.post(url, data, config) as Promise<T>;
+  return apiRequest(apiClient.post<T>(url, data, config));
 }
 
 export function apiPatch<T>(
@@ -43,12 +51,12 @@ export function apiPatch<T>(
   data?: unknown,
   config?: AxiosRequestConfig
 ): Promise<T> {
-  return apiClient.patch(url, data, config) as Promise<T>;
+  return apiRequest(apiClient.patch<T>(url, data, config));
 }
 
 export function apiDelete<T = void>(
   url: string,
   config?: AxiosRequestConfig
 ): Promise<T> {
-  return apiClient.delete(url, config) as Promise<T>;
+  return apiRequest(apiClient.delete<T>(url, config));
 }

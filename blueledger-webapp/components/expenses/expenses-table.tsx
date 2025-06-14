@@ -45,8 +45,8 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
           <TableHead>Description</TableHead>
           <TableHead>Category</TableHead>
           <TableHead>Date</TableHead>
-          <TableHead className="text-right">Price</TableHead>
           <TableHead className="text-right">Quantity</TableHead>
+          <TableHead className="text-right">Price</TableHead>
           <TableHead className="text-right">Total Price</TableHead>
           <TableHead></TableHead>
           <TableHead></TableHead>
@@ -72,10 +72,10 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
                 {expense.date ? formatLocalizedDate(expense.date) : ''}
               </TableCell>
               <TableCell className="w-30 text-right">
-                {expense.price as number}
+                {expense.quantity as number}
               </TableCell>
               <TableCell className="w-30 text-right">
-                {expense.quantity as number}
+                {expense.price as number}
               </TableCell>
               <TableCell className="w-30 text-right">
                 {expense.totalPrice as number}

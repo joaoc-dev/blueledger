@@ -74,7 +74,7 @@ Responsible for interacting with Azure in order to provide the web-app with adva
 |             |              | use-expenses-form.ts    |                                                                                          |
 | services/   |              |                         | Client-side API interaction functions                                                    |
 |             | expenses     |                         |                                                                                          |
-|             |              | expenses-mapper.ts      | Mapping between types and API request/response                                           |
+|             |              | expense-mapper.ts       | Mapping between types and API request/response                                           |
 |             |              | expenses.ts             |                                                                                          |
 |             | users        |                         |                                                                                          |
 |             |              | users.ts                |                                                                                          |

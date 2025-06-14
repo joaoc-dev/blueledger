@@ -70,10 +70,10 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
         />
         <FormField
           control={form.control}
-          name="price"
+          name="quantity"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Price</FormLabel>
+              <FormLabel>Quantity</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -96,10 +96,10 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
         />
         <FormField
           control={form.control}
-          name="quantity"
+          name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Quantity</FormLabel>
+              <FormLabel>Price</FormLabel>
               <FormControl>
                 <Input
                   {...field}
