@@ -1,6 +1,6 @@
 import { ExpenseType } from '@/types/expense';
 import Expense, { ExpenseDocument } from '@/models/expense.model';
-import dbConnect from '../db/mongoose-client';
+import dbConnect from '@/lib/db/mongoose-client';
 import mongoose from 'mongoose';
 
 function transformExpense(expense: ExpenseDocument): ExpenseType {

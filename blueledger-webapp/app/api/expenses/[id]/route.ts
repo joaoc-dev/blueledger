@@ -1,13 +1,15 @@
+import { withAuth } from '@/lib/api/withAuth';
 import dbConnect from '@/lib/db/mongoose-client';
-import Expense from '@/models/expense.model';
 import {
   deleteExpenseSchema,
   patchExpenseSchema,
 } from '@/lib/validations/expense-schema';
+import Expense from '@/models/expense.model';
+import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
 
-export async function PATCH(
-  request: Request,
+export const PATCH = withAuth(async function PATCH(
+  request: NextAuthRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -47,10 +49,10 @@ export async function PATCH(
       { status: 500 }
     );
   }
-}
+});
 
-export async function DELETE(
-  request: Request,
+export const DELETE = withAuth(async function DELETE(
+  request: NextAuthRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -79,4 +81,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-}
+});
