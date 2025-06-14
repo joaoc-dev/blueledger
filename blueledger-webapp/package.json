@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/mongodb-adapter": "^3.9.1",
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-dialog": "^1.1.13",
     "@radix-ui/react-label": "^2.1.6",
@@ -21,6 +22,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.510.0",
+    "mongodb": "^6.17.0",
     "mongoose": "^8.14.3",
     "next": "15.3.2",
     "next-auth": "^5.0.0-beta.28",

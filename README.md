@@ -11,6 +11,7 @@ It gives users the possibility of managing their expenses with the help of analy
 - 🔒 Auth.js
   - JWT Strategy
   - GitHub OAuth
+  - MongoDB adapter
 - 🐰 AI Code Reviews by CodeRabbit
 - 🛰️ Performance monitoring and error tracking by Sentry
 - 📝 Form handling by React Hook Form

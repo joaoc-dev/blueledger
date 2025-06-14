@@ -1,4 +1,4 @@
-import dbConnect from '@/lib/db/client';
+import dbConnect from '@/lib/db/mongoose-client';
 import Expense from '@/models/expense.model';
 import { createExpenseSchema } from '@/lib/validations/expense-schema';
 import { NextRequest, NextResponse } from 'next/server';
