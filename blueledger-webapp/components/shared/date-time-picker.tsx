@@ -1,0 +1,62 @@
+'use client';
+
+import { Input } from '@/components/ui/input';
+import React from 'react';
+import { DatePicker } from './date-picker';
+
+interface DateTimePickerProps {
+  value: Date;
+  onChange: (date: Date) => void;
+  onBlur: () => void;
+}
+
+export const DateTimePicker = React.forwardRef<
+  HTMLButtonElement,
+  DateTimePickerProps
+>(({ value, onChange, onBlur }, ref) => {
+  const pad = (num: number) => num.toString().padStart(2, '0');
+
+  const timeValue = `${pad(value.getHours())}:${pad(value.getMinutes())}:${pad(
+    value.getSeconds()
+  )}`;
+
+  const handleDateChange = (date: Date | undefined) => {
+    if (!date) return;
+    const newDate = new Date(date);
+    newDate.setHours(value.getHours(), value.getMinutes(), value.getSeconds());
+    onChange(newDate);
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [hours, minutes, seconds] = e.target.value.split(':').map(Number);
+    const newDate = new Date(value);
+    newDate.setHours(hours, minutes, seconds || 0);
+    onChange(newDate);
+  };
+
+  return (
+    <div className="flex gap-1">
+      <div className="w-full">
+        <DatePicker
+          value={value}
+          onChange={handleDateChange}
+          onBlur={onBlur}
+          ref={ref}
+        />
+      </div>
+      <div className="">
+        <Input
+          type="time"
+          id="time"
+          step="1"
+          value={timeValue}
+          onBlur={onBlur}
+          onChange={handleTimeChange}
+          className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+        />
+      </div>
+    </div>
+  );
+});
+
+DateTimePicker.displayName = 'DateTimePicker';

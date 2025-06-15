@@ -10,15 +10,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import axios from 'axios';
+import { useExpenseForm } from '@/hooks/use-expense-form';
+import { ExpenseFormData } from '@/lib/validations/expense-schema';
+import { createExpense, updateExpense } from '@/services/expenses';
+import { ExpenseType } from '@/types/expense';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useExpenseForm } from '@/hooks/use-expense-form';
-import { ExpenseType } from '@/types/expense';
-import { ExpenseFormData } from '@/lib/validations/expense-schema';
-import { createExpense, updateExpense } from '@/services/expenses';
+import { DateTimePicker } from '../shared/date-time-picker';
+import { ExpenseCategorySelect } from './expense-category-select';
 
 interface ExpenseFormProps {
   expense?: ExpenseType;
@@ -42,10 +43,9 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
 
       router.push('/expenses');
     } catch (error) {
-      console.error(error);
-
       setIsSubmitting(false);
       toast.error('Failed to create expense');
+      console.log(error);
     }
   };
 
@@ -63,6 +63,32 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Input {...field} type="text" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="quantity"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Quantity</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="number"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const number = Number(value);
+
+                    if (isNaN(number)) {
+                      field.onChange(0);
+                    } else {
+                      field.onChange(number);
+                    }
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -96,24 +122,34 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
         />
         <FormField
           control={form.control}
-          name="quantity"
+          name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Quantity</FormLabel>
+              <FormLabel>Category</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const number = Number(value);
-
-                    if (isNaN(number)) {
-                      field.onChange(0);
-                    } else {
-                      field.onChange(number);
-                    }
-                  }}
+                <ExpenseCategorySelect
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Date</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
                 />
               </FormControl>
               <FormMessage />

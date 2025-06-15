@@ -6,7 +6,6 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { TableCell } from '@/components/ui/table';
 import { SquarePen, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 interface ExpenseRowActionsProps {
   id: string;

@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import { EXPENSE_CATEGORIES } from '@/constants/expense-category';
 
 // This interface represents the properties of an Expense document
 interface IExpense {
@@ -6,6 +7,9 @@ interface IExpense {
   price: number;
   quantity: number;
   totalPrice: number;
+  category: string;
+  date: Date;
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,6 +43,21 @@ const ExpenseSchema = new Schema<ExpenseDocument>(
     totalPrice: {
       type: Number,
       required: true,
+    },
+    category: {
+      type: String,
+      enum: EXPENSE_CATEGORIES,
+      required: [true, 'Category is required'],
+      maxLength: [50, 'Category must be less than 50 characters'],
+      trim: true,
+    },
+    date: {
+      type: Date,
+      required: [true, 'Date is required'],
+      default: Date.now,
+    },
+    userId: {
+      type: String,
     },
   },
   {
