@@ -20,7 +20,7 @@ export function DesktopNavUser({ user }: { user: User }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <UserAvatar user={user} />
+        <UserAvatar user={user} className="h-8 w-8" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"

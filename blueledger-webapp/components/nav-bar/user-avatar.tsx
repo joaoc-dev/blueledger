@@ -10,13 +10,13 @@ type UserAvatarProps = {
 } & React.ComponentProps<typeof Avatar>;
 
 const UserAvatar = React.forwardRef<HTMLDivElement, UserAvatarProps>(
-  ({ user, asChild, ...props }, ref) => {
+  ({ user, asChild, className, ...props }, ref) => {
     const Comp = asChild ? Slot : Avatar;
 
     return (
-      <Comp className="h-8 w-8 rounded-full" ref={ref} {...props}>
+      <Comp className={className} ref={ref} {...props}>
         <AvatarImage src={user.image!} alt={user.name!} />
-        <AvatarFallback className="rounded-full">
+        <AvatarFallback>
           <UserRound />
         </AvatarFallback>
       </Comp>
