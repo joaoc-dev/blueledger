@@ -12,10 +12,11 @@ It gives users the possibility of managing their expenses with the help of analy
   - JWT Strategy
   - GitHub OAuth
   - MongoDB adapter
-- 🐰 AI Code Reviews by CodeRabbit
-- 🛰️ Performance monitoring and error tracking by Sentry
+- 🖼️ Image hosting via Cloudinary + 🧑 Custom avatar crop & upload widget
 - 📝 Form handling by React Hook Form
 - ✅ Schema Validations by Zod
+- 🐰 AI Code Reviews by CodeRabbit
+- 🛰️ Performance monitoring and error tracking by Sentry
 
 ## ai-service
 
