@@ -1,18 +1,15 @@
 import axios from 'axios';
-import { api } from './api-client';
+import { apiGet } from './api-client';
 
 async function getSignature(): Promise<{
   signature: string;
   timestamp: number;
 }> {
-  return api.get('sign-cloudinary-params');
+  return apiGet('sign-cloudinary-params');
 }
 
 export async function uploadToCloudinarySigned(blob: Blob) {
   const { signature, timestamp } = await getSignature();
-
-  console.log('signature', signature);
-  console.log('timestamp', timestamp);
 
   const uploadPreset = process.env
     .NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string;

@@ -16,7 +16,7 @@ import { getCroppedImg } from '@/lib/utils/image';
 import { Button } from '../ui/button';
 import AvatarPreviewPanel from './avatar-preview-panel';
 import { toast } from 'sonner';
-import { uploadAndSetUserImage } from '@/services/users';
+import { uploadAndSetUserImage } from '@/services/users/users';
 
 type Props = {
   open: boolean;

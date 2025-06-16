@@ -25,19 +25,17 @@ export const PATCH = withAuth(async function PATCH(request: NextAuthRequest) {
     await dbConnect();
 
     const existingUser = await User.findById(userId);
-    console.log('existingUser', existingUser);
+
     if (!existingUser)
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
-    console.log('updatedData', validation.data.body);
     const user = await User.findByIdAndUpdate(userId, validation.data.body, {
       new: true,
     });
 
-    console.log('user', user);
-    return NextResponse.json({ message: 'User updated successfully' });
+    return NextResponse.json({ user, message: 'User updated successfully' });
   } catch (error) {
-    console.log('Error getting user', error);
+    console.log('Error updating user', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

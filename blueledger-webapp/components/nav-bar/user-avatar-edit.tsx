@@ -12,7 +12,7 @@ import UserAvatar from './user-avatar';
 import { User } from 'next-auth';
 import { useState } from 'react';
 import AvatarCropperModal from '../users/avatar-cropper-modal';
-import { updateUserImage } from '@/services/users';
+import { updateUserImage } from '@/services/users/users';
 import { toast } from 'sonner';
 
 export function UserAvatarEdit({ user }: { user: User }) {

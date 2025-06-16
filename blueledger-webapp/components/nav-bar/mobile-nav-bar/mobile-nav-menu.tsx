@@ -2,10 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Separator } from '@/components/ui/separator';
-import UserAvatar from '../user-avatar';
 import { User } from 'next-auth';
-import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import UserProfileLinks from './user-profile-links';
 
 interface MobileNavMenuProps {
   links: { label: string; href: string }[];
@@ -50,73 +48,7 @@ const MobileNavMenu = ({
         })}
 
         {user && (
-          <>
-            <li className="flex flex-col gap-3">
-              <Separator />
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <UserAvatar user={user} />
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
-              </div>
-              <Separator />
-            </li>
-
-            <li className="flex flex-col gap-3">
-              <Link
-                onClick={onClose}
-                href={pathname}
-                className="flex items-center gap-2"
-              >
-                <Sparkles />
-                Upgrade to Pro(soon)
-              </Link>
-              <Separator />
-            </li>
-
-            <li>
-              <Link
-                onClick={onClose}
-                href="/user/profile"
-                className="flex items-center gap-2"
-              >
-                <BadgeCheck />
-                Profile
-              </Link>
-            </li>
-            <li>
-              <Link
-                onClick={onClose}
-                href={pathname}
-                className="flex items-center gap-2"
-              >
-                <CreditCard />
-                <span>Billing(soon)</span>
-              </Link>
-            </li>
-            <li className="flex flex-col gap-3">
-              <Link
-                onClick={onClose}
-                href={pathname}
-                className=" flex items-center gap-2"
-              >
-                <Bell />
-                Notifications(soon)
-              </Link>
-              <Separator />
-            </li>
-            <li>
-              <Link
-                onClick={onClose}
-                href={pathname}
-                className="flex items-center gap-2"
-              >
-                <LogOut />
-                Logout
-              </Link>
-            </li>
-          </>
+          <UserProfileLinks user={user} onClose={onClose} pathname={pathname} />
         )}
       </ul>
       {isOpen && (

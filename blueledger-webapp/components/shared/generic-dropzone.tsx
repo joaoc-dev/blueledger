@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { FileRejection, useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import { FolderInput } from 'lucide-react';
 
 function getMimeLabels(accept: { [key: string]: string[] }): string {
@@ -51,12 +51,9 @@ export default function GenericDropzone({
     [onDrop]
   );
 
-  const handleDropRejected = useCallback(
-    (fileRejections: FileRejection[]) => {
-      setError(`Only ${getMimeLabels(accept)} files are allowed.`);
-    },
-    [accept]
-  );
+  const handleDropRejected = useCallback(() => {
+    setError(`Only ${getMimeLabels(accept)} files are allowed.`);
+  }, [accept]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleDrop,

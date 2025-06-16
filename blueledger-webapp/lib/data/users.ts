@@ -1,0 +1,22 @@
+import { UserType } from '@/types/user';
+import User, { UserDocument } from '@/models/user.model';
+import dbConnect from '@/lib/db/mongoose-client';
+import mongoose from 'mongoose';
+
+function transformUser(user: UserDocument): UserType {
+  const { _id, ...rest } = user.toObject ? user.toObject() : user;
+  return {
+    ...rest,
+    id: _id?.toString(),
+  };
+}
+
+export async function getUserById(id: string): Promise<UserType | null> {
+  if (!mongoose.Types.ObjectId.isValid(id)) return null;
+
+  await dbConnect();
+
+  const user = await User.findById(id);
+
+  return user ? transformUser(user) : null;
+}

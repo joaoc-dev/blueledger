@@ -2,14 +2,11 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 // This interface represents the properties of an User document
 interface IUser {
-  _id: string;
   name: string;
   email: string;
-  emailVerified: Date;
   image: string;
-  account: string;
-  userId: string;
-  type: string;
+  bio: string;
+  emailVerified: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,6 +21,10 @@ interface UserModel extends Model<UserDocument> {
 
 const UserSchema = new Schema<UserDocument>(
   {
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+    },
     email: {
       type: String,
       unique: true,
@@ -33,16 +34,16 @@ const UserSchema = new Schema<UserDocument>(
         'Email is invalid',
       ],
     },
-    // password: {
-    //   type: String,
-    //   required: true,
-    // },
-    name: {
-      type: String,
-      required: [true, 'Name is required'],
-    },
     image: {
       type: String,
+      required: false,
+    },
+    bio: {
+      type: String,
+      required: false,
+    },
+    emailVerified: {
+      type: Date,
       required: false,
     },
   },

@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-export const apiClient = axios.create({
+const apiClient = axios.create({
   baseURL: '/api',
   headers: {
     'Content-Type': 'application/json',

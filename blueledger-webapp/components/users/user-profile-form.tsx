@@ -11,31 +11,24 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '../ui/input';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '../ui/button';
-import { User } from 'next-auth';
 import { Textarea } from '../ui/textarea';
+import { updateUser } from '@/services/users/users';
+import { toast } from 'sonner';
+import { UserType } from '@/types/user';
+import { useUserProfileForm } from '@/hooks/use-user-profile-form';
+import { UserProfileFormData } from '@/lib/validations/user-schema';
 
-const formSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-  bio: z.string().min(1),
-});
+const UserProfileForm = ({ user }: { user: UserType }) => {
+  const form = useUserProfileForm(user);
 
-const UserProfileForm = ({ user }: { user: User }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: user.name || '',
-      email: user.email || '',
-      bio: '',
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(data: UserProfileFormData) {
+    try {
+      await updateUser(data);
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
