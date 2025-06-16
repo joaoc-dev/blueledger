@@ -1,15 +1,11 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { HandCoins } from 'lucide-react';
-import { ThemeToggle } from './theme-toggle';
-import { usePathname } from 'next/navigation';
-// import UserAvatar from './user-avatar';
-import { Button } from '../ui/button';
-// import { signIn, signOut } from '@/lib/auth/auth';
-import { signIn, signOut } from 'next-auth/react';
 import { User } from 'next-auth';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { ThemeToggle } from '../theme-toggle';
 import { DesktopNavUser } from './desktop-nav-user';
 
 interface DesktopNavBarProps {

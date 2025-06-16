@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { HandCoins } from 'lucide-react';
-import { ThemeToggle } from './theme-toggle';
+import { ThemeToggle } from '../theme-toggle';
 import HamburgerButton from './hamburger-button';
 import MobileNavMenu from './mobile-nav-menu';
 import { User } from 'next-auth';
 
 interface MobileNavBarProps {
   links: { label: string; href: string }[];
-  user: User;
+  user: User | undefined;
 }
 
 const MobileNavBar = ({ links, user }: MobileNavBarProps) => {

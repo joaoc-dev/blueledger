@@ -1,6 +1,5 @@
-import React from 'react';
-import DesktopNavBar from './desktop-nav-bar';
-import MobileNavBar from './mobile-nav-bar';
+import { DesktopNavBar } from './desktop-nav-bar';
+import { MobileNavBar } from './mobile-nav-bar';
 import { auth } from '@/lib/auth/auth';
 
 const links = [

@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
-import UserAvatar from './user-avatar';
+import UserAvatar from '../user-avatar';
 import Link from 'next/link';
 
 export function DesktopNavUser({ user }: { user: User }) {
