@@ -1,48 +1,37 @@
 import React from 'react';
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { auth } from '@/lib/auth/auth';
-import UserAvatar from '@/components/nav-bar/user-avatar';
-import CloudinaryUploadButton from '@/components/shared/cloudinary-upload-button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { UserRound } from 'lucide-react';
-import { AvatarImage } from '@/components/ui/avatar';
+import { UserAvatarEdit } from '@/components/nav-bar/user-avatar-edit';
+import UserProfileForm from '@/components/users/user-profile-form';
+import { Separator } from '@/components/ui/separator';
 
 const UserProfilePage = async () => {
   const session = await auth();
 
   return (
-    <Card>
+    <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle>Profile</CardTitle>
-        {session?.user?.image && (
-          <>
-            <UserAvatar
-              user={session!.user!}
-              className="h-32 w-32 rounded-full"
-            />
-            <CloudinaryUploadButton />
-          </>
-        )}
-        <CardDescription>
-          {session?.user?.name} - {session?.user?.email}
-        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Avatar className="h-32 w-32">
-          <AvatarImage src={session?.user?.image!} alt={session?.user?.name!} />
-          <AvatarFallback>
-            <UserRound />
-          </AvatarFallback>
-        </Avatar>
+      <Separator />
+      <CardContent className="flex flex-col md:flex-row gap-10 min-h-[250px]">
+        <div className="mx-auto">
+          <UserAvatarEdit user={session!.user!} />
+        </div>
+
+        <div className="hidden md:block mx-auto">
+          <Separator orientation="vertical" />
+        </div>
+
+        <UserProfileForm user={session!.user!} />
       </CardContent>
+      <CardFooter></CardFooter>
     </Card>
   );
 };
