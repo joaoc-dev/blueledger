@@ -10,7 +10,7 @@ import { User } from 'next-auth';
 
 interface MobileNavBarProps {
   links: { label: string; href: string }[];
-  user: User | undefined;
+  user: User;
 }
 
 const MobileNavBar = ({ links, user }: MobileNavBarProps) => {
@@ -35,6 +35,7 @@ const MobileNavBar = ({ links, user }: MobileNavBarProps) => {
         links={links}
         isOpen={isNavMenuOpen}
         onClose={handleClick}
+        user={user}
       />
     </>
   );

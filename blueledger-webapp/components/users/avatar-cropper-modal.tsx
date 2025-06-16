@@ -15,6 +15,8 @@ import GenericDropzone from '../shared/generic-dropzone';
 import { getCroppedImg } from '@/lib/utils/image';
 import { Button } from '../ui/button';
 import AvatarPreviewPanel from './avatar-preview-panel';
+import { toast } from 'sonner';
+import { uploadAndSetUserImage } from '@/services/users';
 
 type Props = {
   open: boolean;
@@ -26,6 +28,7 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedImage, setCroppedImage] = useState<Blob | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const debouncedCrop = useRef(
     debounce(async (imageSrc: string, croppedAreaPixels: Area) => {
@@ -64,13 +67,29 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
     }
   };
 
+  const handleUpload = async () => {
+    if (!croppedImage) return;
+    setIsUploading(true);
+    try {
+      await uploadAndSetUserImage(croppedImage);
+      onClose();
+      toast.success('Profile picture uploaded successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to upload profile picture');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md w-full h-[600px] flex flex-col gap-3">
         {!imageSrc ? (
           <>
             <DialogTitle>Upload your profile picture</DialogTitle>
-            <div className="h-[400px]">
+            <Separator />
+            <div className="h-full">
               <GenericDropzone
                 onDrop={handleDrop}
                 accept={{
@@ -114,7 +133,9 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
                   )}
                 </div>
                 <Separator />
-                <Button>Set new profile picture</Button>
+                <Button onClick={handleUpload} disabled={isUploading}>
+                  {isUploading ? 'Uploading...' : 'Set new profile picture'}
+                </Button>
               </div>
             </DialogFooter>
           </>

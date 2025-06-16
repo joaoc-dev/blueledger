@@ -8,14 +8,16 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const POST = withAuth(async function POST(request: Request) {
-  const body = await request.json();
-  const { paramsToSign } = body;
+export const GET = withAuth(async function GET() {
+  const timestamp = Math.floor(Date.now() / 1000);
 
   const signature = cloudinary.utils.api_sign_request(
-    paramsToSign,
+    {
+      timestamp,
+      upload_preset: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+    },
     process.env.CLOUDINARY_API_SECRET as string
   );
 
-  return NextResponse.json({ signature });
+  return NextResponse.json({ signature, timestamp });
 });
