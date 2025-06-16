@@ -26,6 +26,7 @@
     "cloudinary": "^2.6.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.510.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.14.3",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
