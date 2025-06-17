@@ -5,7 +5,7 @@ import { auth } from '@/lib/auth/auth';
 const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await auth();
 
-  if (!session) return <AuthRedirectClient />;
+  if (!session || !session.user) return <AuthRedirectClient />;
 
   return (
     <div className="max-w-screen-xl mx-auto min-h-screen grid grid-rows-[auto_1fr] ">

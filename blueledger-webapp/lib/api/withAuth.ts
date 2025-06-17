@@ -10,7 +10,7 @@ type Handler<P = undefined> = (
 
 export function withAuth<P = undefined>(handler: Handler<P>) {
   return auth(async function (req: NextAuthRequest, context) {
-    if (!req.auth) {
+    if (!req.auth || !req.auth.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     // eslint-disable-next-line
