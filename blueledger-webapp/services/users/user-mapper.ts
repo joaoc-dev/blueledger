@@ -6,6 +6,7 @@ export interface UserApiResponse {
   name: string;
   email: string;
   image: string;
+  imagePublicId: string;
   bio: string;
   emailVerified: Date;
 }

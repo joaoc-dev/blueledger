@@ -31,7 +31,7 @@ export function UserAvatarEdit({ user }: { user: User }) {
 
   const handleRemove = async () => {
     try {
-      await updateUserImage('');
+      await updateUserImage(null);
       toast.success('Profile picture removed successfully');
     } catch (error) {
       console.error(error);

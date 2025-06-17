@@ -4,6 +4,7 @@ import { z } from 'zod';
 const nameSchema = z.string().min(1, { message: 'Name is required' });
 const emailSchema = z.string().email({ message: 'Invalid email' });
 const imageSchema = z.string().optional();
+const imagePublicIdSchema = z.string().optional();
 const bioSchema = z.string().optional();
 
 const baseFields = {
@@ -26,6 +27,7 @@ export const patchUserSchema = z.object({
     .strictObject({
       name: nameSchema.optional(),
       image: imageSchema.optional(),
+      imagePublicId: imagePublicIdSchema.optional(),
       bio: bioSchema.optional(),
     })
     .refine(

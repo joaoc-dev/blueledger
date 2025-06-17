@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Form,
   FormControl,
@@ -20,14 +20,18 @@ import { useUserProfileForm } from '@/hooks/use-user-profile-form';
 import { UserProfileFormData } from '@/lib/validations/user-schema';
 
 const UserProfileForm = ({ user }: { user: UserType }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useUserProfileForm(user);
 
   async function onSubmit(data: UserProfileFormData) {
     try {
+      setIsLoading(true);
       await updateUser(data);
       toast.success('Profile updated successfully');
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -85,7 +89,9 @@ const UserProfileForm = ({ user }: { user: UserType }) => {
             </FormItem>
           )}
         />
-        <Button type="submit">Update Profile</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? 'Updating...' : 'Update Profile'}
+        </Button>
       </form>
     </Form>
   );

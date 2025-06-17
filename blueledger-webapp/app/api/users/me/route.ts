@@ -1,7 +1,7 @@
 import { withAuth } from '@/lib/api/withAuth';
-import dbConnect from '@/lib/db/mongoose-client';
+import { updateUser } from '@/lib/data/users';
 import { patchUserSchema } from '@/lib/validations/user-schema';
-import User from '@/models/user.model';
+import { UserType } from '@/types/user';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
 
@@ -22,16 +22,10 @@ export const PATCH = withAuth(async function PATCH(request: NextAuthRequest) {
       );
     }
 
-    await dbConnect();
+    const user = await updateUser(userId!, validation.data.body as UserType);
 
-    const existingUser = await User.findById(userId);
-
-    if (!existingUser)
+    if (!user)
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
-
-    const user = await User.findByIdAndUpdate(userId, validation.data.body, {
-      new: true,
-    });
 
     return NextResponse.json({ user, message: 'User updated successfully' });
   } catch (error) {

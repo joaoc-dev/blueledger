@@ -16,7 +16,7 @@ import { getCroppedImg } from '@/lib/utils/image';
 import { Button } from '../ui/button';
 import AvatarPreviewPanel from './avatar-preview-panel';
 import { toast } from 'sonner';
-import { uploadAndSetUserImage } from '@/services/users/users';
+import { updateUserImage } from '@/services/users/users';
 
 type Props = {
   open: boolean;
@@ -51,6 +51,7 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
 
   const handleDrop = (files: File[]) => {
     const file = files[0];
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
@@ -58,12 +59,16 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
     };
   };
 
+  const closeModal = () => {
+    setImageSrc(null);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    onClose();
+  };
+
   const onOpenChange = (open: boolean) => {
     if (!open) {
-      setImageSrc(null);
-      setCrop({ x: 0, y: 0 });
-      setZoom(1);
-      onClose();
+      closeModal();
     }
   };
 
@@ -71,8 +76,8 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
     if (!croppedImage) return;
     setIsUploading(true);
     try {
-      await uploadAndSetUserImage(croppedImage);
-      onClose();
+      await updateUserImage(croppedImage);
+      closeModal();
       toast.success('Profile picture uploaded successfully');
     } catch (error) {
       console.error(error);
@@ -96,6 +101,7 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
                   'image/jpeg': ['.jpg', '.jpeg'],
                   'image/png': ['.png'],
                 }}
+                maxFileSize={1024 * 1024 * 4}
               />
             </div>
           </>

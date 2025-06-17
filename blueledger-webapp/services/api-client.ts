@@ -2,9 +2,6 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const apiClient = axios.create({
   baseURL: '/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 async function apiRequest<T>(request: Promise<AxiosResponse<T>>): Promise<T> {

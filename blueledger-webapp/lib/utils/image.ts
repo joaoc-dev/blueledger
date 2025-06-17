@@ -3,6 +3,7 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error('Failed to load image'));
+    img.crossOrigin = 'anonymous';
     img.src = src;
   });
 }

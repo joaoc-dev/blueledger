@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 import { FolderInput } from 'lucide-react';
 
 function getMimeLabels(accept: { [key: string]: string[] }): string {
@@ -32,12 +32,14 @@ type GenericDropzoneProps = {
   onDrop: (files: File[]) => void;
   accept?: { [key: string]: string[] }; // e.g. { 'image/*': [] }
   maxFiles?: number;
+  maxFileSize?: number;
 };
 
 export default function GenericDropzone({
   onDrop,
   accept = { 'image/*': [] },
   maxFiles = 1,
+  maxFileSize = 1024 * 1024 * 1,
 }: GenericDropzoneProps) {
   const [error, setError] = useState<string | null>(null);
 
@@ -51,15 +53,27 @@ export default function GenericDropzone({
     [onDrop]
   );
 
-  const handleDropRejected = useCallback(() => {
-    setError(`Only ${getMimeLabels(accept)} files are allowed.`);
-  }, [accept]);
+  const handleDropRejected = useCallback(
+    (fileRejections: FileRejection[]) => {
+      if (fileRejections.length > maxFiles) {
+        setError(`Maximum number of files: ${maxFiles}`);
+      } else if (fileRejections[0].errors[0].code === 'file-too-large') {
+        setError(`File size must be less than ${maxFileSize / 1024 / 1024}MB`);
+      } else if (fileRejections[0].errors[0].code === 'file-invalid-type') {
+        setError(`File must be a ${getMimeLabels(accept)}`);
+      } else {
+        setError('Unknown error');
+      }
+    },
+    [accept, maxFiles, maxFileSize]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleDrop,
+    onDropRejected: handleDropRejected,
     accept,
     maxFiles,
-    onDropRejected: handleDropRejected,
+    maxSize: maxFileSize,
   });
 
   return (

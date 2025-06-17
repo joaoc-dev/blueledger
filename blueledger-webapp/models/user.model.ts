@@ -5,6 +5,7 @@ interface IUser {
   name: string;
   email: string;
   image: string;
+  imagePublicId: string;
   bio: string;
   emailVerified: Date;
   createdAt: Date;
@@ -35,6 +36,10 @@ const UserSchema = new Schema<UserDocument>(
       ],
     },
     image: {
+      type: String,
+      required: false,
+    },
+    imagePublicId: {
       type: String,
       required: false,
     },
