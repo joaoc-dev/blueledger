@@ -15,7 +15,7 @@ const UserAvatar = React.forwardRef<HTMLDivElement, UserAvatarProps>(
 
     return (
       <Comp className={className} ref={ref} {...props}>
-        <AvatarImage src={user.image!} alt={user.name!} />
+        <AvatarImage src={user.image ?? ''} alt={user.name ?? 'User avatar'} />
         <AvatarFallback>
           <UserRound />
         </AvatarFallback>

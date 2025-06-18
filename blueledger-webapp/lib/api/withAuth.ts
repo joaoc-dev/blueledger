@@ -4,8 +4,7 @@ import { NextResponse } from 'next/server';
 
 type Handler<P = undefined> = (
   req: NextAuthRequest,
-  // eslint-disable-next-line
-  context: P extends undefined ? {} : { params: P }
+  context: P extends undefined ? Record<string, never> : { params: P }
 ) => Promise<NextResponse>;
 
 export function withAuth<P = undefined>(handler: Handler<P>) {
@@ -13,7 +12,10 @@ export function withAuth<P = undefined>(handler: Handler<P>) {
     if (!req.auth || !req.auth.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    // eslint-disable-next-line
-    return handler(req, context as P extends undefined ? {} : { params: P });
+
+    return handler(
+      req,
+      context as P extends undefined ? Record<string, never> : { params: P }
+    );
   });
 }

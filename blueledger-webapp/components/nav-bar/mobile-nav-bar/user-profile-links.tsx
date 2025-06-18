@@ -4,6 +4,7 @@ import Link from 'next/link';
 import React from 'react';
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
 import { User } from 'next-auth';
+import { signOut } from 'next-auth/react';
 
 interface UserProfileLinksProps {
   user: User;
@@ -73,12 +74,16 @@ const UserProfileLinks = ({
       <Separator />
       <li>
         <Link
-          onClick={onClose}
-          href={pathname}
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            signOut();
+            onClose();
+          }}
           className="flex items-center gap-2"
         >
           <LogOut className="size-4" />
-          <span>Logout</span>
+          <span>Log out</span>
         </Link>
       </li>
     </ul>

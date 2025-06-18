@@ -21,7 +21,7 @@ export async function getUserById(id: string): Promise<UserType | null> {
   return user ? transformUser(user) : null;
 }
 
-export async function updateUser(id: string, data: UserType) {
+export async function updateUser(id: string, data: Partial<UserType>) {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
 
   await dbConnect();
@@ -37,5 +37,5 @@ export async function removeImageFromUser(
   return await updateUser(userId, {
     image: '',
     imagePublicId: '',
-  } as UserType);
+  });
 }

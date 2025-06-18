@@ -34,7 +34,7 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
     debounce(async (imageSrc: string, croppedAreaPixels: Area) => {
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels);
       setCroppedImage(blob);
-    }, 250)
+    }, 100)
   );
 
   useEffect(() => {

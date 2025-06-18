@@ -21,7 +21,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.email = userData.email;
           token.image = userData.image;
           token.bio = userData.bio;
-          token.emailVerified = userData.emailVerified;
+          token.emailVerified = userData.emailVerified
+            ? userData.emailVerified.toISOString()
+            : null;
         }
       }
       return token;
@@ -34,7 +36,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: token.email as string,
         image: token.image as string,
         bio: token.bio as string,
-        emailVerified: token.emailVerified as Date | null,
+        emailVerified: token.emailVerified
+          ? new Date(token.emailVerified as string)
+          : null,
       };
       return session;
     },
