@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { ThemeToggle } from '../theme-toggle';
 import { DesktopNavUser } from './desktop-nav-user';
+import clsx from 'clsx';
 
 interface DesktopNavBarProps {
   links: { label: string; href: string }[];
@@ -76,9 +77,10 @@ const DesktopNavBar = ({ links, user }: DesktopNavBarProps) => {
             <li key={link.label}>
               <Link
                 ref={isActive ? activeLinkRef : null}
-                className={`nav__item hover:text-foreground ${
-                  isActive ? 'text-foreground' : 'text-muted-foreground'
-                }`}
+                className={clsx(
+                  'nav__item hover:text-foreground',
+                  isActive && 'text-foreground'
+                )}
                 href={link.href}
               >
                 {link.label}
