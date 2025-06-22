@@ -1,16 +1,20 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { HandCoins } from 'lucide-react';
-import { ThemeToggle } from './theme-toggle';
+import { User } from 'next-auth';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { ThemeToggle } from '../theme-toggle';
+import { DesktopNavUser } from './desktop-nav-user';
+import clsx from 'clsx';
 
 interface DesktopNavBarProps {
   links: { label: string; href: string }[];
+  user: User | undefined;
 }
 
-const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
+const DesktopNavBar = ({ links, user }: DesktopNavBarProps) => {
   const pathname = usePathname();
   const activeLinkRef = useRef<HTMLAnchorElement>(null);
   const navListRef = useRef<HTMLUListElement>(null);
@@ -43,6 +47,8 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
 
         setUnderlineW(linkWidth / navListWidth);
       }
+    } else {
+      setUnderlineW(0);
     }
   };
 
@@ -71,9 +77,10 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
             <li key={link.label}>
               <Link
                 ref={isActive ? activeLinkRef : null}
-                className={`nav__item hover:text-foreground ${
-                  isActive ? 'text-foreground' : 'text-muted-foreground'
-                }`}
+                className={clsx(
+                  'nav__item hover:text-foreground',
+                  isActive && 'text-foreground'
+                )}
                 href={link.href}
               >
                 {link.label}
@@ -82,7 +89,10 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
           );
         })}
       </ul>
-      <ThemeToggle />
+      <div className="flex items-center gap-2">
+        {user && <DesktopNavUser user={user} />}
+        <ThemeToggle />
+      </div>
     </nav>
   );
 };

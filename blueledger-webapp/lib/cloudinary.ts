@@ -1,0 +1,107 @@
+import { updateUser } from '@/lib/data/users';
+import { UserType } from '@/types/user';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const getSignature = async () => {
+  const timestamp = Math.floor(Date.now() / 1000);
+
+  const signature = cloudinary.utils.api_sign_request(
+    {
+      upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
+      timestamp,
+      filename_override: timestamp.toString(),
+    },
+    process.env.CLOUDINARY_API_SECRET!
+  );
+
+  return { signature, timestamp };
+};
+
+async function uploadImage(image: Blob): Promise<{
+  public_id: string;
+  secure_url: string;
+}> {
+  const arrayBuffer = await image.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  const { signature, timestamp } = await getSignature();
+
+  const uploadResult = await new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
+        signature,
+        timestamp,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        filename_override: timestamp.toString(),
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        return resolve(result);
+      }
+    );
+
+    uploadStream.end(buffer);
+  });
+
+  return uploadResult as {
+    public_id: string;
+    secure_url: string;
+  };
+}
+
+async function destroyImage(publicId: string) {
+  const destroyResult = await new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy(publicId, (error, result) => {
+      if (error) return reject(error);
+      return resolve(result);
+    });
+  });
+
+  return destroyResult;
+}
+
+async function handleImageUploadAndUserUpdate(
+  userId: string,
+  image: Blob
+): Promise<UserType> {
+  const uploadResult = await uploadImage(image);
+  const publicId = uploadResult.public_id;
+
+  const updatedUser = await updateUser(userId, {
+    image: uploadResult.secure_url,
+    imagePublicId: publicId,
+  } as UserType);
+
+  if (!updatedUser) {
+    await destroyImage(publicId);
+    throw new Error('User not found after image upload');
+  }
+
+  return updatedUser;
+}
+
+async function removePreviousImageIfExists(
+  publicId: string | null | undefined
+) {
+  if (!publicId) return;
+  try {
+    const result = await destroyImage(publicId);
+    console.log('Previous image destroyed:', result);
+  } catch (error) {
+    console.warn('Failed to destroy old image:', error);
+  }
+}
+
+export {
+  uploadImage,
+  destroyImage,
+  handleImageUploadAndUserUpdate,
+  removePreviousImageIfExists,
+};

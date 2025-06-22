@@ -1,9 +1,11 @@
-import dbConnect from '@/lib/db/client';
-import Expense from '@/models/expense.model';
+import { withAuth } from '@/lib/api/withAuth';
+import dbConnect from '@/lib/db/mongoose-client';
 import { createExpenseSchema } from '@/lib/validations/expense-schema';
-import { NextRequest, NextResponse } from 'next/server';
+import Expense from '@/models/expense.model';
+import { NextAuthRequest } from 'next-auth';
+import { NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async function POST(request: NextAuthRequest) {
   try {
     const body = await request.json();
     const validation = createExpenseSchema.safeParse(body);
@@ -36,4 +38,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});

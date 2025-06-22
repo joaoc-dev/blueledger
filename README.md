@@ -8,10 +8,15 @@ It gives users the possibility of managing their expenses with the help of analy
 - 🧩 Composable utility classes by Tailwind
 - 🎨 Customized Shadcn UI components
 - 🍃 MongoDB + 📦 Mongoose ODM
-- 🐰 AI Code Reviews by CodeRabbit
-- 🛰️ Performance monitoring and error tracking by Sentry
+- 🔒 Auth.js
+  - JWT Strategy
+  - GitHub OAuth
+  - MongoDB adapter
+- 🖼️ Image hosting via Cloudinary + 🧑 Custom avatar crop & upload widget
 - 📝 Form handling by React Hook Form
 - ✅ Schema Validations by Zod
+- 🐰 AI Code Reviews by CodeRabbit
+- 🛰️ Performance monitoring and error tracking by Sentry
 
 ## ai-service
 
