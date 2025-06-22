@@ -18,15 +18,23 @@ import { toast } from 'sonner';
 import { UserType } from '@/types/user';
 import { useUserProfileForm } from '@/hooks/use-user-profile-form';
 import { UserProfileFormData } from '@/lib/validations/user-schema';
+import { useSession } from 'next-auth/react';
 
 const UserProfileForm = ({ user }: { user: UserType }) => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useUserProfileForm(user);
+  const { update } = useSession();
 
   async function onSubmit(data: UserProfileFormData) {
     try {
       setIsLoading(true);
       await updateUser(data);
+      await update({
+        user: {
+          name: data.name!,
+          bio: data.bio!,
+        },
+      });
       toast.success('Profile updated successfully');
     } catch (error) {
       console.error(error);

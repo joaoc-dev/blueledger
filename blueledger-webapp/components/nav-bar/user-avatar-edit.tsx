@@ -14,6 +14,7 @@ import { useState } from 'react';
 import AvatarCropperModal from '../users/avatar-cropper-modal';
 import { updateUserImage } from '@/services/users/users';
 import { toast } from 'sonner';
+import { SessionProvider } from 'next-auth/react';
 
 export function UserAvatarEdit({ user }: { user: User }) {
   const [cropperOpen, setCropperOpen] = useState(false);
@@ -64,7 +65,9 @@ export function UserAvatarEdit({ user }: { user: User }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <AvatarCropperModal open={cropperOpen} onClose={handleModalClose} />
+      <SessionProvider>
+        <AvatarCropperModal open={cropperOpen} onClose={handleModalClose} />
+      </SessionProvider>
     </div>
   );
 }

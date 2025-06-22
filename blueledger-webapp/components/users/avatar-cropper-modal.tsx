@@ -17,6 +17,7 @@ import { Button } from '../ui/button';
 import AvatarPreviewPanel from './avatar-preview-panel';
 import { toast } from 'sonner';
 import { updateUserImage } from '@/services/users/users';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   open: boolean;
@@ -24,6 +25,7 @@ type Props = {
 };
 
 export default function AvatarCropperModal({ open, onClose }: Props) {
+  const { update } = useSession();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -76,7 +78,10 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
     if (!croppedImage) return;
     setIsUploading(true);
     try {
-      await updateUserImage(croppedImage);
+      const updatedUser = await updateUserImage(croppedImage);
+      await update({
+        user: { image: updatedUser.image! },
+      });
       closeModal();
       toast.success('Profile picture uploaded successfully');
     } catch (error) {

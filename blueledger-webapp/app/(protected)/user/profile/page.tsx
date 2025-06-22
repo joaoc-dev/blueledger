@@ -10,6 +10,7 @@ import { auth } from '@/lib/auth/auth';
 import { UserAvatarEdit } from '@/components/nav-bar/user-avatar-edit';
 import UserProfileForm from '@/components/users/user-profile-form';
 import { Separator } from '@/components/ui/separator';
+import { SessionProvider } from 'next-auth/react';
 
 const UserProfilePage = async () => {
   const session = await auth();
@@ -28,8 +29,9 @@ const UserProfilePage = async () => {
         <div className="hidden md:block mx-auto">
           <Separator orientation="vertical" />
         </div>
-
-        <UserProfileForm user={session!.user!} />
+        <SessionProvider>
+          <UserProfileForm user={session!.user!} />
+        </SessionProvider>
       </CardContent>
       <CardFooter></CardFooter>
     </Card>

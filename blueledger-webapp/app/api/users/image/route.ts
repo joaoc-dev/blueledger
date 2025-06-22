@@ -10,6 +10,7 @@ import { NextResponse } from 'next/server';
 
 export const POST = withAuth(async function POST(request: NextAuthRequest) {
   let publicId: string | null | undefined;
+  let imageUrl: string | null | undefined;
 
   try {
     const formData = await request.formData();
@@ -25,6 +26,7 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
     if (image) {
       const updatedUser = await handleImageUploadAndUserUpdate(userId!, image);
       publicId = updatedUser.imagePublicId;
+      imageUrl = updatedUser.image;
 
       await removePreviousImageIfExists(originalImagePublicId);
     } else {
@@ -35,10 +37,7 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
       await removePreviousImageIfExists(originalImagePublicId);
     }
 
-    return NextResponse.json(
-      { message: 'Image updated successfully' },
-      { status: 200 }
-    );
+    return NextResponse.json({ image: imageUrl }, { status: 200 });
   } catch (error) {
     console.error('Error updating user image', error);
 
