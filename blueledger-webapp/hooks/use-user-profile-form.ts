@@ -10,9 +10,9 @@ export const useUserProfileForm = (user?: UserType) => {
   const form = useForm<UserProfileFormData>({
     resolver: zodResolver(userProfileFormSchema),
     defaultValues: {
-      name: user?.name || undefined,
-      email: user?.email || undefined,
-      bio: user?.bio || undefined,
+      name: user?.name || '',
+      email: user?.email || '',
+      bio: user?.bio || '',
     },
   });
 

@@ -2,6 +2,7 @@
 
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
 
+import useUserStore from '@/app/(protected)/store';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,16 +12,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
-import UserAvatar from '../user-avatar';
 import Link from 'next/link';
+import UserAvatar from '../user-avatar';
 
-export function DesktopNavUser({ user }: { user: User }) {
+export function DesktopNavUser() {
+  const name = useUserStore((state) => state.name);
+  const email = useUserStore((state) => state.email);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <UserAvatar user={user} className="h-8 w-8" />
+        <UserAvatar className="h-8 w-8" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
@@ -30,10 +33,10 @@ export function DesktopNavUser({ user }: { user: User }) {
       >
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-            <UserAvatar user={user} />
+            <UserAvatar />
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{user.name}</span>
-              <span className="truncate text-xs">{user.email}</span>
+              <span className="truncate font-medium">{name}</span>
+              <span className="truncate text-xs">{email}</span>
             </div>
           </div>
         </DropdownMenuLabel>

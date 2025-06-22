@@ -9,16 +9,20 @@ import {
 import { Button } from '@/components/ui/button';
 import { Pencil } from 'lucide-react';
 import UserAvatar from './user-avatar';
-import { User } from 'next-auth';
 import { useState } from 'react';
 import AvatarCropperModal from '../users/avatar-cropper-modal';
 import { updateUserImage } from '@/services/users/users';
 import { toast } from 'sonner';
+import useUserStore from '@/app/(protected)/store';
 import { SessionProvider } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
-export function UserAvatarEdit({ user }: { user: User }) {
+export function UserAvatarEdit() {
   const [cropperOpen, setCropperOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const setImage = useUserStore((state) => state.setImage);
+  const { update } = useSession();
 
   const handleModalClose = () => {
     setCropperOpen(false);
@@ -33,16 +37,23 @@ export function UserAvatarEdit({ user }: { user: User }) {
   const handleRemove = async () => {
     try {
       await updateUserImage(null);
+      setImage(undefined);
+      await update({
+        user: {
+          image: '',
+        },
+      });
+
       toast.success('Profile picture removed successfully');
     } catch (error) {
-      console.error(error);
+      console.error('Error removing image:', error);
       toast.error('Failed to remove profile picture');
     }
   };
 
   return (
     <div className="relative inline-block w-fit h-fit">
-      <UserAvatar user={user} className="h-32 w-32" />
+      <UserAvatar className="h-32 w-32" />
 
       <div className="absolute bottom-[-15px] right-[-10px]">
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>

@@ -2,22 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { User } from 'next-auth';
 import UserProfileLinks from './user-profile-links';
 
 interface MobileNavMenuProps {
   links: { label: string; href: string }[];
   isOpen: boolean;
   onClose: () => void;
-  user: User | undefined;
 }
 
-const MobileNavMenu = ({
-  links,
-  isOpen,
-  onClose,
-  user,
-}: MobileNavMenuProps) => {
+const MobileNavMenu = ({ links, isOpen, onClose }: MobileNavMenuProps) => {
   const pathname = usePathname();
 
   return (
@@ -47,9 +40,7 @@ const MobileNavMenu = ({
           );
         })}
 
-        {user && (
-          <UserProfileLinks user={user} onClose={onClose} pathname={pathname} />
-        )}
+        <UserProfileLinks onClose={onClose} pathname={pathname} />
       </ul>
       {isOpen && (
         <div

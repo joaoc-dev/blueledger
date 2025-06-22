@@ -1,31 +1,31 @@
+'use client';
+
 import { Separator } from '@/components/ui/separator';
 import UserAvatar from '@/components/nav-bar/user-avatar';
 import Link from 'next/link';
 import React from 'react';
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
-import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
+import useUserStore from '@/app/(protected)/store';
 
 interface UserProfileLinksProps {
-  user: User;
   onClose: () => void;
   pathname: string;
 }
 
-const UserProfileLinks = ({
-  user,
-  onClose,
-  pathname,
-}: UserProfileLinksProps) => {
+const UserProfileLinks = ({ onClose, pathname }: UserProfileLinksProps) => {
+  const name = useUserStore((state) => state.name);
+  const email = useUserStore((state) => state.email);
+
   return (
     <ul className="flex flex-col gap-4">
       <Separator className="" />
       <li className="px-6">
         <div className="flex items-center gap-3 text-left text-sm">
-          <UserAvatar user={user} />
+          <UserAvatar />
           <div className="flex flex-col text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{user.name}</span>
-            <span className="truncate text-xs">{user.email}</span>
+            <span className="truncate font-semibold">{name}</span>
+            <span className="truncate text-xs">{email}</span>
           </div>
         </div>
       </li>
