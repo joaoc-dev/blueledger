@@ -26,11 +26,11 @@ interface ExpenseFormProps {
 }
 
 const ExpenseForm = ({ expense }: ExpenseFormProps) => {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useExpenseForm(expense);
+  const router = useRouter();
 
-  const onSubmit = async (data: ExpenseFormData) => {
+  const handleSubmit = async (data: ExpenseFormData) => {
     try {
       setIsSubmitting(true);
       if (expense?.id) {
@@ -41,7 +41,7 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
         toast.success('Successfully created expense');
       }
 
-      router.push('/expenses');
+      router.back();
     } catch (error) {
       setIsSubmitting(false);
       toast.error('Failed to create expense');
@@ -53,7 +53,7 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
     <Form {...form}>
       <form
         className="space-y-4 max-w-sm mx-auto"
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleSubmit)}
       >
         <FormField
           control={form.control}
