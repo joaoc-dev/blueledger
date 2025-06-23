@@ -13,6 +13,7 @@ It gives users the possibility of managing their expenses with the help of analy
   - GitHub OAuth
   - MongoDB adapter
 - 🖼️ Image hosting via Cloudinary + 🧑 Custom avatar crop & upload widget
+- 🐻 Seamless user profile updates by Zustand
 - 📝 Form handling by React Hook Form
 - ✅ Schema Validations by Zod
 - 🐰 AI Code Reviews by CodeRabbit

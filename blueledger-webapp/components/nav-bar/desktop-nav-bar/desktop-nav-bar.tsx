@@ -1,20 +1,18 @@
 'use client';
 
+import clsx from 'clsx';
 import { HandCoins } from 'lucide-react';
-import { User } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { ThemeToggle } from '../theme-toggle';
 import { DesktopNavUser } from './desktop-nav-user';
-import clsx from 'clsx';
 
 interface DesktopNavBarProps {
   links: { label: string; href: string }[];
-  user: User | undefined;
 }
 
-const DesktopNavBar = ({ links, user }: DesktopNavBarProps) => {
+const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
   const pathname = usePathname();
   const activeLinkRef = useRef<HTMLAnchorElement>(null);
   const navListRef = useRef<HTMLUListElement>(null);
@@ -90,7 +88,7 @@ const DesktopNavBar = ({ links, user }: DesktopNavBarProps) => {
         })}
       </ul>
       <div className="flex items-center gap-2">
-        {user && <DesktopNavUser user={user} />}
+        <DesktopNavUser />
         <ThemeToggle />
       </div>
     </nav>

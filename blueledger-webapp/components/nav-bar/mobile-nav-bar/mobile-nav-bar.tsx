@@ -6,14 +6,12 @@ import { HandCoins } from 'lucide-react';
 import { ThemeToggle } from '../theme-toggle';
 import HamburgerButton from './hamburger-button';
 import MobileNavMenu from './mobile-nav-menu';
-import { User } from 'next-auth';
 
 interface MobileNavBarProps {
   links: { label: string; href: string }[];
-  user: User | undefined;
 }
 
-const MobileNavBar = ({ links, user }: MobileNavBarProps) => {
+const MobileNavBar = ({ links }: MobileNavBarProps) => {
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
 
   const handleClick = () => {
@@ -35,7 +33,6 @@ const MobileNavBar = ({ links, user }: MobileNavBarProps) => {
         links={links}
         isOpen={isNavMenuOpen}
         onClose={handleClick}
-        user={user}
       />
     </>
   );

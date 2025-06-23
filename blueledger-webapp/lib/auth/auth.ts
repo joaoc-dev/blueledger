@@ -11,7 +11,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         const userData = await getUserById(user.id!);
 
@@ -25,6 +25,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             ? userData.emailVerified.toISOString()
             : null;
         }
+      }
+      // update the token with the updated user data
+      if (trigger === 'update') {
+        const updatedUser = session.user;
+        if ('image' in updatedUser) token.image = updatedUser.image;
+        if ('name' in updatedUser) token.name = updatedUser.name;
+        if ('bio' in updatedUser) token.bio = updatedUser.bio;
       }
       return token;
     },

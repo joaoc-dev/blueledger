@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Form,
   FormControl,
@@ -18,18 +18,56 @@ import { toast } from 'sonner';
 import { UserType } from '@/types/user';
 import { useUserProfileForm } from '@/hooks/use-user-profile-form';
 import { UserProfileFormData } from '@/lib/validations/user-schema';
+import useUserStore from '@/app/(protected)/store';
+import { useSession } from 'next-auth/react';
 
-const UserProfileForm = ({ user }: { user: UserType }) => {
+const UserProfileForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const name = useUserStore((state) => state.name);
+  const setName = useUserStore((state) => state.setName);
+  const email = useUserStore((state) => state.email);
+  const bio = useUserStore((state) => state.bio);
+  const setBio = useUserStore((state) => state.setBio);
+
+  const user = {
+    name,
+    email,
+    bio,
+  } as UserType;
+
   const form = useUserProfileForm(user);
+  const { update } = useSession();
+
+  // Reset form when store values change (e.g., after page refresh)
+  useEffect(() => {
+    if (name || email || bio) {
+      form.reset({
+        name: name || '',
+        email: email || '',
+        bio: bio || '',
+      });
+    }
+  }, [name, email, bio, form]);
 
   async function onSubmit(data: UserProfileFormData) {
     try {
       setIsLoading(true);
       await updateUser(data);
+
+      setName(data.name!);
+      setBio(data.bio!);
+
+      await update({
+        user: {
+          name: data.name!,
+          bio: data.bio!,
+        },
+      });
       toast.success('Profile updated successfully');
     } catch (error) {
       console.error(error);
+      toast.error('Failed to update profile');
     } finally {
       setIsLoading(false);
     }
