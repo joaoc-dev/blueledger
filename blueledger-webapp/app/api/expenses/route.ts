@@ -4,6 +4,7 @@ import { createExpenseSchema } from '@/lib/validations/expense-schema';
 import Expense from '@/models/expense.model';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
+import { getExpenses } from '@/lib/data/expenses';
 
 export const POST = withAuth(async function POST(request: NextAuthRequest) {
   try {
@@ -33,6 +34,20 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
     console.log('Error creating expense', error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
+});
+
+export const GET = withAuth(async function GET(request: NextAuthRequest) {
+  try {
+    await dbConnect();
+    const expenses = await getExpenses();
+    return NextResponse.json(expenses);
+  } catch (error) {
+    console.log('Error getting expenses', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

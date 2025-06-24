@@ -11,31 +11,49 @@ import {
 import ExpenseRowActions from './expense-row-actions';
 import { ExpenseType } from '@/types/expense';
 import { toast } from 'sonner';
-import { deleteExpense } from '@/services/expenses';
+import { deleteExpense, getExpenses } from '@/services/expenses';
 import { useState } from 'react';
 import { CATEGORY_ICONS, ExpenseCategory } from '@/constants/expense-category';
 import { CircleEllipsis } from 'lucide-react';
 import { formatLocalizedDate } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
 
-interface ExpensesTableProps {
-  expenses: ExpenseType[];
-}
+// interface ExpensesTableProps {
+//   expenses: ExpenseType[];
+// }
 
-const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
-  const [localExpenses, setLocalExpenses] = useState(expenses);
+const ClientGetExpenses = async () => {
+  console.log('ClientGetExpenses');
+
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  const expenses = await getExpenses();
+  console.log('ClientGetExpenses', expenses);
+  return expenses;
+};
+
+const ExpensesTable = () => {
+  // const [localExpenses, setLocalExpenses] = useState(expenses);
+  const {
+    data: expenses,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: ['expenses'],
+    queryFn: ClientGetExpenses,
+  });
 
   const handleDelete = async (id: string) => {
-    const originalExpenses = [...localExpenses];
-    try {
-      setLocalExpenses(localExpenses.filter((expense) => expense.id !== id));
-      await deleteExpense(id);
-
-      toast.success('Expense deleted successfully');
-    } catch (error) {
-      setLocalExpenses(originalExpenses);
-      console.error(error);
-      toast.error('Failed to delete expense');
-    }
+    // const originalExpenses = [...localExpenses];
+    // try {
+    //   setLocalExpenses(localExpenses.filter((expense) => expense.id !== id));
+    //   await deleteExpense(id);
+    //   toast.success('Expense deleted successfully');
+    // } catch (error) {
+    //   setLocalExpenses(originalExpenses);
+    //   console.error(error);
+    //   toast.error('Failed to delete expense');
+    // }
   };
 
   return (
@@ -53,7 +71,7 @@ const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {localExpenses.map((expense) => {
+        {expenses?.map((expense) => {
           const Icon =
             expense.category && expense.category in CATEGORY_ICONS
               ? CATEGORY_ICONS[expense.category as ExpenseCategory]
