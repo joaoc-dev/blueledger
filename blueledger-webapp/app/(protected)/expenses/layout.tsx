@@ -3,7 +3,6 @@ const ExpensesLayout = ({
   modal,
 }: {
   children: React.ReactNode;
-  throwaway: React.ReactNode;
   modal: React.ReactNode;
 }) => {
   return (

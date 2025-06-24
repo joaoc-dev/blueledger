@@ -9,6 +9,7 @@ import { getExpenses } from '@/lib/data/expenses';
 const ServerGetExpenses = async () => {
   console.log('ServerGetExpenses');
 
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   return getExpenses().then((expenses) => {
     console.log('ServerGetExpenses', expenses);
     return expenses;

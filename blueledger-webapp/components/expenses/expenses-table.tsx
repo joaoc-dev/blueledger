@@ -9,14 +9,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import ExpenseRowActions from './expense-row-actions';
-import { ExpenseType } from '@/types/expense';
-import { toast } from 'sonner';
-import { deleteExpense, getExpenses } from '@/services/expenses';
-import { useState } from 'react';
+// import { ExpenseType } from '@/types/expense';
+// import { toast } from 'sonner';
+// import { deleteExpense, getExpenses } from '@/services/expenses';
+// import { useState } from 'react';
+import { getExpenses } from '@/services/expenses';
 import { CATEGORY_ICONS, ExpenseCategory } from '@/constants/expense-category';
 import { CircleEllipsis } from 'lucide-react';
 import { formatLocalizedDate } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
+import { Button } from '../ui/button';
+import { getQueryClient } from '@/lib/react-query/get-query-client';
 
 // interface ExpensesTableProps {
 //   expenses: ExpenseType[];
@@ -34,10 +37,14 @@ const ClientGetExpenses = async () => {
 
 const ExpensesTable = () => {
   // const [localExpenses, setLocalExpenses] = useState(expenses);
+  const queryClient = getQueryClient();
+
   const {
     data: expenses,
     isLoading,
     isFetching,
+    isError,
+    error,
   } = useQuery({
     queryKey: ['expenses'],
     queryFn: ClientGetExpenses,
@@ -55,6 +62,22 @@ const ExpensesTable = () => {
     //   toast.error('Failed to delete expense');
     // }
   };
+
+  if (isError) {
+    return (
+      <div className="flex flex-col gap-4 w-[500px] mx-auto items-center justify-center h-[500px]">
+        Error: {error.message}
+        <Button
+          disabled={isFetching}
+          onClick={() =>
+            queryClient.invalidateQueries({ queryKey: ['expenses'] })
+          }
+        >
+          Retry
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <Table>
@@ -77,8 +100,13 @@ const ExpensesTable = () => {
               ? CATEGORY_ICONS[expense.category as ExpenseCategory]
               : CircleEllipsis;
 
+          const isNewExpense = !expense.id;
+
           return (
-            <TableRow key={expense.id}>
+            <TableRow
+              key={isNewExpense ? Date.now().toString() : expense.id}
+              className={isNewExpense ? 'opacity-50' : ''}
+            >
               <TableCell>{expense.description as string}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
@@ -101,6 +129,7 @@ const ExpensesTable = () => {
               <ExpenseRowActions
                 id={expense.id}
                 onDelete={() => handleDelete(expense.id)}
+                disabled={isNewExpense}
               />
             </TableRow>
           );

@@ -12,6 +12,8 @@ It gives users the possibility of managing their expenses with the help of analy
   - JWT Strategy
   - GitHub OAuth
   - MongoDB adapter
+- 🧊 Modals with Parallel + Intercepting Routes
+- 🔄 Reactive data layer by React Query
 - 🖼️ Image hosting via Cloudinary + 🧑 Custom avatar crop & upload widget
 - 🐻 Seamless user profile updates by Zustand
 - 📝 Form handling by React Hook Form
