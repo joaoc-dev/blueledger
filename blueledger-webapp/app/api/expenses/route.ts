@@ -1,10 +1,9 @@
 import { withAuth } from '@/lib/api/withAuth';
 import dbConnect from '@/lib/db/mongoose-client';
 import { createExpenseSchema } from '@/lib/validations/expense-schema';
-import Expense from '@/models/expense.model';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { getExpenses } from '@/lib/data/expenses';
+import { createExpense, getExpenses } from '@/lib/data/expenses';
 
 export const POST = withAuth(async function POST(request: NextAuthRequest) {
   try {
@@ -22,7 +21,8 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
 
     const { description, price, quantity, category, date } = validation.data;
     const totalPrice = price * quantity;
-    const expense = await Expense.create({
+
+    const expense = await createExpense({
       description,
       price,
       quantity,

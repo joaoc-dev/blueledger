@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { DateTimePicker } from '../shared/date-time-picker';
 import { ExpenseCategorySelect } from './expense-category-select';
+import { useAddExpense } from '@/hooks/use-add-expense';
 
 interface ExpenseFormProps {
   expense?: ExpenseType;
@@ -29,6 +30,15 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useExpenseForm(expense);
   const router = useRouter();
+  const addExpense = useAddExpense();
+
+  const handleCreateExpense = async (data: ExpenseFormData) => {
+    await addExpense.mutateAsync(data as ExpenseType);
+  };
+
+  // const handleUpdateExpense = async (data: ExpenseFormData) => {
+  //   await mutation.mutateAsync(data);
+  // };
 
   const handleSubmit = async (data: ExpenseFormData) => {
     try {
@@ -37,7 +47,8 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
         await updateExpense(expense.id, data);
         toast.success('Successfully updated expense');
       } else {
-        await createExpense(data);
+        // await createExpense(data);
+        handleCreateExpense(data);
         toast.success('Successfully created expense');
       }
 

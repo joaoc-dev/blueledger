@@ -28,3 +28,13 @@ export async function getExpenseById(id: string): Promise<ExpenseType | null> {
 
   return expense ? transformExpense(expense) : null;
 }
+
+export async function createExpense(
+  expense: Partial<ExpenseType>
+): Promise<ExpenseType> {
+  await dbConnect();
+
+  const newExpense = await Expense.create(expense);
+
+  return transformExpense(newExpense);
+}

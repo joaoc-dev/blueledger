@@ -20,6 +20,7 @@ import { formatLocalizedDate } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '../ui/button';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
+import clsx from 'clsx';
 
 // interface ExpensesTableProps {
 //   expenses: ExpenseType[];
@@ -100,12 +101,13 @@ const ExpensesTable = () => {
               ? CATEGORY_ICONS[expense.category as ExpenseCategory]
               : CircleEllipsis;
 
-          const isNewExpense = !expense.id;
+          const isNewExpense = !!expense.optimisticId;
 
+          console.log('expense', expense);
           return (
             <TableRow
-              key={isNewExpense ? Date.now().toString() : expense.id}
-              className={isNewExpense ? 'opacity-50' : ''}
+              key={expense.id || expense.optimisticId}
+              className={clsx(isNewExpense && 'bg-foreground/10 animate-pulse')}
             >
               <TableCell>{expense.description as string}</TableCell>
               <TableCell>
