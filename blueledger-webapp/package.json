@@ -43,6 +43,7 @@
     "react-dropzone": "^14.3.8",
     "react-easy-crop": "^5.4.2",
     "react-hook-form": "^7.56.3",
+    "react-loading-skeleton": "^3.5.0",
     "require-in-the-middle": "^7.5.2",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.3.1",
