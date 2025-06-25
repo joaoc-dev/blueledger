@@ -59,9 +59,11 @@ export function DesktopNavUser() {
             <CreditCard />
             Billing(soon)
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Bell />
-            Notifications(soon)
+          <DropdownMenuItem asChild>
+            <Link href="/user/notifications">
+              <Bell />
+              Notifications
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

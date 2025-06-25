@@ -64,11 +64,11 @@ const UserProfileLinks = ({ onClose, pathname }: UserProfileLinksProps) => {
       <li className="flex flex-col gap-3">
         <Link
           onClick={onClose}
-          href={pathname}
+          href="/user/notifications"
           className=" flex items-center gap-2"
         >
           <Bell className="size-4" />
-          <span>Notifications (soon)</span>
+          <span>Notifications</span>
         </Link>
       </li>
       <Separator />
