@@ -101,6 +101,9 @@ importers:
       pusher:
         specifier: ^5.2.0
         version: 5.2.0
+      pusher-js:
+        specifier: ^8.4.0
+        version: 8.4.0
       react:
         specifier: ^19.0.0
         version: 19.1.0
@@ -3168,6 +3171,9 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  pusher-js@8.4.0:
+    resolution: {integrity: sha512-wp3HqIIUc1GRyu1XrP6m2dgyE9MoCsXVsWNlohj0rjSkLf+a0jLvEyVubdg58oMk7bhjBWnFClgp8jfAa6Ak4Q==}
 
   pusher@5.2.0:
     resolution: {integrity: sha512-F6LNiZyJsIkoHLz+YurjKZ1HH8V1/cMggn4k97kihjP3uTvm0P4mZzSFeHOWIy+PlJ2VInJBhUFJBYLsFR5cjg==}
@@ -6916,6 +6922,10 @@ snapshots:
   proxy-from-env@1.1.0: {}
 
   punycode@2.3.1: {}
+
+  pusher-js@8.4.0:
+    dependencies:
+      tweetnacl: 1.0.3
 
   pusher@5.2.0:
     dependencies:
