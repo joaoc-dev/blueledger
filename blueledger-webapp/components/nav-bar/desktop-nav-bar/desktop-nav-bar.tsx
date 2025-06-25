@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { ThemeToggle } from '../theme-toggle';
 import { DesktopNavUser } from './desktop-nav-user';
+import NotificationBell from '../notification-bell';
 
 interface DesktopNavBarProps {
   links: { label: string; href: string }[];
@@ -88,8 +89,15 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
         })}
       </ul>
       <div className="flex items-center gap-2">
-        <DesktopNavUser />
-        <ThemeToggle />
+        <div className="border-2 border-red-500">
+          <NotificationBell />
+        </div>
+        <div className="border-2 border-blue-500">
+          <DesktopNavUser />
+        </div>
+        <div className="border-2 border-green-500">
+          <ThemeToggle />
+        </div>
       </div>
     </nav>
   );

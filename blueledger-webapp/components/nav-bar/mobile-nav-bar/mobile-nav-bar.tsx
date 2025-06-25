@@ -6,6 +6,7 @@ import { HandCoins } from 'lucide-react';
 import { ThemeToggle } from '../theme-toggle';
 import HamburgerButton from './hamburger-button';
 import MobileNavMenu from './mobile-nav-menu';
+import NotificationBell from '../notification-bell';
 
 interface MobileNavBarProps {
   links: { label: string; href: string }[];
@@ -27,7 +28,10 @@ const MobileNavBar = ({ links }: MobileNavBarProps) => {
           <HandCoins />
         </Link>
 
-        <ThemeToggle />
+        <div className="flex items-center gap-4">
+          <NotificationBell />
+          <ThemeToggle />
+        </div>
       </nav>
       <MobileNavMenu
         links={links}
