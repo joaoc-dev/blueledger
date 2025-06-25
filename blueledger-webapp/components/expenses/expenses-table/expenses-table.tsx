@@ -1,20 +1,15 @@
 'use client';
 
-import ExpenseRowActions from './expense-row-actions';
 // import { ExpenseType } from '@/types/expense';
 // import { toast } from 'sonner';
 // import { deleteExpense, getExpenses } from '@/services/expenses';
 // import { useState } from 'react';
 import { getExpenses } from '@/services/expenses';
-import { CATEGORY_ICONS, ExpenseCategory } from '@/constants/expense-category';
-import { CircleEllipsis } from 'lucide-react';
-import { formatLocalizedDate } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '../../ui/button';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { DataTable } from '../../shared/data-table/data-table';
-import { ColumnDef } from '@tanstack/react-table';
-import { ExpenseType } from '@/types/expense';
+import { columns } from './columns';
 
 const ClientGetExpenses = async () => {
   await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -36,86 +31,6 @@ const handleDelete = async (id: string) => {
   //   toast.error('Failed to delete expense');
   // }
 };
-
-const columns: ColumnDef<ExpenseType>[] = [
-  {
-    accessorKey: 'description',
-    header: 'Description',
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'category',
-    header: 'Category',
-    cell: ({ row }) => {
-      const category = row.original.category;
-      const Icon =
-        category && category in CATEGORY_ICONS
-          ? CATEGORY_ICONS[category as ExpenseCategory]
-          : CircleEllipsis;
-
-      return (
-        <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4" />
-          {category ? category : 'Other'}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'date',
-    header: 'Date',
-    cell: ({ row }) => {
-      const date = row.original.date;
-      return <div>{date ? formatLocalizedDate(date) : ''}</div>;
-    },
-  },
-  {
-    accessorKey: 'quantity',
-    header: 'Quantity',
-  },
-
-  {
-    accessorKey: 'price',
-    header: 'Price',
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('price'));
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'EUR',
-      }).format(amount);
-      return <div>{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: 'totalPrice',
-    header: 'Total Price',
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('totalPrice'));
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'EUR',
-      }).format(amount);
-      return <div>{formatted}</div>;
-    },
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => {
-      const expense = row.original;
-
-      return (
-        <div className="flex justify-end">
-          <ExpenseRowActions
-            id={expense.id}
-            onDelete={() => handleDelete(expense.id)}
-            disabled={!!expense.optimisticId}
-          />
-        </div>
-      );
-    },
-    enableHiding: false,
-  },
-];
 
 const ExpensesTable = () => {
   const queryClient = getQueryClient();
@@ -148,11 +63,7 @@ const ExpensesTable = () => {
   }
 
   return (
-    <DataTable
-      storageKey="expenses.visibleColumns"
-      columns={columns}
-      data={expenses || []}
-    />
+    <DataTable storageKey="expenses" columns={columns} data={expenses || []} />
   );
 };
 
