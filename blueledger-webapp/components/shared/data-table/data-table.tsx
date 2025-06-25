@@ -2,9 +2,11 @@
 
 import {
   ColumnDef,
+  SortingState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 
@@ -35,15 +37,23 @@ export function DataTable<TData, TValue>({
     Record<string, boolean>
   >(storageKey, {});
 
+  const [sorting, setSorting] = useLocalStorage<SortingState>(
+    `${storageKey}.sorting`,
+    []
+  );
+
   const table = useReactTable({
     data,
     columns,
     state: {
       columnVisibility,
+      sorting,
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
