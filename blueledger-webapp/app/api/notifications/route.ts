@@ -13,7 +13,7 @@ export async function POST() {
   // });
 
   const notification = {
-    userId: '123',
+    userId: 'user-123',
     message: 'You triggered a notification!',
   };
 
