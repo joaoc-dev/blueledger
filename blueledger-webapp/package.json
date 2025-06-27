@@ -36,6 +36,7 @@
     "lucide-react": "^0.510.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.14.3",
+    "motion": "^12.19.2",
     "next": "15.3.2",
     "next-auth": "^5.0.0-beta.28",
     "next-cloudinary": "^6.16.0",
