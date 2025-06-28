@@ -2,8 +2,9 @@ import { NotificationWithUser } from '@/lib/data/notifications.mock';
 import { ScrollArea } from '@/components/custom/scroll-area';
 import { AnimatePresence, motion } from 'motion/react';
 import { NotificationItem } from './notification-item';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
-export const NotificationList = ({
+export const NotificationListAnimated = ({
   notificationsList,
   setNotificationRead,
 }: {
@@ -17,17 +18,19 @@ export const NotificationList = ({
           {notificationsList.map((n) => {
             return (
               <motion.div
+                layout
                 key={n.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.5 }}
               >
-                <NotificationItem
-                  key={n.id}
-                  notification={n}
-                  setNotificationRead={setNotificationRead}
-                />
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  <NotificationItem
+                    notification={n}
+                    setNotificationRead={setNotificationRead}
+                  />
+                </DropdownMenuItem>
               </motion.div>
             );
           })}

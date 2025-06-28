@@ -21,7 +21,7 @@ export const NotificationMessage = ({
     case NotificationTypes.ADDED_TO_EXPENSE:
       return (
         <div className="flex items-center gap-2 text-sm text-gray-500">
-          <span>Added you to an new</span>
+          <span>Added you to a new</span>
           <Badge className="bg-amber-400 text-foreground">expense</Badge>
         </div>
       );

@@ -13,13 +13,13 @@ export const NotificationItem = ({
 }) => {
   return (
     <div>
-      <div className="grid grid-cols-[auto_1fr] gap-2 px-2">
+      <div className="grid grid-cols-[auto_1fr] gap-2 px-2 py-1">
         <img
           src={notification.userImage}
           alt={notification.userName}
           className="w-12 h-12 rounded-full"
         />
-        <div className="flex flex-col gap-2 px-2">
+        <div className="flex flex-col gap-3 px-2">
           <div className="flex flex-col">
             <div className="flex flex-col gap-1">
               <p className="text-sm font-semibold">{notification.userName}</p>
@@ -32,7 +32,7 @@ export const NotificationItem = ({
             setNotificationRead={setNotificationRead}
           />
           <div className="flex items-center gap-1 text-xs text-gray-500">
-            <Clock />
+            <Clock className="w-4 h-4" />
             {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
           </div>
         </div>

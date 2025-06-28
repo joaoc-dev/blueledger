@@ -5,12 +5,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { ListFilter } from 'lucide-react';
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { NotificationList } from './notification-list';
+import { NotificationListVirtualized } from './notification-list-virtualized';
 import {
   getNotifications,
   NotificationWithUser,
 } from '@/lib/data/notifications.mock';
 import { useEffect, useState } from 'react';
+import { NotificationListAnimated } from './notification-list-animated';
 
 export default function NotificationBellDropdownContent() {
   const [notificationsList, setNotificationsList] = useState<
@@ -67,7 +68,14 @@ export default function NotificationBellDropdownContent() {
         />
       </div>
       <DropdownMenuSeparator /> */}
-      <NotificationList
+      {/* <NotificationListVirtualized
+        notificationsList={notificationsList
+          .filter((notif) => !notif.isRead)
+          .map((notification) => notification)}
+        setNotificationRead={setNotificationRead}
+      /> */}
+
+      <NotificationListAnimated
         notificationsList={notificationsList
           .filter((notif) => !notif.isRead)
           .map((notification) => notification)}
