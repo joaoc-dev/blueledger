@@ -16,7 +16,7 @@ const MobileNavMenu = ({ links, isOpen, onClose }: MobileNavMenuProps) => {
   return (
     <>
       <ul
-        className={`nav__list--mobile ${
+        className={`nav__sheet nav__sheet--links ${
           isOpen ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
