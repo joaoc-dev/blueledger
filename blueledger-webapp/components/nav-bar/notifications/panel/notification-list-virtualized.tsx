@@ -17,20 +17,13 @@ export const NotificationListVirtualized = ({
   const rowVirtualizer = useVirtualizer({
     count: notificationsList.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 130, // avg row height (px)
+    estimateSize: () => 100, // avg row height (px)
     overscan: 5,
   });
 
-  console.log(
-    'virtual items ->',
-    rowVirtualizer.getVirtualItems().length,
-    ' / total -> ',
-    notificationsList.length
-  );
-
   return (
     <div>
-      <ScrollArea className="h-96 w-full" ref={parentRef}>
+      <ScrollArea className="notifications__scroll-area" ref={parentRef}>
         <div
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
@@ -51,16 +44,11 @@ export const NotificationListVirtualized = ({
                   transform: `translateY(${virtualItem.start}px)`,
                 }}
               >
-                <DropdownMenuItem
+                <NotificationItem
                   key={n.id}
-                  onSelect={(e) => e.preventDefault()}
-                >
-                  <NotificationItem
-                    key={n.id}
-                    notification={n}
-                    setNotificationRead={setNotificationRead}
-                  />
-                </DropdownMenuItem>
+                  notification={n}
+                  setNotificationRead={setNotificationRead}
+                />
               </div>
             );
           })}

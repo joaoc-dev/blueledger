@@ -13,7 +13,7 @@ export const NotificationItem = ({
 }) => {
   return (
     <div>
-      <div className="grid grid-cols-[auto_1fr] gap-2 px-2 py-1">
+      <div className="grid grid-cols-[auto_1fr] gap-2 px-2 py-1 h-25">
         <img
           src={notification.userImage}
           alt={notification.userName}
@@ -27,13 +27,16 @@ export const NotificationItem = ({
               <NotificationMessage notification={notification} />
             </div>
           </div>
-          <NotificationActions
-            notification={notification}
-            setNotificationRead={setNotificationRead}
-          />
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <Clock className="w-4 h-4" />
-            {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
+
+          <div className="flex items-center gap-1 justify-between h-6">
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <Clock className="w-4 h-4" />
+              {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
+            </div>
+            <NotificationActions
+              notification={notification}
+              setNotificationRead={setNotificationRead}
+            />
           </div>
         </div>
       </div>

@@ -1,13 +1,13 @@
 'use client';
 
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 import { HandCoins } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { ThemeToggle } from '../theme-toggle';
 import { DesktopNavUser } from './desktop-nav-user';
-import NotificationBell from '../notifications/notification-bell';
+import DesktopNotificationBell from '../notifications/desktop-notification-bell';
 
 interface DesktopNavBarProps {
   links: { label: string; href: string }[];
@@ -76,7 +76,7 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
             <li key={link.label}>
               <Link
                 ref={isActive ? activeLinkRef : null}
-                className={clsx(
+                className={cn(
                   'nav__item hover:text-foreground',
                   isActive && 'text-foreground'
                 )}
@@ -89,7 +89,7 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
         })}
       </ul>
       <div className="flex items-center gap-2">
-        <NotificationBell />
+        <DesktopNotificationBell />
         <DesktopNavUser />
         <ThemeToggle />
       </div>

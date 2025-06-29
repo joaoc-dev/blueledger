@@ -15,7 +15,7 @@ export default function DesktopNotificationBell() {
         <NotificationBellIcon />
       </PopoverTrigger>
       <PopoverContent
-        className="w-(--radix-dropdown-menu-trigger-width) min-w-86 px-3 py-2"
+        className="w-(--radix-dropdown-menu-trigger-width) h-120 min-w-86 px-3 py-2"
         side="bottom"
         align="end"
         sideOffset={8}

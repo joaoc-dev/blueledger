@@ -13,7 +13,7 @@ export const NotificationListAnimated = ({
 }) => {
   return (
     <div>
-      <ScrollArea className="h-96 w-full">
+      <ScrollArea className="notifications__scroll-area">
         <AnimatePresence>
           {notificationsList.map((n) => {
             return (
@@ -25,12 +25,10 @@ export const NotificationListAnimated = ({
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <NotificationItem
-                    notification={n}
-                    setNotificationRead={setNotificationRead}
-                  />
-                </DropdownMenuItem>
+                <NotificationItem
+                  notification={n}
+                  setNotificationRead={setNotificationRead}
+                />
               </motion.div>
             );
           })}
