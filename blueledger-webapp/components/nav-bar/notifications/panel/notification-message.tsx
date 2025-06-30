@@ -1,13 +1,11 @@
 import { Badge } from '@/components/ui/badge';
-import {
-  NotificationTypes,
-  NotificationWithUser,
-} from '@/lib/data/notifications.mock';
+import { NotificationType } from '@/types/notification';
+import { NotificationTypes } from '@/constants/notification-type';
 
 export const NotificationMessage = ({
   notification,
 }: {
-  notification: NotificationWithUser;
+  notification: NotificationType;
 }) => {
   switch (notification.type) {
     case NotificationTypes.FRIEND_REQUEST:

@@ -1,15 +1,14 @@
-import { NotificationWithUser } from '@/lib/data/notifications.mock';
 import { ScrollArea } from '@/components/custom/scroll-area';
 import { AnimatePresence, motion } from 'motion/react';
 import { NotificationItem } from './notification-item';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { NotificationType } from '@/types/notification';
 
 export const NotificationListAnimated = ({
   notificationsList,
   setNotificationRead,
 }: {
-  notificationsList: NotificationWithUser[];
-  setNotificationRead: (id: number) => void;
+  notificationsList: NotificationType[];
+  setNotificationRead: (id: string) => void;
 }) => {
   return (
     <div>

@@ -1,12 +1,8 @@
 import { dummyUsers } from './dummy-users'; // path to your 20-item users mock
-
-export const NotificationTypes = {
-  FRIEND_REQUEST: 'FRIEND_REQUEST',
-  ADDED_TO_EXPENSE: 'ADDED_TO_EXPENSE',
-  GROUP_INVITE: 'GROUP_INVITE',
-} as const;
-
-export type NotificationTypeKey = keyof typeof NotificationTypes;
+import {
+  NotificationTypes,
+  NotificationTypeKey,
+} from '@/constants/notification-type';
 
 const minusXMinutes = (m: number) => {
   const d = new Date();

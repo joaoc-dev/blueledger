@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button';
-import { NotificationWithUser } from '@/lib/data/notifications.mock';
+import { NotificationType } from '@/types/notification';
 
-// TODO: Add actions for notifications
+// TODO: Add actions by notification type
 const NotificationActions = ({
   setNotificationRead,
   notification,
 }: {
-  setNotificationRead: (id: number) => void;
-  notification: NotificationWithUser;
+  setNotificationRead: (id: string) => void;
+  notification: NotificationType;
 }) => {
   if (notification.isRead) {
     return null;

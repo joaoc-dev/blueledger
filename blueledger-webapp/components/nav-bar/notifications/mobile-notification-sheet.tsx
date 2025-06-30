@@ -19,7 +19,7 @@ const MobileNotificationSheet = ({
   return (
     <>
       <ul
-        className={`nav__sheet px-4 py-2 ${
+        className={`nav__sheet px-4 py-2 h-120 ${
           isOpen ? 'translate-y-0' : '-translate-y-full'
         }`}
       >

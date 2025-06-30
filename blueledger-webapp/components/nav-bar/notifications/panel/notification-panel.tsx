@@ -69,7 +69,7 @@ const NotificationPanel = () => {
               setNotificationRead={markAsRead}
             />
           ) : (
-            <div className="grid h-full w-full place-items-center text-sm text-gray-60">
+            <div className="grid h-full w-full place-items-center text-sm text-gray-400">
               <Mails className="h-10 w-10" />
             </div>
           )}

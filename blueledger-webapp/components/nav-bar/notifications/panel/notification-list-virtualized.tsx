@@ -1,16 +1,15 @@
-import { NotificationWithUser } from '@/lib/data/notifications.mock';
 import { ScrollArea } from '@/components/custom/scroll-area';
 import { NotificationItem } from './notification-item';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
+import { NotificationType } from '@/types/notification';
 
 export const NotificationListVirtualized = ({
   notificationsList,
   setNotificationRead,
 }: {
-  notificationsList: NotificationWithUser[];
-  setNotificationRead: (id: number) => void;
+  notificationsList: NotificationType[];
+  setNotificationRead: (id: string) => void;
 }) => {
   const parentRef = useRef<HTMLDivElement>(null);
 
