@@ -4,6 +4,7 @@ import { EXPENSE_CATEGORIES } from '@/constants/expense-category';
 
 const descriptionSchema = z
   .string()
+  .trim()
   .min(1, { message: 'Description is required' })
   .max(200, { message: 'Description must be less than 200 characters' });
 

@@ -7,6 +7,8 @@ import { createExpense, getExpenses } from '@/lib/data/expenses';
 
 export const POST = withAuth(async function POST(request: NextAuthRequest) {
   try {
+    const userId = request.auth!.user!.id;
+
     const body = await request.json();
     const validation = createExpenseSchema.safeParse(body);
 
@@ -23,6 +25,7 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
     const totalPrice = price * quantity;
 
     const expense = await createExpense({
+      user: { id: userId },
       description,
       price,
       quantity,

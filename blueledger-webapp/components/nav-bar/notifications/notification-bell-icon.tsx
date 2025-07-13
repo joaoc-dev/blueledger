@@ -12,7 +12,7 @@ const NotificationBellIcon = forwardRef<
   return (
     <div ref={ref} className={cn('relative icon-button', className)} {...props}>
       <Bell />
-      {unread.length > 0 && (
+      {unread && unread.length > 0 && (
         <span className="absolute top-0 right-0 px-1 min-w-4 flex items-center justify-center rounded-full text-xs bg-destructive text-destructive-foreground">
           {unread.length}
         </span>

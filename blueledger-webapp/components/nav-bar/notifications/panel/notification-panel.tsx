@@ -46,7 +46,7 @@ const NotificationPanel = () => {
           key={tabs[0].value}
           value={tabs[0].value}
         >
-          {unread.length > 0 ? (
+          {unread && unread.length > 0 ? (
             <NotificationListAnimated
               notificationsList={unread}
               setNotificationRead={markAsRead}
@@ -63,7 +63,7 @@ const NotificationPanel = () => {
           key={tabs[1].value}
           value={tabs[1].value}
         >
-          {read.length > 0 ? (
+          {read && read.length > 0 ? (
             <NotificationListVirtualized
               notificationsList={read}
               setNotificationRead={markAsRead}

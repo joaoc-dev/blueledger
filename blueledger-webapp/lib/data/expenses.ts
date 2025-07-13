@@ -3,12 +3,24 @@ import Expense, { ExpenseDocument } from '@/models/expense.model';
 import dbConnect from '@/lib/db/mongoose-client';
 import mongoose from 'mongoose';
 
-function transformExpense(expense: ExpenseDocument): ExpenseType {
-  const { _id, ...rest } = expense.toObject ? expense.toObject() : expense;
+function toExpenseType(expense: ExpenseDocument): ExpenseType {
+  const { _id, _v, user, ...rest } = expense.toObject
+    ? expense.toObject()
+    : expense;
   return {
     ...rest,
     id: _id?.toString(),
   };
+}
+
+function toExpenseModel(expense: Partial<ExpenseType>): ExpenseDocument {
+  const { user, ...rest } = expense;
+
+  const expenseModel = {
+    ...rest,
+    user: user?.id,
+  };
+  return new Expense(expenseModel);
 }
 
 export async function getExpenses(): Promise<ExpenseType[]> {
@@ -16,7 +28,7 @@ export async function getExpenses(): Promise<ExpenseType[]> {
 
   const expenses = await Expense.find();
 
-  return expenses.map(transformExpense);
+  return expenses.map(toExpenseType);
 }
 
 export async function getExpenseById(id: string): Promise<ExpenseType | null> {
@@ -26,7 +38,7 @@ export async function getExpenseById(id: string): Promise<ExpenseType | null> {
 
   const expense = await Expense.findById(id);
 
-  return expense ? transformExpense(expense) : null;
+  return expense ? toExpenseType(expense) : null;
 }
 
 export async function createExpense(
@@ -34,7 +46,9 @@ export async function createExpense(
 ): Promise<ExpenseType> {
   await dbConnect();
 
-  const newExpense = await Expense.create(expense);
+  const expenseModel = toExpenseModel(expense);
 
-  return transformExpense(newExpense);
+  const newExpense = await Expense.create(expenseModel);
+
+  return toExpenseType(newExpense);
 }

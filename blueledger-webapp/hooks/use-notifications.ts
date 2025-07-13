@@ -1,27 +1,30 @@
 import { useEffect, useState, useCallback } from 'react';
-import {
-  getNotifications,
-  NotificationTypes,
-  NotificationWithUser,
-} from '@/lib/data/notifications.mock';
+// import {
+//   getNotifications,
+//   NotificationWithUser,
+// } from '@/lib/data/notifications.mock';
+import { NotificationTypes } from '@/constants/notification-type';
+import { getNotifications } from '@/services/notifications/notifications';
+
 import Pusher from 'pusher-js';
+import { NotificationType } from '@/types/notification';
 
 export function useNotifications() {
-  const [items, setItems] = useState<NotificationWithUser[]>([]);
+  const [items, setItems] = useState<NotificationType[]>([]);
 
-  const addDummyNotification = () => {
-    const dummyNotificationWithUser = {
-      id: items.length + 1,
-      userId: '1',
-      type: NotificationTypes.FRIEND_REQUEST,
-      timestamp: new Date().toISOString(),
-      isRead: false,
-      userName: 'John Doe',
-      userImage: 'https://github.com/shadcn.png',
-    };
+  // const addDummyNotification = () => {
+  //   const dummyNotificationWithUser = {
+  //     id: items.length + 1,
+  //     userId: '1',
+  //     type: NotificationTypes.FRIEND_REQUEST,
+  //     timestamp: new Date().toISOString(),
+  //     isRead: false,
+  //     userName: 'John Doe',
+  //     userImage: 'https://github.com/shadcn.png',
+  //   };
 
-    setItems((prev) => [...prev, dummyNotificationWithUser]);
-  };
+  //   setItems((prev) => [...prev, dummyNotificationWithUser]);
+  // };
 
   const fetchNotifications = async () => {
     const notifications = await getNotifications();
@@ -38,7 +41,7 @@ export function useNotifications() {
     const channel = pusher.subscribe('user-123');
     channel.bind('new-notification', () => {
       console.log('Notification received!');
-      addDummyNotification();
+      // addDummyNotification();
     });
 
     return () => {
@@ -47,7 +50,7 @@ export function useNotifications() {
     };
   }, []);
 
-  const markAsRead = useCallback((id: number) => {
+  const markAsRead = useCallback((id: string) => {
     setItems((prev) =>
       prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
     );

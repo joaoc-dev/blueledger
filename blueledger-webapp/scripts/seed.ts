@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 async function main() {
   await dbConnect();
 
+  // This was my currently logged in user, replace it with your own user id or comment
   const exceptUsers = [new mongoose.Types.ObjectId('685287dc739c1c2fd7d8922e')];
 
   await User.deleteMany({

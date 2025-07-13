@@ -26,6 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             : null;
         }
       }
+
       // update the token with the updated user data
       if (trigger === 'update') {
         const updatedUser = session.user;

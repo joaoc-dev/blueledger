@@ -20,9 +20,11 @@ import { useUserProfileForm } from '@/hooks/use-user-profile-form';
 import { UserProfileFormData } from '@/lib/validations/user-schema';
 import useUserStore from '@/app/(protected)/store';
 import { useSession } from 'next-auth/react';
+import { useUserProfile } from '@/hooks/useUserProfile';
 
 const UserProfileForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { refetch } = useUserProfile();
 
   const name = useUserStore((state) => state.name);
   const setName = useUserStore((state) => state.setName);
@@ -38,6 +40,10 @@ const UserProfileForm = () => {
 
   const form = useUserProfileForm(user);
   const { update } = useSession();
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   // Reset form when store values change (e.g., after page refresh)
   useEffect(() => {
@@ -55,9 +61,11 @@ const UserProfileForm = () => {
       setIsLoading(true);
       await updateUser(data);
 
+      // Update store
       setName(data.name!);
       setBio(data.bio!);
 
+      // Update session
       await update({
         user: {
           name: data.name!,

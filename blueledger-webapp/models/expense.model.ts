@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document, Model, ObjectId } from 'mongoose';
 import { EXPENSE_CATEGORIES } from '@/constants/expense-category';
 
 // This interface represents the properties of an Expense document
@@ -9,7 +9,7 @@ interface IExpense {
   totalPrice: number;
   category: string;
   date: Date;
-  userId: string;
+  user: ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,8 +56,10 @@ const ExpenseSchema = new Schema<ExpenseDocument>(
       required: [true, 'Date is required'],
       default: Date.now,
     },
-    userId: {
-      type: String,
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'User ID is required'],
     },
   },
   {

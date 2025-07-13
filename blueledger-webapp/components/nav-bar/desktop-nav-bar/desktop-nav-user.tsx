@@ -12,16 +12,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useUserProfile } from '@/hooks/useUserProfile';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import UserAvatar from '../user-avatar';
 
 export function DesktopNavUser() {
+  const { refetch } = useUserProfile();
   const name = useUserStore((state) => state.name);
   const email = useUserStore((state) => state.email);
 
+  const handleDropdownOpenChange = (open: boolean) => {
+    if (open) refetch();
+  };
+
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={handleDropdownOpenChange}>
       <DropdownMenuTrigger asChild>
         <UserAvatar className="h-8 w-8" />
       </DropdownMenuTrigger>

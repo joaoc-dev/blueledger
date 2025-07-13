@@ -3,7 +3,7 @@ import User, { UserDocument } from '@/models/user.model';
 import dbConnect from '@/lib/db/mongoose-client';
 import mongoose from 'mongoose';
 
-function transformUser(user: UserDocument): UserType {
+function toUserType(user: UserDocument): UserType {
   const { _id, ...rest } = user.toObject ? user.toObject() : user;
   return {
     ...rest,
@@ -18,7 +18,7 @@ export async function getUserById(id: string): Promise<UserType | null> {
 
   const user = await User.findById(id);
 
-  return user ? transformUser(user) : null;
+  return user ? toUserType(user) : null;
 }
 
 export async function updateUser(id: string, data: Partial<UserType>) {
@@ -28,7 +28,7 @@ export async function updateUser(id: string, data: Partial<UserType>) {
 
   const user = await User.findByIdAndUpdate(id, data, { new: true });
 
-  return user ? transformUser(user) : null;
+  return user ? toUserType(user) : null;
 }
 
 export async function removeImageFromUser(
