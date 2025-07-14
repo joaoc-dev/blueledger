@@ -7,6 +7,7 @@ import {
 import Expense from '@/models/expense.model';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
+import { validateRequest } from '../../validateRequest';
 
 export const PATCH = withAuth(async function PATCH(
   request: NextAuthRequest,
@@ -15,14 +16,13 @@ export const PATCH = withAuth(async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const validation = patchExpenseSchema.safeParse({ params: { id }, body });
 
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: validation.error.format() },
-        { status: 400 }
-      );
-    }
+    const { error, data } = validateRequest(patchExpenseSchema, {
+      params: { id },
+      body,
+    });
+
+    if (error) return error;
 
     await dbConnect();
 
@@ -32,7 +32,7 @@ export const PATCH = withAuth(async function PATCH(
 
     const updatedData = {
       ...existingExpense.toObject(),
-      ...validation.data.body,
+      ...data!.body,
     };
 
     updatedData.totalPrice = updatedData.price * updatedData.quantity;
@@ -57,14 +57,12 @@ export const DELETE = withAuth(async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const validation = deleteExpenseSchema.safeParse({ params: { id } });
 
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: validation.error.format() },
-        { status: 400 }
-      );
-    }
+    const { error } = validateRequest(deleteExpenseSchema, {
+      params: { id },
+    });
+
+    if (error) return error;
 
     await dbConnect();
 

@@ -4,26 +4,21 @@ import { createExpenseSchema } from '@/lib/validations/expense-schema';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { createExpense, getExpenses } from '@/lib/data/expenses';
+import { validateRequest } from '../validateRequest';
 
 export const POST = withAuth(async function POST(request: NextAuthRequest) {
   try {
-    const userId = request.auth!.user!.id;
-
     const body = await request.json();
-    const validation = createExpenseSchema.safeParse(body);
 
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: validation.error.format() },
-        { status: 400 }
-      );
-    }
+    const { error, data } = validateRequest(createExpenseSchema, body);
+    if (error) return error;
 
     await dbConnect();
 
-    const { description, price, quantity, category, date } = validation.data;
+    const { description, price, quantity, category, date } = data!;
     const totalPrice = price * quantity;
 
+    const userId = request.auth!.user!.id;
     const expense = await createExpense({
       user: { id: userId },
       description,
