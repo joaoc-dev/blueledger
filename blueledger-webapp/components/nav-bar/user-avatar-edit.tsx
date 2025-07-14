@@ -13,7 +13,7 @@ import { useState } from 'react';
 import AvatarCropperModal from '../users/avatar-cropper-modal';
 import { updateUserImage } from '@/services/users/users';
 import { toast } from 'sonner';
-import useUserStore from '@/app/(protected)/store';
+import { useUserStore } from '@/app/(protected)/store';
 import { SessionProvider } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 

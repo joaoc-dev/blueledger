@@ -17,7 +17,7 @@ import { Button } from '../ui/button';
 import AvatarPreviewPanel from './avatar-preview-panel';
 import { toast } from 'sonner';
 import { updateUserImage } from '@/services/users/users';
-import useUserStore from '@/app/(protected)/store';
+import { useUserStore } from '@/app/(protected)/store';
 import { useSession } from 'next-auth/react';
 
 type Props = {

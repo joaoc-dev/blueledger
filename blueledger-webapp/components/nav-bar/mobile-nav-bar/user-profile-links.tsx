@@ -6,7 +6,7 @@ import Link from 'next/link';
 import React from 'react';
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
 import { signOut } from 'next-auth/react';
-import useUserStore from '@/app/(protected)/store';
+import { useUserStore } from '@/app/(protected)/store';
 
 interface UserProfileLinksProps {
   onClose: () => void;

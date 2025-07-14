@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import { UserType } from '@/types/user';
 import { useUserProfileForm } from '@/hooks/use-user-profile-form';
 import { UserProfileFormData } from '@/lib/validations/user-schema';
-import useUserStore from '@/app/(protected)/store';
+import { useUserStore } from '@/app/(protected)/store';
 import { useSession } from 'next-auth/react';
 import { useUserProfile } from '@/hooks/useUserProfile';
 

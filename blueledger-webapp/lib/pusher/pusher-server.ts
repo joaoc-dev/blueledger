@@ -1,3 +1,4 @@
+import { PusherEvent } from '@/constants/pusher-events';
 import Pusher from 'pusher';
 
 const pusherServer = new Pusher({
@@ -8,10 +9,14 @@ const pusherServer = new Pusher({
   useTLS: true,
 });
 
-const sendNotification = async (userId: string, message: string) => {
-  await pusherServer.trigger(userId, 'new-notification', {
+const sendToPusher = async (
+  channel: string,
+  event: PusherEvent,
+  message: string
+) => {
+  await pusherServer.trigger(channel, event, {
     message,
   });
 };
 
-export { sendNotification };
+export { sendToPusher };

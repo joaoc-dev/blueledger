@@ -2,7 +2,7 @@
 
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
 
-import useUserStore from '@/app/(protected)/store';
+import { useUserStore } from '@/app/(protected)/store';
 import {
   DropdownMenu,
   DropdownMenuContent,

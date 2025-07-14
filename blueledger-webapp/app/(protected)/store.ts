@@ -1,3 +1,4 @@
+import { NotificationType } from '@/types/notification';
 import { create } from 'zustand';
 
 interface UserProfileStore {
@@ -30,4 +31,14 @@ const useUserStore = create<UserProfileStore>((set) => ({
     }),
 }));
 
-export default useUserStore;
+interface NotificationsStore {
+  notifications: NotificationType[];
+  setNotifications: (notifications: NotificationType[]) => void;
+}
+
+const useNotificationsStore = create<NotificationsStore>((set) => ({
+  notifications: [],
+  setNotifications: (notifications) => set({ notifications }),
+}));
+
+export { useUserStore, useNotificationsStore };
