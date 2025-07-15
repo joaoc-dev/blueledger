@@ -4,6 +4,7 @@ import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { getExpenses } from '@/lib/data/expenses';
 import ExpensesTable from '@/components/expenses/expenses-table';
+import { expenseKeys } from '@/constants/query-keys';
 
 const ServerGetExpenses = async () => {
   // console.log('ServerGetExpenses');
@@ -19,7 +20,7 @@ const ExpensesPage = async () => {
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ['expenses'],
+    queryKey: expenseKeys.byUser,
     queryFn: ServerGetExpenses,
   });
 

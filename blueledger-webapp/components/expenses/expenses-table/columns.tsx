@@ -80,8 +80,7 @@ export const columns: ColumnDef<ExpenseType>[] = [
       return (
         <div className="flex justify-end">
           <ExpenseRowActions
-            id={expense.id}
-            // onDelete={() => handleDelete(expense.id)}
+            id={expense.optimisticId ?? expense.id!}
             disabled={!!expense.optimisticId}
           />
         </div>

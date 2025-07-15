@@ -10,53 +10,53 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useExpenseForm } from '@/hooks/use-expense-form';
+import { useExpenseForm } from '@/hooks/useExpenseForm';
+import { useExpenses } from '@/hooks/useExpenses';
 import { ExpenseFormData } from '@/lib/validations/expense-schema';
-import { createExpense, updateExpense } from '@/services/expenses';
 import { ExpenseType } from '@/types/expense';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { toast } from 'sonner';
+import { v4 as uuidv4 } from 'uuid';
 import { DateTimePicker } from '../shared/date-time-picker';
 import { ExpenseCategorySelect } from './expense-category-select';
-import { useAddExpense } from '@/hooks/use-add-expense';
 
 interface ExpenseFormProps {
   expense?: ExpenseType;
 }
 
 const ExpenseForm = ({ expense }: ExpenseFormProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useExpenseForm(expense);
   const router = useRouter();
-  const addExpense = useAddExpense();
-
-  const handleCreateExpense = async (data: ExpenseFormData) => {
-    await addExpense.mutateAsync(data as ExpenseType);
-  };
-
-  // const handleUpdateExpense = async (data: ExpenseFormData) => {
-  //   await mutation.mutateAsync(data);
-  // };
+  const expenses = useExpenses();
 
   const handleSubmit = async (data: ExpenseFormData) => {
+    const isUpdate = !!expense?.id;
+    const toastId = expense?.id ?? uuidv4();
+
+    toast.loading(`${isUpdate ? 'Updating' : 'Adding'} expense...`, {
+      id: toastId,
+    });
+
     try {
-      setIsSubmitting(true);
-      if (expense?.id) {
-        await updateExpense(expense.id, data);
-        toast.success('Successfully updated expense');
+      if (isUpdate) {
+        await expenses.updateExpenseMutation.mutateAsync({
+          id: expense.id!,
+          updatedExpense: data,
+        });
       } else {
-        // await createExpense(data);
-        handleCreateExpense(data);
-        toast.success('Successfully created expense');
+        await expenses.addExpenseMutation.mutateAsync(data);
       }
+
+      toast.success(`${isUpdate ? 'Updated' : 'Added'} expense`, {
+        id: toastId,
+      });
 
       router.back();
     } catch (error) {
-      setIsSubmitting(false);
-      toast.error('Failed to create expense');
-      console.log(error);
+      toast.error(`Failed to ${isUpdate ? 'update' : 'add'} expense`, {
+        id: toastId,
+      });
     }
   };
 
@@ -170,9 +170,9 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
         <Button
           className="mt-6 w-full cursor-pointer"
           type="submit"
-          disabled={isSubmitting}
+          disabled={form.formState.isSubmitting}
         >
-          {isSubmitting ? (
+          {form.formState.isSubmitting ? (
             <>
               <Loader2 className="animate-spin" /> Submitting...
             </>

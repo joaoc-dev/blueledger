@@ -8,6 +8,7 @@ export async function getExpenses(groupId?: string): Promise<ExpenseType[]> {
   const response = await apiGet<ExpenseApiResponse[]>('/expenses', {
     params,
   });
+
   return ExpenseMapper.toTypeList(response);
 }
 
@@ -33,7 +34,6 @@ export async function updateExpense(
     `/expenses/${id}`,
     request
   );
-  console.log(response);
   return ExpenseMapper.toType(response);
 }
 

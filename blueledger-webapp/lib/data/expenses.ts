@@ -52,3 +52,23 @@ export async function createExpense(
 
   return toExpenseType(newExpense);
 }
+
+export async function updateExpense(
+  expense: Partial<ExpenseType>
+): Promise<ExpenseType | null> {
+  await dbConnect();
+
+  const updatedExpense = await Expense.findByIdAndUpdate(expense.id, expense, {
+    new: true,
+  });
+
+  return updatedExpense ? toExpenseType(updatedExpense) : null;
+}
+
+export async function deleteExpense(id: string): Promise<ExpenseType | null> {
+  await dbConnect();
+
+  const deletedExpense = await Expense.findByIdAndDelete(id);
+
+  return deletedExpense ? toExpenseType(deletedExpense) : null;
+}

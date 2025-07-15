@@ -1,7 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import ms from 'ms';
 
 const apiClient = axios.create({
   baseURL: '/api',
+  timeout: ms('10s'),
 });
 
 async function apiRequest<T>(request: Promise<AxiosResponse<T>>): Promise<T> {
