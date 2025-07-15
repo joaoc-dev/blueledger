@@ -3,7 +3,6 @@
 import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { TableCell } from '@/components/ui/table';
 import { useExpenses } from '@/hooks/useExpenses';
 import { SquarePen, Trash2 } from 'lucide-react';
 import Link from 'next/link';
@@ -26,6 +25,7 @@ const ExpenseRowActions = ({ id, disabled }: ExpenseRowActionsProps) => {
         id: id,
       });
     } catch (error) {
+      console.log('Error deleting expense', error);
       toast.error('Failed to delete expense', {
         id: id,
       });

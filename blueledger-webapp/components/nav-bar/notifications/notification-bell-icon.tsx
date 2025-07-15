@@ -21,4 +21,6 @@ const NotificationBellIcon = forwardRef<
   );
 });
 
+NotificationBellIcon.displayName = 'NotificationBellIcon';
+
 export default NotificationBellIcon;

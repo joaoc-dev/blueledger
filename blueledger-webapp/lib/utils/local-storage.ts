@@ -1,4 +1,6 @@
-export function setLocalStorageItem(key: string, value: any) {
+'use client';
+
+export function setLocalStorageItem<T>(key: string, value: T) {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(key, JSON.stringify(value));
@@ -7,11 +9,11 @@ export function setLocalStorageItem(key: string, value: any) {
   }
 }
 
-export function getLocalStorageItem(key: string) {
-  if (typeof window === 'undefined') return;
+export function getLocalStorageItem<T>(key: string): T | undefined {
+  if (typeof window === 'undefined') return undefined;
   try {
     const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : undefined;
+    return item ? (JSON.parse(item) as T) : undefined;
   } catch (error) {
     console.error('Error getting item from localStorage:', error);
   }
