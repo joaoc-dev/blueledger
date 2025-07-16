@@ -9,7 +9,7 @@ export const NotificationListVirtualized = ({
   setNotificationRead,
 }: {
   notificationsList: NotificationType[];
-  setNotificationRead: (id: string) => void;
+  setNotificationRead: (id: string) => Promise<NotificationType>;
 }) => {
   const parentRef = useRef<HTMLDivElement>(null);
 

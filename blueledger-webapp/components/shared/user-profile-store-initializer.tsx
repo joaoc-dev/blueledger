@@ -12,12 +12,12 @@ export default function UserProfileStoreInitializer() {
   const setBio = useUserStore((state) => state.setBio);
 
   useEffect(() => {
-    if (!user) return;
-    setImage(user.image || undefined);
-    if (user.name) setName(user.name);
-    if (user.email) setEmail(user.email);
-    if (user.bio) setBio(user.bio);
-  }, [user]);
+    setImage(user?.image || undefined);
+
+    if (user?.name) setName(user.name);
+    if (user?.email) setEmail(user.email);
+    if (user?.bio) setBio(user.bio);
+  }, [user, setImage, setName, setEmail, setBio]);
 
   return null;
 }

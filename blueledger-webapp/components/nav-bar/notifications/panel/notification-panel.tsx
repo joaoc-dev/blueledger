@@ -3,11 +3,15 @@ import { NotificationListAnimated } from '@/components/nav-bar/notifications/pan
 import { NotificationListVirtualized } from '@/components/nav-bar/notifications/panel/notification-list-virtualized';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useNotifications } from '@/hooks/use-notifications';
+import { useNotifications } from '@/hooks/useNotifications';
 import { Mails } from 'lucide-react';
 
 const NotificationPanel = () => {
-  const { read, unread, markAsRead, markAllAsRead } = useNotifications();
+  const { read, unread, markAsReadMutation } = useNotifications();
+
+  const markAllAsRead = () => {
+    console.log('marking all as read');
+  };
 
   const tabs = [
     { value: 'unread', name: 'Unread' },
@@ -49,7 +53,7 @@ const NotificationPanel = () => {
           {unread && unread.length > 0 ? (
             <NotificationListAnimated
               notificationsList={unread}
-              setNotificationRead={markAsRead}
+              setNotificationRead={markAsReadMutation.mutateAsync}
             />
           ) : (
             <div className="grid h-full w-full place-items-center text-sm text-gray-400">
@@ -66,7 +70,7 @@ const NotificationPanel = () => {
           {read && read.length > 0 ? (
             <NotificationListVirtualized
               notificationsList={read}
-              setNotificationRead={markAsRead}
+              setNotificationRead={markAsReadMutation.mutateAsync}
             />
           ) : (
             <div className="grid h-full w-full place-items-center text-sm text-gray-400">

@@ -10,7 +10,7 @@ export const NotificationItem = ({
   setNotificationRead,
 }: {
   notification: NotificationType;
-  setNotificationRead: (id: string) => void;
+  setNotificationRead: (id: string) => Promise<NotificationType>;
 }) => {
   return (
     <div>

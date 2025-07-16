@@ -8,7 +8,7 @@ export const NotificationListAnimated = ({
   setNotificationRead,
 }: {
   notificationsList: NotificationType[];
-  setNotificationRead: (id: string) => void;
+  setNotificationRead: (id: string) => Promise<NotificationType>;
 }) => {
   return (
     <div>

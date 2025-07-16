@@ -1,51 +1,79 @@
-import { useEffect, useState, useCallback } from 'react';
-// import {
-//   getNotifications,
-//   NotificationWithUser,
-// } from '@/lib/data/notifications.mock';
-import { NotificationTypes } from '@/constants/notification-type';
-import { getNotifications } from '@/services/notifications/notifications';
+import {
+  getNotifications,
+  markNotificationAsRead,
+} from '@/services/notifications/notifications';
 
-import Pusher from 'pusher-js';
-import { NotificationType } from '@/types/notification';
-import { getExpenses } from '@/services/expenses/expenses';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
+import { notificationKeys } from '@/constants/query-keys';
 import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import { NotificationType } from '@/types/notification';
 
 export function useNotifications() {
+  const queryClient = getQueryClient();
   const {
     data: notifications,
     isLoading,
     isError,
     refetch,
-  } = useQuery({
-    queryKey: ['notifications'],
+  } = useQuery<NotificationType[]>({
+    queryKey: notificationKeys.byUser,
     queryFn: getNotifications,
   });
-
-  // const addDummyNotification = () => {
-  //   const dummyNotificationWithUser = {
-  //     id: items.length + 1,
-  //     userId: '1',
-  //     type: NotificationTypes.FRIEND_REQUEST,
-  //     timestamp: new Date().toISOString(),
-  //     isRead: false,
-  //     userName: 'John Doe',
-  //     userImage: 'https://github.com/shadcn.png',
-  //   };
-
-  //   setItems((prev) => [...prev, dummyNotificationWithUser]);
-  // };
 
   const read = notifications?.filter((n) => n.isRead);
   const unread = notifications?.filter((n) => !n.isRead);
 
-  // const markAsRead = useCallback((id: string) => {
-  //   // setItems((prev) =>
-  //   //   prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-  //   // );
-  // }, []);
+  // Mutations: Optimistic with manual cache manipulation but query invalidation on settled
+  // We use query invalidation because of this:
+  // Mark A as read, mark B as read
+  // Both error, but A error comes first and we restore context to A, B
+  // but then B error comes in and we restore context to B, where's A?
+  const markAsReadMutation = useMutation({
+    mutationFn: markNotificationAsRead,
+
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: notificationKeys.byUser });
+
+      const optimisticNotification: NotificationType = {
+        ...unread?.find((n) => n.id === id)!,
+        isRead: true,
+        updatedAt: new Date(),
+        id,
+      };
+
+      const previousNotifications =
+        queryClient.getQueryData<NotificationType[]>(notificationKeys.byUser) ||
+        [];
+
+      const updatedNotifications = previousNotifications.map((notification) =>
+        notification.id === id ? optimisticNotification : notification
+      );
+
+      queryClient.setQueryData<NotificationType[]>(
+        notificationKeys.byUser,
+        updatedNotifications
+      );
+    },
+
+    onError: (err, id, context) => {
+      console.error('Failed to mark notification as read:', err);
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: notificationKeys.byUser });
+    },
+  });
+
   // const markAllAsRead = () => unread?.forEach((n) => markAsRead(n.id));
 
-  return { notifications, isLoading, isError, refetch, read, unread };
+  return {
+    notifications,
+    isLoading,
+    isError,
+    refetch,
+    read,
+    unread,
+    markAsReadMutation,
+  };
 }

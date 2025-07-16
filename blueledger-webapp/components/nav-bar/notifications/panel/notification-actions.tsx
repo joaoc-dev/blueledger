@@ -6,7 +6,7 @@ const NotificationActions = ({
   setNotificationRead,
   notification,
 }: {
-  setNotificationRead: (id: string) => void;
+  setNotificationRead: (id: string) => Promise<NotificationType>;
   notification: NotificationType;
 }) => {
   if (notification.isRead) {

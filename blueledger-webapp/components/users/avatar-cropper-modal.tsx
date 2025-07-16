@@ -43,8 +43,9 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
   );
 
   useEffect(() => {
+    const debounced = debouncedCrop.current;
     return () => {
-      debouncedCrop.current.cancel();
+      debounced.cancel();
     };
   }, []);
 

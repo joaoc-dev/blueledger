@@ -1,4 +1,4 @@
-import { apiGet, apiPatch, apiPost } from '../api-client';
+import { apiGet, apiPatch, apiPost } from '../../lib/api-client';
 import { UserProfileFormData } from '@/lib/validations/user-schema';
 import { UserType } from '@/types/user';
 import { UserApiResponse, UserMapper } from './user-mapper';

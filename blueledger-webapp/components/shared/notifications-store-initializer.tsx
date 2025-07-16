@@ -16,11 +16,11 @@ export default function UserProfileStoreInitializer() {
   useEffect(() => {
     if (!notifications) return;
     setNotifications(notifications);
-  }, [notifications]);
-
-  const queryClient = getQueryClient();
+  }, [notifications, setNotifications]);
 
   useEffect(() => {
+    const queryClient = getQueryClient();
+
     const pusherClient = getPusherClient();
     const channel = pusherClient.subscribe('user-123');
 

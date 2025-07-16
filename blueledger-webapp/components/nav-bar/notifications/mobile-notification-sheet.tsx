@@ -2,11 +2,6 @@
 
 import NotificationPanel from './panel/notification-panel';
 
-const tabs = [
-  { value: 'unread', name: 'Unread' },
-  { value: 'read', name: 'Read' },
-];
-
 interface MobileNotificationDropdownProps {
   isOpen: boolean;
   onClose: () => void;
