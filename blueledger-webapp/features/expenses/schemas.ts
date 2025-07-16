@@ -35,7 +35,6 @@ export const expenseFormSchema = z.object({
 
 export type ExpenseFormData = z.infer<typeof expenseFormSchema>;
 
-/* API Schemas */
 const dateStringToDateSchema = z
   .string()
   .transform((str) => new Date(str))
@@ -43,6 +42,7 @@ const dateStringToDateSchema = z
 
 export const createExpenseSchema = z.strictObject({
   ...baseFields,
+  user: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
   date: dateStringToDateSchema,
 });
 
@@ -67,6 +67,8 @@ export const patchExpenseSchema = z.object({
       }
     ),
 });
+
+export type PatchExpenseData = z.infer<typeof patchExpenseSchema>;
 
 export const deleteExpenseSchema = z.strictObject({
   params: z.object({

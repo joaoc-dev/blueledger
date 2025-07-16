@@ -9,7 +9,7 @@ interface IExpense {
   totalPrice: number;
   category: string;
   date: Date;
-  user: ObjectId;
+  user: ObjectId | string;
   createdAt: Date;
   updatedAt: Date;
 }

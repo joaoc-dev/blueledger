@@ -1,14 +1,19 @@
-import { getQueryClient } from '@/lib/react-query/get-query-client';
+import { expenseKeys } from '@/constants/query-keys';
 import {
   createExpense,
   deleteExpense,
   updateExpense,
-} from '@/services/expenses';
-import { ExpenseFormData } from '@/lib/validations/expense-schema';
+} from '@/features/expenses/client';
+import {
+  ExpenseFormData,
+  expenseFormSchema,
+} from '@/features/expenses/schemas';
+import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { ExpenseType } from '@/types/expense';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
-import { expenseKeys } from '@/constants/query-keys';
 
 interface ExpensesContext {
   previousExpenses: ExpenseType[];
@@ -172,3 +177,18 @@ export function useExpenses() {
     deleteExpenseMutation,
   };
 }
+
+export const useExpenseForm = (expense?: ExpenseType) => {
+  const form = useForm<ExpenseFormData>({
+    resolver: zodResolver(expenseFormSchema),
+    defaultValues: {
+      description: expense?.description || '',
+      price: expense?.price || 0,
+      quantity: expense?.quantity || 0,
+      category: expense?.category || 'Other',
+      date: expense?.date || new Date(),
+    },
+  });
+
+  return form;
+};
