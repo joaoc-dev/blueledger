@@ -7,11 +7,8 @@ import { useNotifications } from '@/features/notifications.ts/hooks';
 import { Mails } from 'lucide-react';
 
 const NotificationPanel = () => {
-  const { read, unread, markAsReadMutation } = useNotifications();
-
-  const markAllAsRead = () => {
-    console.log('marking all as read');
-  };
+  const { read, unread, markAsReadMutation, markAllAsReadMutation } =
+    useNotifications();
 
   const tabs = [
     { value: 'unread', name: 'Unread' },
@@ -23,7 +20,7 @@ const NotificationPanel = () => {
       <div className="flex items-center justify-between">
         <span className="text-lg px-2">Notifications</span>
         <Button
-          onClick={markAllAsRead}
+          onClick={() => markAllAsReadMutation.mutateAsync()}
           className="px-2 underline"
           variant="ghost"
           size="sm"

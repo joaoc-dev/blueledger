@@ -1,17 +1,21 @@
 import {
   NotificationDisplay,
   PatchNotificationData,
+  CreateNotificationData,
 } from '@/features/notifications.ts/schemas';
 import Notification from '@/features/notifications.ts/model';
 import dbConnect from '@/lib/db/mongoose-client';
-import { mapDisplayToModel, mapModelToDisplay } from './mapper';
+import { mapModelToDisplay } from './mapper-server';
+import { ExpenseDocument } from '../expenses/model';
 
 export async function createNotification(
-  notification: Partial<NotificationDisplay>
+  notification: CreateNotificationData
 ): Promise<NotificationDisplay> {
   await dbConnect();
 
-  const notificationModel = mapDisplayToModel(notification);
+  const notificationModel: Partial<ExpenseDocument> = {
+    ...notification,
+  };
 
   const newNotification = await Notification.create(notificationModel);
 
@@ -68,4 +72,15 @@ export async function updateNotification(
     .lean();
 
   return updatedNotification ? mapModelToDisplay(updatedNotification) : null;
+}
+
+export async function markAllNotificationsAsRead(
+  userId: string
+): Promise<void> {
+  await dbConnect();
+
+  await Notification.updateMany(
+    { user: userId, isRead: false },
+    { isRead: true }
+  );
 }
