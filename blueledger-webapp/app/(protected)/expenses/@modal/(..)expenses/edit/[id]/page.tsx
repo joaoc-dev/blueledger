@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import React from 'react';
 import ExpenseForm from '@/components/expenses/expense-form';
-import { getExpenseById } from '@/lib/data/expenses';
+import { getExpenseById } from '@/features/expenses/data';
 import Modal from '@/components/shared/modal';
 
 const EditExpensePageModal = async ({

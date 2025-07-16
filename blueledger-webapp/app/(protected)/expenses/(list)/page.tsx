@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { getExpenses } from '@/lib/data/expenses';
+import { getExpenses } from '@/features/expenses/data';
 import ExpensesTable from '@/components/expenses/expenses-table';
 import { expenseKeys } from '@/constants/query-keys';
 

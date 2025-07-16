@@ -7,17 +7,17 @@ import {
 import {
   ExpenseFormData,
   expenseFormSchema,
+  ExpenseDisplay,
 } from '@/features/expenses/schemas';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
-import { ExpenseType } from '@/types/expense';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 
 interface ExpensesContext {
-  previousExpenses: ExpenseType[];
-  optimisticExpense?: ExpenseType;
+  previousExpenses: ExpenseDisplay[];
+  optimisticExpense?: ExpenseDisplay;
 }
 
 // Mutations: Optimistic with manual cache manipulation and NO query invalidation
@@ -25,17 +25,17 @@ export function useExpenses() {
   const queryClient = getQueryClient();
 
   const applyOptimisticMutation = async (
-    updateQueryFunction: (expenses: ExpenseType[]) => ExpenseType[],
-    optimisticExpense?: ExpenseType
+    updateQueryFunction: (expenses: ExpenseDisplay[]) => ExpenseDisplay[],
+    optimisticExpense?: ExpenseDisplay
   ) => {
     await queryClient.cancelQueries({ queryKey: expenseKeys.byUser });
 
     const previousExpenses =
-      queryClient.getQueryData<ExpenseType[]>(expenseKeys.byUser) || [];
+      queryClient.getQueryData<ExpenseDisplay[]>(expenseKeys.byUser) || [];
 
     const updatedExpenses = updateQueryFunction(previousExpenses);
 
-    queryClient.setQueryData<ExpenseType[]>(
+    queryClient.setQueryData<ExpenseDisplay[]>(
       expenseKeys.byUser,
       updatedExpenses
     );
@@ -44,10 +44,10 @@ export function useExpenses() {
   };
 
   const applyNewMutationResult = (
-    mutationResult: ExpenseType,
+    mutationResult: ExpenseDisplay,
     optimisticId: string
   ) => {
-    queryClient.setQueryData<ExpenseType[]>(expenseKeys.byUser, (expenses) =>
+    queryClient.setQueryData<ExpenseDisplay[]>(expenseKeys.byUser, (expenses) =>
       expenses?.map((expense) =>
         expense.optimisticId === optimisticId ? mutationResult : expense
       )
@@ -55,25 +55,25 @@ export function useExpenses() {
   };
 
   const applyUpdateMutationResult = (
-    mutationResult: ExpenseType,
+    mutationResult: ExpenseDisplay,
     id: string
   ) => {
-    queryClient.setQueryData<ExpenseType[]>(expenseKeys.byUser, (expenses) =>
+    queryClient.setQueryData<ExpenseDisplay[]>(expenseKeys.byUser, (expenses) =>
       expenses?.map((expense) => (expense.id === id ? mutationResult : expense))
     );
   };
 
-  const rollbackMutation = (previousExpenses: ExpenseType[] | undefined) => {
+  const rollbackMutation = (previousExpenses: ExpenseDisplay[] | undefined) => {
     if (!previousExpenses) return;
 
-    queryClient.setQueryData<ExpenseType[]>(
+    queryClient.setQueryData<ExpenseDisplay[]>(
       expenseKeys.byUser,
       previousExpenses
     );
   };
 
   const addExpenseMutation = useMutation<
-    ExpenseType,
+    ExpenseDisplay,
     Error,
     ExpenseFormData,
     ExpensesContext
@@ -81,7 +81,7 @@ export function useExpenses() {
     mutationFn: createExpense,
 
     onMutate: async (newExpense: ExpenseFormData) => {
-      const optimisticExpense: ExpenseType = {
+      const optimisticExpense: ExpenseDisplay = {
         ...newExpense,
         optimisticId: uuidv4(),
         totalPrice: newExpense.price * newExpense.quantity,
@@ -89,7 +89,7 @@ export function useExpenses() {
         updatedAt: new Date(),
       };
 
-      const updateQueryFunction = (expenses: ExpenseType[]) => [
+      const updateQueryFunction = (expenses: ExpenseDisplay[]) => [
         optimisticExpense,
         ...expenses,
       ];
@@ -113,7 +113,7 @@ export function useExpenses() {
   });
 
   const updateExpenseMutation = useMutation<
-    ExpenseType,
+    ExpenseDisplay,
     Error,
     { id: string; updatedExpense: ExpenseFormData },
     ExpensesContext
@@ -121,14 +121,15 @@ export function useExpenses() {
     mutationFn: ({ id, updatedExpense }) => updateExpense(id, updatedExpense),
 
     onMutate: async ({ id, updatedExpense }) => {
-      const optimisticExpense: ExpenseType = {
+      const optimisticExpense: ExpenseDisplay = {
         ...updatedExpense,
         id,
         totalPrice: updatedExpense.price * updatedExpense.quantity,
         updatedAt: new Date(),
+        createdAt: new Date(),
       };
 
-      const updateQueryFunction = (expenses: ExpenseType[]) =>
+      const updateQueryFunction = (expenses: ExpenseDisplay[]) =>
         expenses.map((expense) =>
           expense.id === id ? optimisticExpense : expense
         );
@@ -160,7 +161,7 @@ export function useExpenses() {
     mutationFn: deleteExpense,
 
     onMutate: async (id) => {
-      const updateQueryFunction = (expenses: ExpenseType[]) =>
+      const updateQueryFunction = (expenses: ExpenseDisplay[]) =>
         expenses.filter((expense) => expense.id !== id);
 
       return await applyOptimisticMutation(updateQueryFunction);
@@ -178,7 +179,7 @@ export function useExpenses() {
   };
 }
 
-export const useExpenseForm = (expense?: ExpenseType) => {
+export const useExpenseForm = (expense?: ExpenseDisplay) => {
   const form = useForm<ExpenseFormData>({
     resolver: zodResolver(expenseFormSchema),
     defaultValues: {

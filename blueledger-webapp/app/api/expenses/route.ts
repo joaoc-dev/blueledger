@@ -1,33 +1,22 @@
 import { withAuth } from '@/lib/api/withAuth';
-import dbConnect from '@/lib/db/mongoose-client';
-import { createExpenseSchema } from '@/lib/validations/expense-schema';
+import { createExpenseSchema } from '@/features/expenses/schemas';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { createExpense, getExpenses } from '@/lib/data/expenses';
+import { createExpense, getExpenses } from '@/features/expenses/data';
 import { validateRequest } from '../validateRequest';
 
 export const POST = withAuth(async function POST(request: NextAuthRequest) {
   try {
     const body = await request.json();
+    const userId = request.auth!.user!.id;
 
-    const { error, data } = validateRequest(createExpenseSchema, body);
+    const { error, data } = validateRequest(createExpenseSchema, {
+      ...body,
+      user: userId,
+    });
     if (error) return error;
 
-    await dbConnect();
-
-    const { description, price, quantity, category, date } = data!;
-    const totalPrice = price * quantity;
-
-    const userId = request.auth!.user!.id;
-    const expense = await createExpense({
-      user: { id: userId },
-      description,
-      price,
-      quantity,
-      totalPrice,
-      category,
-      date,
-    });
+    const expense = await createExpense(data!);
 
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
@@ -39,9 +28,8 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
   }
 });
 
-export const GET = withAuth(async function GET(request: NextAuthRequest) {
+export const GET = withAuth(async function GET() {
   try {
-    await dbConnect();
     const expenses = await getExpenses();
     return NextResponse.json(expenses);
   } catch (error) {
