@@ -3,7 +3,7 @@
 import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { useExpenses } from '@/hooks/useExpenses';
+import { useExpenses } from '@/features/expenses/hooks';
 import { SquarePen, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';

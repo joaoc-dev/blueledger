@@ -1,5 +1,8 @@
 import mongoose, { Schema, Document, Model, ObjectId } from 'mongoose';
-import { EXPENSE_CATEGORIES } from '@/constants/expense-category';
+import {
+  EXPENSE_CATEGORIES,
+  ExpenseCategory,
+} from '@/features/expenses/constants';
 
 // This interface represents the properties of an Expense document
 interface IExpense {
@@ -7,7 +10,7 @@ interface IExpense {
   price: number;
   quantity: number;
   totalPrice: number;
-  category: string;
+  category: ExpenseCategory;
   date: Date;
   user: ObjectId | string;
   createdAt: Date;

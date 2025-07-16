@@ -1,6 +1,9 @@
 import { Types } from 'mongoose';
 import { z } from 'zod';
-import { EXPENSE_CATEGORIES } from '@/constants/expense-category';
+import {
+  EXPENSE_CATEGORIES,
+  EXPENSE_CATEGORIES_VALUES,
+} from '@/features/expenses/constants';
 
 const descriptionSchema = z
   .string()
@@ -14,7 +17,7 @@ const quantitySchema = z
   .number()
   .min(1, { message: 'Quantity must be greater than 0' });
 
-const categorySchema = z.enum(EXPENSE_CATEGORIES);
+const categorySchema = z.enum(EXPENSE_CATEGORIES_VALUES);
 
 const dateSchema = z.date({
   required_error: 'Date is required',
@@ -84,7 +87,7 @@ export const expenseDisplaySchema = z.object({
   price: z.number().min(0),
   quantity: z.number().min(1),
   totalPrice: z.number(),
-  category: z.enum(EXPENSE_CATEGORIES),
+  category: z.enum(EXPENSE_CATEGORIES_VALUES),
   date: z.date(),
   createdAt: z.date(),
   updatedAt: z.date(),

@@ -11,9 +11,9 @@ import {
 } from '@/components/ui/select';
 import {
   CATEGORY_ICONS,
-  EXPENSE_CATEGORIES,
+  EXPENSE_CATEGORIES_VALUES,
   ExpenseCategory,
-} from '@/constants/expense-category';
+} from '@/features/expenses/constants';
 
 interface ExpenseCategorySelectProps {
   value: ExpenseCategory | undefined;
@@ -33,7 +33,7 @@ export const ExpenseCategorySelect = React.forwardRef<
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Categories</SelectLabel>
-          {EXPENSE_CATEGORIES.map((category) => {
+          {EXPENSE_CATEGORIES_VALUES.map((category) => {
             const Icon = CATEGORY_ICONS[category];
             return (
               <SelectItem key={category} value={category}>
