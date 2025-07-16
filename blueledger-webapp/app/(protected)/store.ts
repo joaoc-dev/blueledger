@@ -1,4 +1,4 @@
-import { NotificationType } from '@/types/notification';
+import { NotificationDisplay } from '@/features/notifications.ts/schemas';
 import { create } from 'zustand';
 
 interface UserProfileStore {
@@ -32,8 +32,8 @@ const useUserStore = create<UserProfileStore>((set) => ({
 }));
 
 interface NotificationsStore {
-  notifications: NotificationType[];
-  setNotifications: (notifications: NotificationType[]) => void;
+  notifications: NotificationDisplay[];
+  setNotifications: (notifications: NotificationDisplay[]) => void;
 }
 
 const useNotificationsStore = create<NotificationsStore>((set) => ({

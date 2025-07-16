@@ -1,8 +1,8 @@
 import { dummyUsers } from './dummy-users'; // path to your 20-item users mock
 import {
-  NotificationTypes,
-  NotificationTypeKey,
-} from '@/constants/notification-type';
+  NOTIFICATION_TYPE_VALUES,
+  NotificationType,
+} from '@/features/notifications.ts/constants';
 
 const minusXMinutes = (m: number) => {
   const d = new Date();
@@ -19,7 +19,7 @@ const minusXHours = (h: number) => {
 export interface Notification {
   id: number;
   userId: string;
-  type: NotificationTypeKey;
+  type: NotificationType;
   timestamp: string;
   isRead: boolean;
 }
@@ -28,7 +28,7 @@ export const generateNotifications = (
   count: number,
   isRead: boolean
 ): Notification[] => {
-  const types = Object.keys(NotificationTypes) as NotificationTypeKey[];
+  const types = NOTIFICATION_TYPE_VALUES;
   const notifications: Notification[] = [];
 
   for (let i = 1; i <= count; i++) {

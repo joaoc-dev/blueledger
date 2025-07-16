@@ -1,5 +1,5 @@
 import { withAuth } from '@/lib/api/withAuth';
-import { getNotifications } from '@/lib/data/notifications';
+import { getNotifications } from '@/features/notifications.ts/data';
 import { NextResponse } from 'next/server';
 
 export const GET = withAuth(async function GET() {

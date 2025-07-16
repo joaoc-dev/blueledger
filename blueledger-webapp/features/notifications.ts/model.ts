@@ -1,13 +1,13 @@
 import mongoose, { Schema, Document, Model, ObjectId } from 'mongoose';
 import {
-  NotificationTypeKey,
-  NotificationTypes,
-} from '@/constants/notification-type';
+  NOTIFICATION_TYPE_VALUES,
+  NotificationType,
+} from '@/features/notifications.ts/constants';
 
 interface INotification {
   user: ObjectId;
   fromUser: ObjectId;
-  type: NotificationTypeKey;
+  type: NotificationType;
   isRead: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -34,7 +34,7 @@ const NotificationSchema = new Schema<NotificationDocument>(
     type: {
       type: String,
       required: [true, 'Type is required'],
-      enum: Object.values(NotificationTypes),
+      enum: NOTIFICATION_TYPE_VALUES,
       trim: true,
     },
     isRead: {

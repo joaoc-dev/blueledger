@@ -2,14 +2,14 @@ import { ScrollArea } from '@/components/custom/scroll-area';
 import { NotificationItem } from './notification-item';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
-import { NotificationType } from '@/types/notification';
+import { NotificationDisplay } from '@/features/notifications.ts/schemas';
 
 export const NotificationListVirtualized = ({
   notificationsList,
   setNotificationRead,
 }: {
-  notificationsList: NotificationType[];
-  setNotificationRead: (id: string) => Promise<NotificationType>;
+  notificationsList: NotificationDisplay[];
+  setNotificationRead: (id: string) => Promise<NotificationDisplay>;
 }) => {
   const parentRef = useRef<HTMLDivElement>(null);
 

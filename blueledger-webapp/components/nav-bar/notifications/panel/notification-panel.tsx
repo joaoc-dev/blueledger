@@ -3,7 +3,7 @@ import { NotificationListAnimated } from '@/components/nav-bar/notifications/pan
 import { NotificationListVirtualized } from '@/components/nav-bar/notifications/panel/notification-list-virtualized';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useNotifications } from '@/hooks/useNotifications';
+import { useNotifications } from '@/features/notifications.ts/hooks';
 import { Mails } from 'lucide-react';
 
 const NotificationPanel = () => {

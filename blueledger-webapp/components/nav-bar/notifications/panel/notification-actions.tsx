@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button';
-import { NotificationType } from '@/types/notification';
+import { NotificationDisplay } from '@/features/notifications.ts/schemas';
 
 // TODO: Add actions by notification type
 const NotificationActions = ({
   setNotificationRead,
   notification,
 }: {
-  setNotificationRead: (id: string) => Promise<NotificationType>;
-  notification: NotificationType;
+  setNotificationRead: (id: string) => Promise<NotificationDisplay>;
+  notification: NotificationDisplay;
 }) => {
   if (notification.isRead) {
     return null;
@@ -18,7 +18,7 @@ const NotificationActions = ({
       className="px-2 underline text-xs"
       variant="ghost"
       size="sm"
-      onClick={() => setNotificationRead(notification.id)}
+      onClick={() => setNotificationRead(notification.id!)}
     >
       Mark as read
     </Button>

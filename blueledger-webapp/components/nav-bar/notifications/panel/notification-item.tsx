@@ -2,15 +2,15 @@ import { Clock, UserRound } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { NotificationMessage } from './notification-message';
 import NotificationActions from './notification-actions';
-import { NotificationType } from '@/types/notification';
+import { NotificationDisplay } from '@/features/notifications.ts/schemas';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export const NotificationItem = ({
   notification,
   setNotificationRead,
 }: {
-  notification: NotificationType;
-  setNotificationRead: (id: string) => Promise<NotificationType>;
+  notification: NotificationDisplay;
+  setNotificationRead: (id: string) => Promise<NotificationDisplay>;
 }) => {
   return (
     <div>

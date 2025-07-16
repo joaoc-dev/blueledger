@@ -1,14 +1,14 @@
 import { ScrollArea } from '@/components/custom/scroll-area';
 import { AnimatePresence, motion } from 'motion/react';
 import { NotificationItem } from './notification-item';
-import { NotificationType } from '@/types/notification';
+import { NotificationDisplay } from '@/features/notifications.ts/schemas';
 
 export const NotificationListAnimated = ({
   notificationsList,
   setNotificationRead,
 }: {
-  notificationsList: NotificationType[];
-  setNotificationRead: (id: string) => Promise<NotificationType>;
+  notificationsList: NotificationDisplay[];
+  setNotificationRead: (id: string) => Promise<NotificationDisplay>;
 }) => {
   return (
     <div>

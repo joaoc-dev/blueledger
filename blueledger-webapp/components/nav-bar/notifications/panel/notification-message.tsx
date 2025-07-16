@@ -1,14 +1,14 @@
 import { Badge } from '@/components/ui/badge';
-import { NotificationType } from '@/types/notification';
-import { NotificationTypes } from '@/constants/notification-type';
+import { NotificationDisplay } from '@/features/notifications.ts/schemas';
+import { NOTIFICATION_TYPES } from '@/features/notifications.ts/constants';
 
 export const NotificationMessage = ({
   notification,
 }: {
-  notification: NotificationType;
+  notification: NotificationDisplay;
 }) => {
   switch (notification.type) {
-    case NotificationTypes.FRIEND_REQUEST:
+    case NOTIFICATION_TYPES.FRIEND_REQUEST:
       return (
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <span>Sent you a</span>
@@ -18,7 +18,7 @@ export const NotificationMessage = ({
           <span>request</span>
         </div>
       );
-    case NotificationTypes.ADDED_TO_EXPENSE:
+    case NOTIFICATION_TYPES.ADDED_TO_EXPENSE:
       return (
         <>
           <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -29,7 +29,7 @@ export const NotificationMessage = ({
           </div>
         </>
       );
-    case NotificationTypes.GROUP_INVITE:
+    case NOTIFICATION_TYPES.GROUP_INVITE:
       return (
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <span>Invited you to a</span>

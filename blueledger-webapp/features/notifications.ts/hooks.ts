@@ -1,13 +1,13 @@
 import {
   getNotifications,
   markNotificationAsRead,
-} from '@/services/notifications/notifications';
+} from '@/features/notifications.ts/client';
 
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { notificationKeys } from '@/constants/query-keys';
 import { useQuery } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { NotificationType } from '@/types/notification';
+import { NotificationDisplay } from '@/features/notifications.ts/schemas';
 
 export function useNotifications() {
   const queryClient = getQueryClient();
@@ -16,7 +16,7 @@ export function useNotifications() {
     isLoading,
     isError,
     refetch,
-  } = useQuery<NotificationType[]>({
+  } = useQuery<NotificationDisplay[]>({
     queryKey: notificationKeys.byUser,
     queryFn: getNotifications,
   });
@@ -35,7 +35,7 @@ export function useNotifications() {
     onMutate: async (id: string) => {
       await queryClient.cancelQueries({ queryKey: notificationKeys.byUser });
 
-      const optimisticNotification: NotificationType = {
+      const optimisticNotification: NotificationDisplay = {
         ...unread?.find((n) => n.id === id)!,
         isRead: true,
         updatedAt: new Date(),
@@ -43,14 +43,15 @@ export function useNotifications() {
       };
 
       const previousNotifications =
-        queryClient.getQueryData<NotificationType[]>(notificationKeys.byUser) ||
-        [];
+        queryClient.getQueryData<NotificationDisplay[]>(
+          notificationKeys.byUser
+        ) || [];
 
       const updatedNotifications = previousNotifications.map((notification) =>
         notification.id === id ? optimisticNotification : notification
       );
 
-      queryClient.setQueryData<NotificationType[]>(
+      queryClient.setQueryData<NotificationDisplay[]>(
         notificationKeys.byUser,
         updatedNotifications
       );

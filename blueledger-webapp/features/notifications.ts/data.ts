@@ -1,12 +1,15 @@
-import { NotificationType } from '@/types/notification';
+import {
+  NotificationDisplay,
+  PatchNotificationData,
+} from '@/features/notifications.ts/schemas';
 import Notification, {
   NotificationDocument,
-} from '@/models/notification.model';
+} from '@/features/notifications.ts/model';
 import dbConnect from '@/lib/db/mongoose-client';
 
-function toNotificationType(
+function toNotificationDisplay(
   notification: NotificationDocument
-): NotificationType {
+): NotificationDisplay {
   const { _id, ...rest } = notification.toObject
     ? notification.toObject()
     : notification;
@@ -26,7 +29,7 @@ function toNotificationType(
 }
 
 function toNotificationModel(
-  notification: Partial<NotificationType>
+  notification: Partial<NotificationDisplay>
 ): NotificationDocument {
   const { user, fromUser, ...rest } = notification;
 
@@ -40,18 +43,18 @@ function toNotificationModel(
 }
 
 export async function createNotification(
-  notification: Partial<NotificationType>
-): Promise<NotificationType> {
+  notification: Partial<NotificationDisplay>
+): Promise<NotificationDisplay> {
   await dbConnect();
 
   const notificationModel = toNotificationModel(notification);
 
   const newNotification = await Notification.create(notificationModel);
 
-  return toNotificationType(newNotification);
+  return toNotificationDisplay(newNotification);
 }
 
-export async function getNotifications(): Promise<NotificationType[]> {
+export async function getNotifications(): Promise<NotificationDisplay[]> {
   await dbConnect();
 
   const notifications = await Notification.find()
@@ -59,12 +62,12 @@ export async function getNotifications(): Promise<NotificationType[]> {
     .populate({ path: 'user', select: 'name image' })
     .lean();
 
-  return notifications.map(toNotificationType);
+  return notifications.map(toNotificationDisplay);
 }
 
 export async function getNotificationById(
   id: string
-): Promise<NotificationType | null> {
+): Promise<NotificationDisplay | null> {
   await dbConnect();
 
   const notification = await Notification.findById(id)
@@ -72,27 +75,25 @@ export async function getNotificationById(
     .populate({ path: 'user', select: 'name image' })
     .lean();
 
-  return notification ? toNotificationType(notification) : null;
+  return notification ? toNotificationDisplay(notification) : null;
 }
 
 export async function updateNotification(
-  notification: Partial<NotificationType>
-): Promise<NotificationType | null> {
+  notification: PatchNotificationData
+): Promise<NotificationDisplay | null> {
   await dbConnect();
 
-  const existing = await Notification.findById(notification.id);
+  const existing = await Notification.findById(notification.params.id);
   if (!existing) return null;
 
-  const { user, fromUser, ...rest } = notification;
-  const updateData = {
-    ...rest,
-    ...(user?.id && { user: user.id }),
-    ...(fromUser?.id && { fromUser: fromUser.id }),
+  const updatedData = {
+    ...existing.toObject(),
+    ...notification.body,
   };
 
   const updatedNotification = await Notification.findByIdAndUpdate(
-    notification.id,
-    updateData,
+    notification.params.id,
+    updatedData,
     {
       new: true,
       runValidators: true,
@@ -102,5 +103,7 @@ export async function updateNotification(
     .populate({ path: 'user', select: 'name image' })
     .lean();
 
-  return updatedNotification ? toNotificationType(updatedNotification) : null;
+  return updatedNotification
+    ? toNotificationDisplay(updatedNotification)
+    : null;
 }
