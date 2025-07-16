@@ -1,10 +1,7 @@
 import { NotificationDisplay } from '@/features/notifications.ts/schemas';
 import { apiGet, apiPatch } from '../../lib/api-client';
 import { NotificationApiResponse } from './schemas';
-import {
-  mapApiResponseListToDisplay,
-  mapApiResponseToDisplay,
-} from './notification-mapper';
+import { mapApiResponseListToDisplay, mapApiResponseToDisplay } from './mapper';
 
 export async function markNotificationAsRead(
   id: string

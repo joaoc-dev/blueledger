@@ -1,3 +1,5 @@
+'use client';
+
 import { NotificationApiResponse, NotificationDisplay } from './schemas';
 
 export function mapApiResponseToDisplay(

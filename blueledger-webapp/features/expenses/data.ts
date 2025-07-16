@@ -6,29 +6,14 @@ import {
   PatchExpenseData,
   ExpenseDisplay,
 } from '@/features/expenses/schemas';
-
-function toExpenseDisplay(expense: ExpenseDocument): ExpenseDisplay {
-  const obj = expense.toObject();
-  return {
-    id: obj._id.toString(),
-    description: obj.description,
-    price: obj.price,
-    quantity: obj.quantity,
-    totalPrice: obj.totalPrice,
-    category: obj.category,
-    date: obj.date,
-    user: { id: obj.user.toString() },
-    createdAt: obj.createdAt,
-    updatedAt: obj.updatedAt,
-  };
-}
+import { mapModelToDisplay } from './mapper-server';
 
 export async function getExpenses(): Promise<ExpenseDisplay[]> {
   await dbConnect();
 
   const expenses = await Expense.find();
 
-  return expenses.map(toExpenseDisplay);
+  return expenses.map(mapModelToDisplay);
 }
 
 export async function createExpense(
@@ -43,7 +28,7 @@ export async function createExpense(
 
   const newExpense = await Expense.create(expenseModel);
 
-  return toExpenseDisplay(newExpense);
+  return mapModelToDisplay(newExpense);
 }
 
 export async function getExpenseById(
@@ -55,7 +40,7 @@ export async function getExpenseById(
 
   const expense = await Expense.findById(id);
 
-  return expense ? toExpenseDisplay(expense) : null;
+  return expense ? mapModelToDisplay(expense) : null;
 }
 
 export async function updateExpense(
@@ -79,7 +64,7 @@ export async function updateExpense(
     { new: true }
   );
 
-  return updatedExpense ? toExpenseDisplay(updatedExpense) : null;
+  return updatedExpense ? mapModelToDisplay(updatedExpense) : null;
 }
 
 export async function deleteExpense(
@@ -89,5 +74,5 @@ export async function deleteExpense(
 
   const deletedExpense = await Expense.findByIdAndDelete(id);
 
-  return deletedExpense ? toExpenseDisplay(deletedExpense) : null;
+  return deletedExpense ? mapModelToDisplay(deletedExpense) : null;
 }

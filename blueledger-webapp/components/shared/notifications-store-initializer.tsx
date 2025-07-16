@@ -7,7 +7,7 @@ import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { getPusherClient } from '@/lib/pusher/pusher-client';
 import { PusherEvents } from '@/constants/pusher-events';
 
-export default function UserProfileStoreInitializer() {
+export default function NotificationsStoreInitializer() {
   const { notifications } = useNotifications();
   const setNotifications = useNotificationsStore(
     (state) => state.setNotifications

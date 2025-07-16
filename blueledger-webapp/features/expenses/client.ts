@@ -8,15 +8,17 @@ import {
   mapApiResponseListToDisplay,
   mapApiResponseToDisplay,
   mapFormDataToApiRequest,
-} from '@/features/expenses/expense-mapper';
+} from '@/features/expenses/mapper-client';
+
+const endpoint = '/expenses';
 
 export async function getExpenses(): Promise<ExpenseDisplay[]> {
-  const response = await apiGet<ExpenseApiResponse[]>('/expenses');
+  const response = await apiGet<ExpenseApiResponse[]>(endpoint);
   return mapApiResponseListToDisplay(response);
 }
 
 export async function getExpenseById(id: string): Promise<ExpenseDisplay> {
-  const response = await apiGet<ExpenseApiResponse>(`/expenses/${id}`);
+  const response = await apiGet<ExpenseApiResponse>(`${endpoint}/${id}`);
   return mapApiResponseToDisplay(response);
 }
 
@@ -24,7 +26,7 @@ export async function createExpense(
   data: ExpenseFormData
 ): Promise<ExpenseDisplay> {
   const request = mapFormDataToApiRequest(data);
-  const response = await apiPost<ExpenseApiResponse>('/expenses', request);
+  const response = await apiPost<ExpenseApiResponse>(endpoint, request);
   return mapApiResponseToDisplay(response);
 }
 
@@ -34,12 +36,12 @@ export async function updateExpense(
 ): Promise<ExpenseDisplay> {
   const request = mapFormDataToApiRequest(data);
   const response = await apiPatch<ExpenseApiResponse>(
-    `/expenses/${id}`,
+    `${endpoint}/${id}`,
     request
   );
   return mapApiResponseToDisplay(response);
 }
 
 export async function deleteExpense(id: string): Promise<void> {
-  await apiDelete(`/expenses/${id}`);
+  await apiDelete(`${endpoint}/${id}`);
 }

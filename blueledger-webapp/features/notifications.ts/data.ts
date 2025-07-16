@@ -2,56 +2,20 @@ import {
   NotificationDisplay,
   PatchNotificationData,
 } from '@/features/notifications.ts/schemas';
-import Notification, {
-  NotificationDocument,
-} from '@/features/notifications.ts/model';
+import Notification from '@/features/notifications.ts/model';
 import dbConnect from '@/lib/db/mongoose-client';
-
-function toNotificationDisplay(
-  notification: NotificationDocument
-): NotificationDisplay {
-  const { _id, ...rest } = notification.toObject
-    ? notification.toObject()
-    : notification;
-
-  return {
-    ...rest,
-    id: _id?.toString(),
-    user: {
-      name: rest.user?.name || '',
-      image: rest.user?.image || '',
-    },
-    fromUser: {
-      name: rest.fromUser?.name || '',
-      image: rest.fromUser?.image || '',
-    },
-  };
-}
-
-function toNotificationModel(
-  notification: Partial<NotificationDisplay>
-): NotificationDocument {
-  const { user, fromUser, ...rest } = notification;
-
-  const notificationModel = {
-    ...rest,
-    user: user?.id,
-    fromUser: fromUser?.id,
-  };
-
-  return new Notification(notificationModel);
-}
+import { mapDisplayToModel, mapModelToDisplay } from './mapper';
 
 export async function createNotification(
   notification: Partial<NotificationDisplay>
 ): Promise<NotificationDisplay> {
   await dbConnect();
 
-  const notificationModel = toNotificationModel(notification);
+  const notificationModel = mapDisplayToModel(notification);
 
   const newNotification = await Notification.create(notificationModel);
 
-  return toNotificationDisplay(newNotification);
+  return mapModelToDisplay(newNotification);
 }
 
 export async function getNotifications(): Promise<NotificationDisplay[]> {
@@ -62,7 +26,7 @@ export async function getNotifications(): Promise<NotificationDisplay[]> {
     .populate({ path: 'user', select: 'name image' })
     .lean();
 
-  return notifications.map(toNotificationDisplay);
+  return notifications.map(mapModelToDisplay);
 }
 
 export async function getNotificationById(
@@ -75,7 +39,7 @@ export async function getNotificationById(
     .populate({ path: 'user', select: 'name image' })
     .lean();
 
-  return notification ? toNotificationDisplay(notification) : null;
+  return notification ? mapModelToDisplay(notification) : null;
 }
 
 export async function updateNotification(
@@ -103,7 +67,5 @@ export async function updateNotification(
     .populate({ path: 'user', select: 'name image' })
     .lean();
 
-  return updatedNotification
-    ? toNotificationDisplay(updatedNotification)
-    : null;
+  return updatedNotification ? mapModelToDisplay(updatedNotification) : null;
 }
