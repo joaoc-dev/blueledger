@@ -1,14 +1,13 @@
-import { PusherEvent, PusherEvents } from '@/constants/pusher-events';
+import { withAuth } from '@/lib/api/withAuth';
+import { NextRequest, NextResponse } from 'next/server';
+import { validateRequest } from '@/app/api/validateRequest';
+import { createNotificationSchema } from '@/features/notifications.ts/schemas';
 import { NOTIFICATION_TYPES } from '@/features/notifications.ts/constants';
 import { createNotification } from '@/features/notifications.ts/data';
-import { createNotificationSchema } from '@/features/notifications.ts/schemas';
-import { withAuth } from '@/lib/api/withAuth';
 import { sendToPusher } from '@/lib/pusher/pusher-server';
-import { NextAuthRequest } from 'next-auth';
-import { NextResponse } from 'next/server';
-import { validateRequest } from '@/app/api/validateRequest';
+import { PusherEvent, PusherEvents } from '@/constants/pusher-events';
 
-export const POST = withAuth(async function POST(request: NextAuthRequest) {
+export const POST = withAuth(async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     //const userId = request.auth!.user!.id;
@@ -17,7 +16,7 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
     const validationResult = validateRequest(createNotificationSchema, {
       user: body.targetUserId,
       fromUser: '6861b5b421c376f9e0ceaedb',
-      type: NOTIFICATION_TYPES.FRIEND_REQUEST,
+      type: NOTIFICATION_TYPES.GROUP_INVITE,
       isRead: false,
     });
 
@@ -31,12 +30,9 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
       ''
     );
 
-    return NextResponse.json(
-      { message: 'Friend request sent' },
-      { status: 201 }
-    );
+    return NextResponse.json({ message: 'Group invite sent' }, { status: 201 });
   } catch (error) {
-    console.log('Error sending friend request', error);
+    console.log('Error sending group invite', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
