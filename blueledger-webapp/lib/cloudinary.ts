@@ -1,5 +1,5 @@
-import { updateUser } from '@/lib/data/users';
-import { UserType } from '@/types/user';
+import { updateUser } from '@/features/users/data';
+import { UserDisplay } from '@/features/users/schemas';
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
@@ -70,14 +70,17 @@ async function destroyImage(publicId: string) {
 async function handleImageUploadAndUserUpdate(
   userId: string,
   image: Blob
-): Promise<UserType> {
+): Promise<UserDisplay> {
   const uploadResult = await uploadImage(image);
   const publicId = uploadResult.public_id;
 
-  const updatedUser = await updateUser(userId, {
-    image: uploadResult.secure_url,
-    imagePublicId: publicId,
-  } as UserType);
+  const updatedUser = await updateUser({
+    id: userId,
+    data: {
+      image: uploadResult.secure_url,
+      imagePublicId: publicId,
+    },
+  });
 
   if (!updatedUser) {
     await destroyImage(publicId);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useUserStore } from '@/app/(protected)/store';
 import {
   Form,
   FormControl,
@@ -10,17 +10,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Textarea } from '../ui/textarea';
-import { updateUser } from '@/services/users/users';
-import { toast } from 'sonner';
-import { UserType } from '@/types/user';
-import { useUserProfileForm } from '@/hooks/use-user-profile-form';
-import { UserProfileFormData } from '@/lib/validations/user-schema';
-import { useUserStore } from '@/app/(protected)/store';
+import { updateUser } from '@/features/users/client';
+import { useUserProfile, useUserProfileForm } from '@/features/users/hooks';
+import { UserDisplay, UserProfileFormData } from '@/features/users/schemas';
 import { useSession } from 'next-auth/react';
-import { useUserProfile } from '@/hooks/useUserProfile';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
 
 const UserProfileForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,14 +34,14 @@ const UserProfileForm = () => {
     name,
     email,
     bio,
-  } as UserType;
+  } as UserDisplay;
 
   const form = useUserProfileForm(user);
   const { update } = useSession();
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   // Reset form when store values change (e.g., after page refresh)
   useEffect(() => {

@@ -1,6 +1,6 @@
-import { UserType } from '@/types/user';
+import { UserDisplay } from '@/features/users/schemas';
 
-export const dummyUsers: UserType[] = [
+export const dummyUsers: UserDisplay[] = [
   {
     id: '1',
     name: 'Maria Okita',

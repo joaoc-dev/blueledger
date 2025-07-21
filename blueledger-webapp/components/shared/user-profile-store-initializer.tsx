@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useUserStore } from '@/app/(protected)/store';
-import { useUserProfile } from '@/hooks/useUserProfile';
+import { useUserProfile } from '@/features/users/hooks';
 
 export default function UserProfileStoreInitializer() {
   const { data: user } = useUserProfile();

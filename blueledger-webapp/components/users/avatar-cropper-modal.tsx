@@ -16,7 +16,7 @@ import { getCroppedImg } from '@/lib/utils/image';
 import { Button } from '../ui/button';
 import AvatarPreviewPanel from './avatar-preview-panel';
 import { toast } from 'sonner';
-import { updateUserImage } from '@/services/users/users';
+import { updateUserImage } from '@/features/users/client';
 import { useUserStore } from '@/app/(protected)/store';
 import { useSession } from 'next-auth/react';
 

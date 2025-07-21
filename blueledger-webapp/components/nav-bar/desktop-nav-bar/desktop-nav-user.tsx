@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useUserProfile } from '@/hooks/useUserProfile';
+import { useUserProfile } from '@/features/users/hooks';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import UserAvatar from '../user-avatar';

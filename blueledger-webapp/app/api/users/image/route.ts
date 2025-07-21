@@ -4,7 +4,7 @@ import {
   handleImageUploadAndUserUpdate,
   removePreviousImageIfExists,
 } from '@/lib/cloudinary';
-import { getUserById, removeImageFromUser } from '@/lib/data/users';
+import { getUserById, removeImageFromUser } from '@/features/users/data';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
 

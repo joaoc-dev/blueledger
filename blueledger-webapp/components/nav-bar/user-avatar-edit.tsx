@@ -11,7 +11,7 @@ import { Pencil } from 'lucide-react';
 import UserAvatar from './user-avatar';
 import { useState } from 'react';
 import AvatarCropperModal from '../users/avatar-cropper-modal';
-import { updateUserImage } from '@/services/users/users';
+import { updateUserImage } from '@/features/users/client';
 import { toast } from 'sonner';
 import { useUserStore } from '@/app/(protected)/store';
 import { SessionProvider } from 'next-auth/react';
