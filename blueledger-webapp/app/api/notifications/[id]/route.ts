@@ -13,13 +13,13 @@ export const PATCH = withAuth(async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const { error, data } = validateRequest(patchNotificationSchema, {
+    const validationResult = validateRequest(patchNotificationSchema, {
       params: { id },
       body,
     });
-    if (error) return error;
+    if (!validationResult.success) return validationResult.error;
 
-    const notification = await updateNotification(data!);
+    const notification = await updateNotification(validationResult.data!);
 
     return NextResponse.json(notification, { status: 200 });
   } catch (error) {

@@ -10,13 +10,13 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
     const body = await request.json();
     const userId = request.auth!.user!.id;
 
-    const { error, data } = validateRequest(createExpenseSchema, {
+    const validationResult = validateRequest(createExpenseSchema, {
       ...body,
       user: userId,
     });
-    if (error) return error;
+    if (!validationResult.success) return validationResult.error;
 
-    const expense = await createExpense(data!);
+    const expense = await createExpense(validationResult.data!);
 
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {

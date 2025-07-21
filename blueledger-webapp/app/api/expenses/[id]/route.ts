@@ -16,13 +16,13 @@ export const PATCH = withAuth(async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const { error, data } = validateRequest(patchExpenseSchema, {
+    const validationResult = validateRequest(patchExpenseSchema, {
       params: { id },
       body,
     });
-    if (error) return error;
+    if (!validationResult.success) return validationResult.error;
 
-    const expense = await updateExpense(data!);
+    const expense = await updateExpense(validationResult.data!);
     if (!expense)
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
 
@@ -43,10 +43,10 @@ export const DELETE = withAuth(async function DELETE(
   try {
     const { id } = await params;
 
-    const { error } = validateRequest(deleteExpenseSchema, {
+    const validationResult = validateRequest(deleteExpenseSchema, {
       params: { id },
     });
-    if (error) return error;
+    if (!validationResult.success) return validationResult.error;
 
     const expense = await deleteExpense(id);
 

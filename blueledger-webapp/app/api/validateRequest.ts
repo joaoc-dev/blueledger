@@ -1,27 +1,45 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-export function validateRequest<S extends z.ZodTypeAny>(
-  schema: S,
-  data: unknown
-): {
-  error: NextResponse | null;
-  data: z.infer<S> | null;
-} {
-  const validation = schema.safeParse(data);
+export type ValidationResult<T extends z.ZodTypeAny> =
+  | { success: true; data: z.infer<T> }
+  | { success: false; error: NextResponse };
 
-  if (!validation.success) {
+export function validateRequest<T extends z.ZodTypeAny>(
+  schema: T,
+  data: unknown
+): ValidationResult<T> {
+  try {
+    const validation = schema.safeParse(data);
+
+    if (!validation.success) {
+      return {
+        success: false,
+        error: NextResponse.json(
+          {
+            error: 'Error validating schema',
+            details: validation.error.errors.map((e) => ({
+              field: e.path.join('.'),
+              message: e.message,
+            })),
+          },
+          { status: 400 }
+        ),
+      };
+    }
+
     return {
+      success: true,
+      data: validation.data,
+    };
+  } catch (error) {
+    console.log('Error validating request', error);
+    return {
+      success: false,
       error: NextResponse.json(
-        { error: validation.error.format() },
-        { status: 400 }
+        { error: 'Internal validation error' },
+        { status: 500 }
       ),
-      data: null,
     };
   }
-
-  return {
-    error: null,
-    data: validation.data,
-  };
 }
