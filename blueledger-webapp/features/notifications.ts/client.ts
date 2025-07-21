@@ -24,7 +24,7 @@ export async function markAllNotificationsAsRead(): Promise<void> {
     `${endpoint}/mark-all-read`
   );
 
-  if (response.success) {
+  if (!response.success) {
     throw new Error('Failed to mark all notifications as read');
   }
 }

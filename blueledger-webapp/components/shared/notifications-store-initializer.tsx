@@ -6,8 +6,10 @@ import { useNotifications } from '@/features/notifications.ts/hooks';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { getPusherClient } from '@/lib/pusher/pusher-client';
 import { PusherEvents } from '@/constants/pusher-events';
+import { useSession } from 'next-auth/react';
 
 export default function NotificationsStoreInitializer() {
+  const { data: session } = useSession();
   const { notifications } = useNotifications();
   const setNotifications = useNotificationsStore(
     (state) => state.setNotifications
@@ -19,13 +21,14 @@ export default function NotificationsStoreInitializer() {
   }, [notifications, setNotifications]);
 
   useEffect(() => {
+    if (!session?.user?.id) return;
+
     const queryClient = getQueryClient();
 
     const pusherClient = getPusherClient();
-    const channel = pusherClient.subscribe('user-123');
+    const channel = pusherClient.subscribe(session?.user?.id!);
 
     channel.bind(PusherEvents.NOTIFICATION, () => {
-      console.log('Notification received!');
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
     });
 
@@ -33,7 +36,7 @@ export default function NotificationsStoreInitializer() {
       channel.unbind_all();
       channel.unsubscribe();
     };
-  }, []);
+  }, [session]);
 
   return null;
 }

@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth/auth';
 import UserProfileStoreInitializer from '@/components/shared/user-profile-store-initializer';
 import NotificationsStoreInitializer from '@/components/shared/notifications-store-initializer';
 import { SkeletonTheme } from 'react-loading-skeleton';
+import { SessionProvider } from 'next-auth/react';
 
 const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await auth();
@@ -19,7 +20,9 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
       <div className="max-w-screen-xl mx-auto min-h-screen grid grid-rows-[auto_1fr] ">
         <header className="mb-20">
           <UserProfileStoreInitializer />
-          <NotificationsStoreInitializer />
+          <SessionProvider>
+            <NotificationsStoreInitializer />
+          </SessionProvider>
           <NavBar />
         </header>
         <main className="p-10">{children}</main>

@@ -4,18 +4,27 @@ import { NOTIFICATION_TYPE_VALUES } from '@/features/notifications.ts/constants'
 
 const isReadSchema = z.boolean();
 
+export const createNotificationSchema = z.strictObject({
+  user: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
+  fromUser: z
+    .string()
+    .refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
+  type: z.enum(NOTIFICATION_TYPE_VALUES),
+  isRead: isReadSchema,
+});
+
+export type CreateNotificationData = z.infer<typeof createNotificationSchema>;
+
 export const patchNotificationSchema = z.object({
-  params: z.object({
-    id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
-  }),
-  body: z.object({
+  id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
+  data: z.object({
     isRead: isReadSchema,
   }),
 });
 
 export type PatchNotificationData = z.infer<typeof patchNotificationSchema>;
 
-const userSchema = z.object({
+const userDisplaySchema = z.object({
   id: z.string().optional(),
   name: z.string().optional(),
   image: z.string().optional(),
@@ -24,8 +33,8 @@ const userSchema = z.object({
 export const notificationDisplaySchema = z.object({
   id: z.string().optional(),
   optimisticId: z.string().optional(),
-  user: userSchema,
-  fromUser: userSchema,
+  user: userDisplaySchema,
+  fromUser: userDisplaySchema,
   type: z.enum(NOTIFICATION_TYPE_VALUES),
   isRead: z.boolean(),
   createdAt: z.date(),
