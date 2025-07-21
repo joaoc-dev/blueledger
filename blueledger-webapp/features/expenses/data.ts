@@ -22,8 +22,8 @@ export async function createExpense(
   await dbConnect();
 
   const expenseModel: Partial<ExpenseDocument> = {
-    ...expense,
-    totalPrice: expense.price! * expense.quantity!,
+    ...expense.data,
+    totalPrice: expense.data.price! * expense.data.quantity!,
   };
 
   const newExpense = await Expense.create(expenseModel);
@@ -48,18 +48,18 @@ export async function updateExpense(
 ): Promise<ExpenseDisplay | null> {
   await dbConnect();
 
-  const existing = await Expense.findById(expense.params.id);
+  const existing = await Expense.findById(expense.id);
   if (!existing) return null;
 
   const updatedData = {
     ...existing.toObject(),
-    ...expense.body,
+    ...expense.data,
   };
 
   updatedData.totalPrice = updatedData.price! * updatedData.quantity!;
 
   const updatedExpense = await Expense.findByIdAndUpdate(
-    expense.params.id,
+    expense.id,
     updatedData,
     { new: true }
   );

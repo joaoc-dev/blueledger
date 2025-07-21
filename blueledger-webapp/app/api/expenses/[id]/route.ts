@@ -17,8 +17,8 @@ export const PATCH = withAuth(async function PATCH(
     const body = await request.json();
 
     const validationResult = validateRequest(patchExpenseSchema, {
-      params: { id },
-      body,
+      id,
+      data: body,
     });
     if (!validationResult.success) return validationResult.error;
 
@@ -44,7 +44,7 @@ export const DELETE = withAuth(async function DELETE(
     const { id } = await params;
 
     const validationResult = validateRequest(deleteExpenseSchema, {
-      params: { id },
+      id,
     });
     if (!validationResult.success) return validationResult.error;
 

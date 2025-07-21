@@ -1,9 +1,6 @@
+import { EXPENSE_CATEGORIES_VALUES } from '@/features/expenses/constants';
 import { Types } from 'mongoose';
 import { z } from 'zod';
-import {
-  EXPENSE_CATEGORIES,
-  EXPENSE_CATEGORIES_VALUES,
-} from '@/features/expenses/constants';
 
 const descriptionSchema = z
   .string()
@@ -44,18 +41,18 @@ const dateStringToDateSchema = z
   .refine((date) => !isNaN(date.getTime()), { message: 'Invalid date' });
 
 export const createExpenseSchema = z.strictObject({
-  ...expenseBaseSchema,
-  user: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
-  date: dateStringToDateSchema,
+  data: z.strictObject({
+    ...expenseBaseSchema,
+    user: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
+    date: dateStringToDateSchema,
+  }),
 });
 
 export type CreateExpenseData = z.infer<typeof createExpenseSchema>;
 
 export const patchExpenseSchema = z.object({
-  params: z.object({
-    id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
-  }),
-  body: z
+  id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
+  data: z
     .strictObject({
       description: descriptionSchema.optional(),
       price: priceSchema.optional(),
@@ -74,9 +71,7 @@ export const patchExpenseSchema = z.object({
 export type PatchExpenseData = z.infer<typeof patchExpenseSchema>;
 
 export const deleteExpenseSchema = z.strictObject({
-  params: z.object({
-    id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
-  }),
+  id: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
 });
 
 export const expenseDisplaySchema = z.object({

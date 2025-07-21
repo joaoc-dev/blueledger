@@ -11,8 +11,10 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
     const userId = request.auth!.user!.id;
 
     const validationResult = validateRequest(createExpenseSchema, {
-      ...body,
-      user: userId,
+      data: {
+        ...body,
+        user: userId,
+      },
     });
     if (!validationResult.success) return validationResult.error;
 

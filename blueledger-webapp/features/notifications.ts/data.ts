@@ -51,16 +51,16 @@ export async function updateNotification(
 ): Promise<NotificationDisplay | null> {
   await dbConnect();
 
-  const existing = await Notification.findById(notification.params.id);
+  const existing = await Notification.findById(notification.id);
   if (!existing) return null;
 
   const updatedData = {
     ...existing.toObject(),
-    ...notification.body,
+    ...notification.data,
   };
 
   const updatedNotification = await Notification.findByIdAndUpdate(
-    notification.params.id,
+    notification.id,
     updatedData,
     {
       new: true,

@@ -14,8 +14,8 @@ export const PATCH = withAuth(async function PATCH(
     const body = await request.json();
 
     const validationResult = validateRequest(patchNotificationSchema, {
-      params: { id },
-      body,
+      id,
+      data: body,
     });
     if (!validationResult.success) return validationResult.error;
 
