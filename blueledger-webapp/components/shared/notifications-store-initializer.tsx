@@ -26,7 +26,8 @@ export default function NotificationsStoreInitializer() {
     const queryClient = getQueryClient();
 
     const pusherClient = getPusherClient();
-    const channel = pusherClient.subscribe(session?.user?.id!);
+    const privateChannel = `private-user-${session?.user?.id}`;
+    const channel = pusherClient.subscribe(privateChannel);
 
     channel.bind(PusherEvents.NOTIFICATION, () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });

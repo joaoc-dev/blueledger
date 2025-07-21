@@ -24,11 +24,8 @@ export const POST = withAuth(async function POST(request: NextRequest) {
 
     await createNotification(validationResult.data!);
 
-    sendToPusher(
-      validationResult.data!.user,
-      PusherEvents.NOTIFICATION as PusherEvent,
-      ''
-    );
+    const privateChannel = `private-user-${validationResult.data!.user}`;
+    sendToPusher(privateChannel, PusherEvents.NOTIFICATION as PusherEvent, '');
 
     return NextResponse.json(
       { message: 'Expense notification sent' },

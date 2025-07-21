@@ -19,4 +19,8 @@ const sendToPusher = async (
   });
 };
 
-export { sendToPusher };
+const authorizeChannel = (socket_id: string, channel_name: string) => {
+  return pusherServer.authorizeChannel(socket_id, channel_name);
+};
+
+export { sendToPusher, authorizeChannel };
