@@ -26,6 +26,7 @@ export async function getNotifications(): Promise<NotificationDisplay[]> {
   await dbConnect();
 
   const notifications = await Notification.find()
+    .sort({ createdAt: -1 })
     .populate({ path: 'fromUser', select: 'name image' })
     .populate({ path: 'user', select: 'name image' })
     .lean();
