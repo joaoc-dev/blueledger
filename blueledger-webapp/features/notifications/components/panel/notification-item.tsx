@@ -1,11 +1,11 @@
-import { Clock, UserRound } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import { NotificationMessage } from './notification-message';
-import NotificationActions from './notification-actions';
-import { NotificationDisplay } from '@/features/notifications.ts/schemas';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { formatDistanceToNow } from 'date-fns';
+import { Clock, UserRound } from 'lucide-react';
+import { NotificationDisplay } from '../../schemas';
+import NotificationActions from './notification-actions';
+import NotificationMessage from './notification-message';
 
-export const NotificationItem = ({
+const NotificationItem = ({
   notification,
   setNotificationRead,
 }: {
@@ -47,3 +47,5 @@ export const NotificationItem = ({
     </div>
   );
 };
+
+export default NotificationItem;

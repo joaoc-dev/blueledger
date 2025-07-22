@@ -1,8 +1,8 @@
-import User from '@/features/users/model';
-import { PatchUserData, UserDisplay } from '@/features/users/schemas';
 import dbConnect from '@/lib/db/mongoose-client';
 import mongoose from 'mongoose';
 import { mapModelToDisplay } from './mapper-server';
+import User from './model';
+import { PatchUserData, UserDisplay } from './schemas';
 
 export async function getUserById(id: string): Promise<UserDisplay | null> {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;

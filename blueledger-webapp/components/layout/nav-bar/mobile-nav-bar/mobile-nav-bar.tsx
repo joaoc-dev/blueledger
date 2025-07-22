@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { ThemeToggle } from '@/components/theme-toggle';
+import {
+  MobileNotificationBell,
+  MobileNotificationSheet,
+} from '@/features/notifications/components';
 import { HandCoins } from 'lucide-react';
-import { ThemeToggle } from '../theme-toggle';
+import Link from 'next/link';
+import { useState } from 'react';
 import HamburgerButton from './hamburger-button';
 import MobileNavMenu from './mobile-nav-menu';
-import MobileNotificationBell from '../notifications/mobile-notification-bell';
-import MobileNotificationSheet from '../notifications/mobile-notification-sheet';
 
 interface MobileNavBarProps {
   links: { label: string; href: string }[];

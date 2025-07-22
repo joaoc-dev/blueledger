@@ -1,12 +1,12 @@
-import { getUser } from '@/features/users/client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { getUser } from './client';
 import {
   UserDisplay,
   UserProfileFormData,
   userProfileFormSchema,
-} from '@/features/users/schemas';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+} from './schemas';
 
 export function useUserProfile() {
   return useQuery({

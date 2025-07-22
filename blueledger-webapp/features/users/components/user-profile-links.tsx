@@ -1,12 +1,11 @@
 'use client';
 
 import { Separator } from '@/components/ui/separator';
-import UserAvatar from '@/components/nav-bar/user-avatar';
-import Link from 'next/link';
-import React from 'react';
+import UserAvatar from '../components/user-avatar';
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
 import { signOut } from 'next-auth/react';
-import { useUserStore } from '@/app/(protected)/store';
+import Link from 'next/link';
+import { useUserStore } from './store';
 
 interface UserProfileLinksProps {
   onClose: () => void;

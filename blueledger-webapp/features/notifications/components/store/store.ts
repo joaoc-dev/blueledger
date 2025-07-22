@@ -1,5 +1,5 @@
-import { NotificationDisplay } from '@/features/notifications/schemas';
 import { create } from 'zustand';
+import { NotificationDisplay } from '../../schemas';
 
 interface NotificationsStore {
   notifications: NotificationDisplay[];

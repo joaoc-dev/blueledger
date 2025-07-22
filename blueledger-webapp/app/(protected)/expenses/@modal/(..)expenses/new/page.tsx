@@ -1,7 +1,7 @@
 'use client';
 
 import Modal from '@/components/shared/modal';
-import ExpenseForm from '@/components/expenses/expense-form';
+import { ExpenseForm } from '@/features/expenses/components';
 
 const NewExpensePageModal = () => {
   return (

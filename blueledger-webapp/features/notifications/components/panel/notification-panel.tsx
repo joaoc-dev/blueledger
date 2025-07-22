@@ -1,10 +1,10 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { NotificationListAnimated } from '@/components/nav-bar/notifications/panel/notification-list-animated';
-import { NotificationListVirtualized } from '@/components/nav-bar/notifications/panel/notification-list-virtualized';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useNotifications } from '@/features/notifications.ts/hooks';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Mails } from 'lucide-react';
+import { useNotifications } from '../../hooks';
+import NotificationListAnimated from './notification-list-animated';
+import NotificationListVirtualized from './notification-list-virtualized';
 
 const NotificationPanel = () => {
   const { read, unread, markAsReadMutation, markAllAsReadMutation } =

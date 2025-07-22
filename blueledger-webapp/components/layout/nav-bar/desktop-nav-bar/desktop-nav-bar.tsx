@@ -1,13 +1,13 @@
 'use client';
 
+import { ThemeToggle } from '@/components/theme-toggle';
+import { DesktopNotificationBell } from '@/features/notifications/components';
 import { cn } from '@/lib/utils';
 import { HandCoins } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
-import { ThemeToggle } from '../theme-toggle';
 import { DesktopNavUser } from './desktop-nav-user';
-import DesktopNotificationBell from '../notifications/desktop-notification-bell';
 
 interface DesktopNavBarProps {
   links: { label: string; href: string }[];

@@ -1,9 +1,9 @@
-import { withAuth } from '@/lib/api/withAuth';
 import { deleteExpense, updateExpense } from '@/features/expenses/data';
 import {
   deleteExpenseSchema,
   patchExpenseSchema,
 } from '@/features/expenses/schemas';
+import { withAuth } from '@/lib/api/withAuth';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { validateRequest } from '../../validateRequest';

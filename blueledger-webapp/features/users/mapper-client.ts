@@ -1,8 +1,4 @@
-import {
-  UserApiResponse,
-  UserDisplay,
-  UserProfileFormData,
-} from '@/features/users/schemas';
+import { UserApiResponse, UserDisplay, UserProfileFormData } from './schemas';
 
 export function mapApiResponseToDisplay(
   apiResponse: UserApiResponse

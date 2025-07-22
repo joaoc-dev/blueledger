@@ -1,6 +1,6 @@
 'use client';
 
-import { useUserStore } from '@/app/(protected)/store';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -10,15 +10,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { updateUser } from '@/features/users/client';
-import { useUserProfile, useUserProfileForm } from '@/features/users/hooks';
-import { UserDisplay, UserProfileFormData } from '@/features/users/schemas';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
+import { updateUser } from '../client';
+import { useUserProfile, useUserProfileForm } from '../hooks';
+import { UserDisplay, UserProfileFormData } from '../schemas';
+import { useUserStore } from './store';
 
 const UserProfileForm = () => {
   const [isLoading, setIsLoading] = useState(false);

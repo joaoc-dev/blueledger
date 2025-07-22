@@ -1,12 +1,12 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { ExpenseType } from '@/types/expense';
-import { CATEGORY_ICONS, ExpenseCategory } from '@/constants/expense-category';
-import { CircleEllipsis } from 'lucide-react';
 import { DataTableColumnHeader } from '@/components/shared/data-table/data-table-column-header';
 import { formatLocalizedDate } from '@/lib/utils';
+import { ColumnDef } from '@tanstack/react-table';
+import { CircleEllipsis } from 'lucide-react';
+import { CATEGORY_ICONS, ExpenseCategory } from '../../constants';
+import { ExpenseDisplay } from '../../schemas';
 import ExpenseRowActions from './expense-row-actions';
 
-export const columns: ColumnDef<ExpenseType>[] = [
+export const columns: ColumnDef<ExpenseDisplay>[] = [
   {
     accessorKey: 'description',
     header: 'Description',

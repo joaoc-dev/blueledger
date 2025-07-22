@@ -1,8 +1,8 @@
-import { ScrollArea } from '@/components/custom/scroll-area';
-import { NotificationItem } from './notification-item';
+import { ScrollArea } from '@/components/third-party/scroll-area';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
-import { NotificationDisplay } from '@/features/notifications.ts/schemas';
+import { NotificationDisplay } from '../../schemas';
+import NotificationItem from './notification-item';
 
 export const NotificationListVirtualized = ({
   notificationsList,
@@ -56,3 +56,5 @@ export const NotificationListVirtualized = ({
     </div>
   );
 };
+
+export default NotificationListVirtualized;

@@ -1,8 +1,8 @@
 'use client';
 
+import { UserProfileLinks } from '@/features/users/components';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import UserProfileLinks from './user-profile-links';
 
 interface MobileNavMenuProps {
   links: { label: string; href: string }[];

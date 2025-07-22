@@ -1,8 +1,8 @@
 import { Badge } from '@/components/ui/badge';
-import { NotificationDisplay } from '@/features/notifications.ts/schemas';
-import { NOTIFICATION_TYPES } from '@/features/notifications.ts/constants';
+import { NOTIFICATION_TYPES } from '../../constants';
+import { NotificationDisplay } from '../../schemas';
 
-export const NotificationMessage = ({
+const NotificationMessage = ({
   notification,
 }: {
   notification: NotificationDisplay;
@@ -40,3 +40,5 @@ export const NotificationMessage = ({
       );
   }
 };
+
+export default NotificationMessage;

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { NotificationDisplay } from '@/features/notifications.ts/schemas';
+import { NotificationDisplay } from '../../schemas';
 
 // TODO: Add actions by notification type
 const NotificationActions = ({

@@ -1,8 +1,8 @@
-import { withAuth } from '@/lib/api/withAuth';
+import { createExpense, getExpenses } from '@/features/expenses/data';
 import { createExpenseSchema } from '@/features/expenses/schemas';
+import { withAuth } from '@/lib/api/withAuth';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { createExpense, getExpenses } from '@/features/expenses/data';
 import { validateRequest } from '../validateRequest';
 
 export const POST = withAuth(async function POST(request: NextAuthRequest) {

@@ -1,8 +1,7 @@
 'use client';
 
-import debounce from 'lodash.debounce';
-import React, { useEffect, useRef, useState } from 'react';
-import Cropper, { Area } from 'react-easy-crop';
+import GenericDropzone from '@/components/shared/generic-dropzone';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,14 +10,15 @@ import {
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
-import GenericDropzone from '../shared/generic-dropzone';
-import { getCroppedImg } from '@/lib/utils/image';
-import { Button } from '../ui/button';
-import AvatarPreviewPanel from './avatar-preview-panel';
-import { toast } from 'sonner';
 import { updateUserImage } from '@/features/users/client';
-import { useUserStore } from '@/app/(protected)/store';
+import { getCroppedImg } from '@/lib/utils/image';
+import debounce from 'lodash.debounce';
 import { useSession } from 'next-auth/react';
+import { useEffect, useRef, useState } from 'react';
+import Cropper, { Area } from 'react-easy-crop';
+import { toast } from 'sonner';
+import AvatarPreviewPanel from './avatar-preview-panel';
+import { useUserStore } from './store';
 
 type Props = {
   open: boolean;

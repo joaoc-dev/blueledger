@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { expenseKeys } from '@/constants/query-keys';
+import { ExpensesTable } from '@/features/expenses/components';
+import { getExpenses } from '@/features/expenses/data';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { getExpenses } from '@/features/expenses/data';
-import ExpensesTable from '@/components/expenses/expenses-table';
-import { expenseKeys } from '@/constants/query-keys';
+import Link from 'next/link';
 
 const ServerGetExpenses = async () => {
   // console.log('ServerGetExpenses');

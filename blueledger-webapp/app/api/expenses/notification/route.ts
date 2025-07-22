@@ -1,11 +1,11 @@
-import { withAuth } from '@/lib/api/withAuth';
-import { NextRequest, NextResponse } from 'next/server';
 import { validateRequest } from '@/app/api/validateRequest';
-import { createNotificationSchema } from '@/features/notifications.ts/schemas';
-import { NOTIFICATION_TYPES } from '@/features/notifications.ts/constants';
-import { createNotification } from '@/features/notifications.ts/data';
-import { sendToPusher } from '@/lib/pusher/pusher-server';
 import { PusherEvent, PusherEvents } from '@/constants/pusher-events';
+import { NOTIFICATION_TYPES } from '@/features/notifications/constants';
+import { createNotification } from '@/features/notifications/data';
+import { createNotificationSchema } from '@/features/notifications/schemas';
+import { withAuth } from '@/lib/api/withAuth';
+import { sendToPusher } from '@/lib/pusher/pusher-server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = withAuth(async function POST(request: NextRequest) {
   try {

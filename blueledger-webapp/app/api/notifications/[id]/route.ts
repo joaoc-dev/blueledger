@@ -1,6 +1,6 @@
+import { updateNotification } from '@/features/notifications/data';
+import { patchNotificationSchema } from '@/features/notifications/schemas';
 import { withAuth } from '@/lib/api/withAuth';
-import { updateNotification } from '@/features/notifications.ts/data';
-import { patchNotificationSchema } from '@/features/notifications.ts/schemas';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { validateRequest } from '../../validateRequest';

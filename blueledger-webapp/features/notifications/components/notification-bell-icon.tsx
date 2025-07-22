@@ -1,4 +1,4 @@
-import { useNotifications } from '@/features/notifications.ts/hooks';
+import { useNotifications } from '../hooks';
 import { cn } from '@/lib/utils';
 import { Bell } from 'lucide-react';
 import { forwardRef } from 'react';

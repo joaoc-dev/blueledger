@@ -13,7 +13,7 @@ import {
   CATEGORY_ICONS,
   EXPENSE_CATEGORIES_VALUES,
   ExpenseCategory,
-} from '@/features/expenses/constants';
+} from '../constants';
 
 interface ExpenseCategorySelectProps {
   value: ExpenseCategory | undefined;

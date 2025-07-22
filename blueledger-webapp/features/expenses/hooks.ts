@@ -1,19 +1,11 @@
 import { expenseKeys } from '@/constants/query-keys';
-import {
-  createExpense,
-  deleteExpense,
-  updateExpense,
-} from '@/features/expenses/client';
-import {
-  ExpenseFormData,
-  expenseFormSchema,
-  ExpenseDisplay,
-} from '@/features/expenses/schemas';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
+import { createExpense, deleteExpense, updateExpense } from './client';
+import { ExpenseDisplay, ExpenseFormData, expenseFormSchema } from './schemas';
 
 interface ExpensesContext {
   previousExpenses: ExpenseDisplay[];
@@ -185,7 +177,7 @@ export const useExpenseForm = (expense?: ExpenseDisplay) => {
     defaultValues: {
       description: expense?.description || '',
       price: expense?.price || 0,
-      quantity: expense?.quantity || 0,
+      quantity: expense?.quantity,
       category: expense?.category || 'Other',
       date: expense?.date || new Date(),
     },

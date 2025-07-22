@@ -1,7 +1,7 @@
+import { markAllNotificationsAsRead } from '@/features/notifications/data';
+import { withAuth } from '@/lib/api/withAuth';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { markAllNotificationsAsRead } from '@/features/notifications.ts/data';
-import { withAuth } from '@/lib/api/withAuth';
 
 export const PATCH = withAuth(async function PATCH(request: NextAuthRequest) {
   try {

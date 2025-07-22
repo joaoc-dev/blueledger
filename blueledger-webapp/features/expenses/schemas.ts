@@ -1,6 +1,6 @@
-import { EXPENSE_CATEGORIES_VALUES } from '@/features/expenses/constants';
 import { Types } from 'mongoose';
 import { z } from 'zod';
+import { EXPENSE_CATEGORIES_VALUES } from './constants';
 
 const descriptionSchema = z
   .string()
@@ -10,8 +10,8 @@ const descriptionSchema = z
 
 const priceSchema = z.number().min(0, { message: 'Price cannot be negative' });
 
-const quantitySchema = z
-  .number()
+const quantitySchema = z.coerce
+  .number({ invalid_type_error: 'Quantity must be a number' })
   .min(1, { message: 'Quantity must be greater than 0' });
 
 const categorySchema = z.enum(EXPENSE_CATEGORIES_VALUES);

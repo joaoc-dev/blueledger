@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useUserProfile } from '../../hooks';
 import { useUserStore } from './store';
-import { useUserProfile } from '@/features/users/hooks';
 
 export default function UserProfileStoreInitializer() {
   const { data: user } = useUserProfile();

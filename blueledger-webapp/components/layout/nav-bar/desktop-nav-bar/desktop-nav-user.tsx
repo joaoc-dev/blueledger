@@ -1,8 +1,5 @@
 'use client';
 
-import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
-
-import { useUserStore } from '@/app/(protected)/store';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,10 +9,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { UserAvatar, useUserStore } from '@/features/users/components';
 import { useUserProfile } from '@/features/users/hooks';
+import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
-import UserAvatar from '../user-avatar';
 
 export function DesktopNavUser() {
   const { refetch } = useUserProfile();

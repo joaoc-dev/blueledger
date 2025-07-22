@@ -1,4 +1,4 @@
-import NavBar from '@/components/nav-bar';
+import NavBar from '@/components/layout/nav-bar';
 import AuthRedirectClient from '@/components/shared/auth-redirect-client';
 import { auth } from '@/lib/auth/auth';
 import UserProfileStoreInitializer from '@/features/users/components/store/store-initializer';

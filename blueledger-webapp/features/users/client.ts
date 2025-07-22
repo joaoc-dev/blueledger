@@ -1,13 +1,9 @@
-import {
-  UserApiResponse,
-  UserDisplay,
-  UserProfileFormData,
-} from '@/features/users/schemas';
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client';
 import {
   mapApiResponseToDisplay,
   mapFormDataToApiRequest,
 } from './mapper-client';
+import { UserApiResponse, UserDisplay, UserProfileFormData } from './schemas';
 
 export async function getUser(): Promise<UserDisplay> {
   const response = await apiGet<UserApiResponse>(`/users/me`);

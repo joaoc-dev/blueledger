@@ -1,23 +1,22 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Pencil } from 'lucide-react';
-import UserAvatar from './user-avatar';
-import { useState } from 'react';
-import AvatarCropperModal from '../users/avatar-cropper-modal';
 import { updateUserImage } from '@/features/users/client';
+import { Pencil } from 'lucide-react';
+import { SessionProvider, useSession } from 'next-auth/react';
+import { useState } from 'react';
 import { toast } from 'sonner';
-import { useUserStore } from '@/app/(protected)/store';
-import { SessionProvider } from 'next-auth/react';
-import { useSession } from 'next-auth/react';
+import AvatarCropperModal from './avatar-cropper-modal';
+import { useUserStore } from './store';
+import UserAvatar from './user-avatar';
 
-export function UserAvatarEdit() {
+export default function UserAvatarEdit() {
   const [cropperOpen, setCropperOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 

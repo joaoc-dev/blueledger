@@ -1,5 +1,6 @@
 'use client';
 
+import { DateTimePicker } from '@/components/shared/date-time-picker';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -10,19 +11,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useExpenseForm } from '@/hooks/useExpenseForm';
-import { useExpenses } from '@/hooks/useExpenses';
-import { ExpenseFormData } from '@/lib/validations/expense-schema';
-import { ExpenseType } from '@/types/expense';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
-import { DateTimePicker } from '../shared/date-time-picker';
+import { useExpenseForm, useExpenses } from '../hooks';
+import { ExpenseDisplay, ExpenseFormData } from '../schemas';
 import { ExpenseCategorySelect } from './expense-category-select';
 
 interface ExpenseFormProps {
-  expense?: ExpenseType;
+  expense?: ExpenseDisplay;
 }
 
 const ExpenseForm = ({ expense }: ExpenseFormProps) => {
@@ -54,6 +52,7 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
 
       router.back();
     } catch (error) {
+      console.log('Error submitting expense', error);
       toast.error(`Failed to ${isUpdate ? 'update' : 'add'} expense`, {
         id: toastId,
       });

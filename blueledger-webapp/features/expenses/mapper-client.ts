@@ -1,8 +1,4 @@
-import {
-  ExpenseDisplay,
-  ExpenseFormData,
-  ExpenseApiResponse,
-} from '@/features/expenses/schemas';
+import { ExpenseDisplay, ExpenseFormData, ExpenseApiResponse } from './schemas';
 
 export function mapApiResponseToDisplay(
   apiResponse: ExpenseApiResponse

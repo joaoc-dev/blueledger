@@ -1,14 +1,10 @@
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/lib/api-client';
 import {
-  ExpenseApiResponse,
-  ExpenseDisplay,
-  ExpenseFormData,
-} from '@/features/expenses/schemas';
-import {
   mapApiResponseListToDisplay,
   mapApiResponseToDisplay,
   mapFormDataToApiRequest,
-} from '@/features/expenses/mapper-client';
+} from './mapper-client';
+import { ExpenseApiResponse, ExpenseDisplay, ExpenseFormData } from './schemas';
 
 const endpoint = '/expenses';
 

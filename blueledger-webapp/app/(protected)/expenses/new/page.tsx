@@ -1,4 +1,4 @@
-import ExpenseForm from '@/components/expenses/expense-form';
+import { ExpenseForm } from '@/features/expenses/components';
 
 const NewExpensePage = () => {
   return <ExpenseForm />;

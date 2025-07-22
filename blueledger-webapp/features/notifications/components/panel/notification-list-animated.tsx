@@ -1,9 +1,9 @@
-import { ScrollArea } from '@/components/custom/scroll-area';
+import { ScrollArea } from '@/components/third-party/scroll-area';
 import { AnimatePresence, motion } from 'motion/react';
-import { NotificationItem } from './notification-item';
-import { NotificationDisplay } from '@/features/notifications.ts/schemas';
+import { NotificationDisplay } from '../../schemas';
+import NotificationItem from './notification-item';
 
-export const NotificationListAnimated = ({
+const NotificationListAnimated = ({
   notificationsList,
   setNotificationRead,
 }: {
@@ -36,3 +36,5 @@ export const NotificationListAnimated = ({
     </div>
   );
 };
+
+export default NotificationListAnimated;

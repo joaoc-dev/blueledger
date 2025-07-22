@@ -1,10 +1,10 @@
 'use client';
 
-import { getExpenses } from '@/services/expenses';
+import { getExpenses } from '../../client';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '../../ui/button';
+import { Button } from '@/components/ui/button';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
-import { DataTable } from '../../shared/data-table/data-table';
+import { DataTable } from '@/components/shared/data-table/data-table';
 import { columns } from './columns';
 import { expenseKeys } from '@/constants/query-keys';
 
@@ -21,7 +21,7 @@ const ExpensesTable = () => {
 
   const {
     data: expenses,
-    isLoading,
+    // isLoading,
     isFetching,
     isError,
     error,
