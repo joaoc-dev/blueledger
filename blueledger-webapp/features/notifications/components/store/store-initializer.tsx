@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useNotificationsStore } from '@/app/(protected)/store';
-import { useNotifications } from '@/features/notifications.ts/hooks';
-import { getQueryClient } from '@/lib/react-query/get-query-client';
-import { getPusherClient } from '@/lib/pusher/pusher-client';
 import { PusherEvents } from '@/constants/pusher-events';
+import { useNotifications } from '@/features/notifications/hooks';
+import { getPusherClient } from '@/lib/pusher/pusher-client';
+import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { useNotificationsStore } from './store';
 
 export default function NotificationsStoreInitializer() {
   const { data: session } = useSession();

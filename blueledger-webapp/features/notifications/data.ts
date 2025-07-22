@@ -2,18 +2,17 @@ import {
   NotificationDisplay,
   PatchNotificationData,
   CreateNotificationData,
-} from '@/features/notifications.ts/schemas';
-import Notification from '@/features/notifications.ts/model';
+} from './schemas';
+import Notification, { NotificationDocument } from './model';
 import dbConnect from '@/lib/db/mongoose-client';
 import { mapModelToDisplay } from './mapper-server';
-import { ExpenseDocument } from '../expenses/model';
 
 export async function createNotification(
   notification: CreateNotificationData
 ): Promise<NotificationDisplay> {
   await dbConnect();
 
-  const notificationModel: Partial<ExpenseDocument> = {
+  const notificationModel: Partial<NotificationDocument> = {
     ...notification,
   };
 

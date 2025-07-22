@@ -1,10 +1,10 @@
-import { NotificationDisplay } from '@/features/notifications.ts/schemas';
-import { apiGet, apiPatch } from '../../lib/api-client';
-import { NotificationApiResponse } from './schemas';
+import { NotificationDisplay } from '@/features/notifications/schemas';
+import { apiGet, apiPatch } from '@/lib/api-client';
 import {
   mapApiResponseListToDisplay,
   mapApiResponseToDisplay,
 } from './mapper-client';
+import { NotificationApiResponse } from './schemas';
 
 const endpoint = '/notifications';
 

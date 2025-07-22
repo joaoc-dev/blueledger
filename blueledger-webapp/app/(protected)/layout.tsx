@@ -1,8 +1,8 @@
 import NavBar from '@/components/nav-bar';
 import AuthRedirectClient from '@/components/shared/auth-redirect-client';
 import { auth } from '@/lib/auth/auth';
-import UserProfileStoreInitializer from '@/components/shared/user-profile-store-initializer';
-import NotificationsStoreInitializer from '@/components/shared/notifications-store-initializer';
+import UserProfileStoreInitializer from '@/features/users/components/store/store-initializer';
+import NotificationsStoreInitializer from '@/features/notifications/components/store/store-initializer';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import { SessionProvider } from 'next-auth/react';
 

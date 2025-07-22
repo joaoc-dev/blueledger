@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
 // This interface represents the properties of an User document
 interface IUser {

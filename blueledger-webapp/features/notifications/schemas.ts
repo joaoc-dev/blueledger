@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { z } from 'zod';
-import { NOTIFICATION_TYPE_VALUES } from '@/features/notifications.ts/constants';
+import { NOTIFICATION_TYPE_VALUES } from './constants';
 
 const isReadSchema = z.boolean();
 

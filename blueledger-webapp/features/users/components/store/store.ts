@@ -1,7 +1,6 @@
-import { NotificationDisplay } from '@/features/notifications.ts/schemas';
 import { create } from 'zustand';
 
-interface UserProfileStore {
+interface UserStore {
   image?: string;
   name?: string;
   email?: string;
@@ -13,7 +12,7 @@ interface UserProfileStore {
   reset: () => void;
 }
 
-const useUserStore = create<UserProfileStore>((set) => ({
+const useUserStore = create<UserStore>((set) => ({
   image: undefined,
   name: undefined,
   email: undefined,
@@ -31,14 +30,4 @@ const useUserStore = create<UserProfileStore>((set) => ({
     }),
 }));
 
-interface NotificationsStore {
-  notifications: NotificationDisplay[];
-  setNotifications: (notifications: NotificationDisplay[]) => void;
-}
-
-const useNotificationsStore = create<NotificationsStore>((set) => ({
-  notifications: [],
-  setNotifications: (notifications) => set({ notifications }),
-}));
-
-export { useUserStore, useNotificationsStore };
+export { useUserStore };

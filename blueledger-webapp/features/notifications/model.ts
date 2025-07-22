@@ -1,12 +1,9 @@
-import mongoose, { Schema, Document, Model, ObjectId } from 'mongoose';
-import {
-  NOTIFICATION_TYPE_VALUES,
-  NotificationType,
-} from '@/features/notifications.ts/constants';
+import mongoose, { Document, Model, ObjectId, Schema } from 'mongoose';
+import { NOTIFICATION_TYPE_VALUES, NotificationType } from './constants';
 
 interface INotification {
-  user: ObjectId;
-  fromUser: ObjectId;
+  user: ObjectId | string;
+  fromUser: ObjectId | string;
   type: NotificationType;
   isRead: boolean;
   createdAt: Date;

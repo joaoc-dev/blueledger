@@ -2,13 +2,12 @@ import {
   getNotifications,
   markAllNotificationsAsRead,
   markNotificationAsRead,
-} from '@/features/notifications.ts/client';
+} from './client';
 
-import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { notificationKeys } from '@/constants/query-keys';
-import { useQuery } from '@tanstack/react-query';
-import { useMutation } from '@tanstack/react-query';
-import { NotificationDisplay } from '@/features/notifications.ts/schemas';
+import { getQueryClient } from '@/lib/react-query/get-query-client';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { NotificationDisplay } from './schemas';
 
 export function useNotifications() {
   const queryClient = getQueryClient();

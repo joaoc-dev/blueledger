@@ -21,17 +21,3 @@ export function mapModelToDisplay(
     },
   };
 }
-
-// export function mapDisplayToModel(
-//   notification: Partial<NotificationDisplay>
-// ): NotificationDocument {
-//   const { user, fromUser, ...rest } = notification;
-
-//   const notificationModel = {
-//     ...rest,
-//     user: user?.id,
-//     fromUser: fromUser?.id,
-//   };
-
-//   return new Notification(notificationModel);
-// }

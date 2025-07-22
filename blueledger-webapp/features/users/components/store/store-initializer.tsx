@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useUserStore } from '@/app/(protected)/store';
+import { useUserStore } from './store';
 import { useUserProfile } from '@/features/users/hooks';
 
 export default function UserProfileStoreInitializer() {
