@@ -1,4 +1,4 @@
-import { ScrollArea } from '@/components/third-party/scroll-area';
+import { ScrollArea } from '@/components/ui-modified/scroll-area';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
 import { NotificationDisplay } from '../../schemas';

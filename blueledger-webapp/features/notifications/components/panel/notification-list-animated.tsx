@@ -1,4 +1,4 @@
-import { ScrollArea } from '@/components/third-party/scroll-area';
+import { ScrollArea } from '@/components/ui-modified/scroll-area';
 import { AnimatePresence, motion } from 'motion/react';
 import { NotificationDisplay } from '../../schemas';
 import NotificationItem from './notification-item';

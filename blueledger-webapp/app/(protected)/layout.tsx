@@ -18,7 +18,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
       duration={1.5}
     >
       <div className="max-w-screen-xl mx-auto min-h-screen grid grid-rows-[auto_1fr] ">
-        <header className="mb-20">
+        <header className="mb-8">
           <UserProfileStoreInitializer />
           <SessionProvider>
             <NotificationsStoreInitializer />
