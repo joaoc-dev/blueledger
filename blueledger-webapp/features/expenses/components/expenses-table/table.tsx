@@ -1,12 +1,12 @@
 'use client';
 
-import { getExpenses } from '../../client';
-import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { getQueryClient } from '@/lib/react-query/get-query-client';
-import { DataTable } from '@/components/shared/data-table/data-table';
-import { columns } from './columns';
 import { expenseKeys } from '@/constants/query-keys';
+import { getQueryClient } from '@/lib/react-query/get-query-client';
+import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
+import { getExpenses } from '../../client';
+import { DataTable } from './data-table';
 
 const ClientGetExpenses = async () => {
   await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -18,10 +18,12 @@ const ClientGetExpenses = async () => {
 
 const ExpensesTable = () => {
   const queryClient = getQueryClient();
+  const searchParams = useSearchParams();
+
+  const description = searchParams.get('description') ?? '';
 
   const {
     data: expenses,
-    // isLoading,
     isFetching,
     isError,
     error,
@@ -37,7 +39,7 @@ const ExpensesTable = () => {
         <Button
           disabled={isFetching}
           onClick={() =>
-            queryClient.invalidateQueries({ queryKey: ['expenses'] })
+            queryClient.invalidateQueries({ queryKey: [expenseKeys.byUser] })
           }
         >
           Retry
@@ -46,9 +48,7 @@ const ExpensesTable = () => {
     );
   }
 
-  return (
-    <DataTable storageKey="expenses" columns={columns} data={expenses || []} />
-  );
+  return <DataTable data={expenses || []} isFetching={isFetching} />;
 };
 
 export default ExpensesTable;

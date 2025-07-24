@@ -1,3 +1,3 @@
-import ExpensesTableWrapper from './expenses-table-wrapper';
+import DynamicTableWrapper from './dynamic-table-wrapper';
 
-export default ExpensesTableWrapper;
+export default DynamicTableWrapper;

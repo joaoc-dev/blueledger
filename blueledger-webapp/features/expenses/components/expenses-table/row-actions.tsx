@@ -12,7 +12,7 @@ interface ExpenseRowActionsProps {
   id: string;
   disabled?: boolean;
 }
-const ExpenseRowActions = ({ id, disabled }: ExpenseRowActionsProps) => {
+const RowActions = ({ id, disabled }: ExpenseRowActionsProps) => {
   const expenses = useExpenses();
 
   const handleDelete = async () => {
@@ -67,4 +67,4 @@ const ExpenseRowActions = ({ id, disabled }: ExpenseRowActionsProps) => {
   );
 };
 
-export default ExpenseRowActions;
+export default RowActions;

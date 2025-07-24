@@ -1,10 +1,10 @@
-import { DataTableColumnHeader } from '@/components/shared/data-table/data-table-column-header';
+import { ColumnHeader } from '@/components/shared/data-table/column-header';
 import { formatLocalizedDate } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { CircleEllipsis } from 'lucide-react';
-import { CATEGORY_ICONS, ExpenseCategory } from '../../constants';
-import { ExpenseDisplay } from '../../schemas';
-import ExpenseRowActions from './expense-row-actions';
+import { CATEGORY_ICONS, ExpenseCategory } from '../../../constants';
+import { ExpenseDisplay } from '../../../schemas';
+import ExpenseRowActions from '../row-actions';
 
 export const columns: ColumnDef<ExpenseDisplay>[] = [
   {
@@ -35,9 +35,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
   },
   {
     accessorKey: 'date',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
-    ),
+    header: ({ column }) => <ColumnHeader column={column} title="Date" />,
     cell: ({ row }) => {
       const date = row.original.date;
       return <div>{date ? formatLocalizedDate(date) : ''}</div>;
