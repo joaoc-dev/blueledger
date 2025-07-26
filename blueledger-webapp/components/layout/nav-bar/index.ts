@@ -1,3 +1,3 @@
-import NavBar from './nav-bar';
+import DynamicNavBarWrapper from './dynamic-nav-bar-wrapper';
 
-export default NavBar;
+export default DynamicNavBarWrapper;

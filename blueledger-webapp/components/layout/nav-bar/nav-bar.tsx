@@ -1,3 +1,6 @@
+'use client';
+
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { DesktopNavBar } from './desktop-nav-bar';
 import { MobileNavBar } from './mobile-nav-bar';
 
@@ -20,16 +23,17 @@ const links = [
   },
 ];
 
-const NavBar = async () => {
-  return (
-    <>
-      <div className="relative block md:hidden">
-        <MobileNavBar links={links} />
-      </div>
-      <div className="hidden md:block">
-        <DesktopNavBar links={links} />
-      </div>
-    </>
+const NavBar = () => {
+  const isMobile = useIsMobile();
+
+  if (typeof window === 'undefined') return null;
+
+  return isMobile ? (
+    <div className="relative">
+      <MobileNavBar links={links} />
+    </div>
+  ) : (
+    <DesktopNavBar links={links} />
   );
 };
 
