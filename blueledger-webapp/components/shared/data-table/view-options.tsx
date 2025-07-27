@@ -17,9 +17,13 @@ export function ViewOptions<TData>({ table }: { table: Table<TData> }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button
+          className="hidden md:flex items-center gap-2"
+          variant="outline"
+          size="sm"
+        >
           <Settings2 />
-          <span className="hidden md:block">View</span>
+          <span>View</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">

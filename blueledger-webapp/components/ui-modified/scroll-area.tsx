@@ -55,4 +55,6 @@ function ScrollBar({
   );
 }
 
+ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName;
+
 export { ScrollArea, ScrollBar };

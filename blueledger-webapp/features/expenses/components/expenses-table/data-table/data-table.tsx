@@ -3,8 +3,6 @@
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
-  flexRender,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -12,22 +10,17 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 
 import { Pagination } from '@/components/shared/data-table/pagination';
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { ExpenseDisplay } from '../../../schemas';
+import { TABLE_CONFIG } from '../constants';
+import { Toolbar } from '../toolbar';
 import { columns } from './columns';
-import { Rows } from './rows';
-import { Toolbar } from './toolbar';
+import DraggableTable from './draggable-table';
 
 interface DataTableProps {
   data: ExpenseDisplay[];
@@ -36,33 +29,47 @@ interface DataTableProps {
 }
 
 export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
+  const defaultColumnOrder = columns.map((c) => c.id!).filter(Boolean);
+  const [columnOrder, setColumnOrder] = useLocalStorage<string[]>(
+    TABLE_CONFIG.LOCAL_STORAGE_KEYS.COLUMN_ORDER,
+    defaultColumnOrder
+  );
+
   const [columnVisibility, setColumnVisibility] = useLocalStorage<
     Record<string, boolean>
-  >(`expenses.columnVisibility`, {});
+  >(TABLE_CONFIG.LOCAL_STORAGE_KEYS.COLUMN_VISIBILITY, {});
 
+  // use query params for sorting and filtering
   const [sorting, setSorting] = useLocalStorage<SortingState>(
-    `expenses.sorting`,
+    TABLE_CONFIG.LOCAL_STORAGE_KEYS.SORTING,
     []
   );
 
   const [columnFilters, setColumnFilters] = useLocalStorage<ColumnFiltersState>(
-    `expenses.columnFilters`,
+    TABLE_CONFIG.LOCAL_STORAGE_KEYS.COLUMN_FILTERS,
     []
   );
 
   const table = useReactTable({
     data,
     columns: columns as ColumnDef<ExpenseDisplay>[],
+    initialState: {
+      columnPinning: {
+        right: ['actions'],
+      },
+    },
     state: {
       columnVisibility,
       sorting,
       columnFilters,
+      columnOrder,
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnOrderChange: setColumnOrder,
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
@@ -70,44 +77,17 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  const numRows = 10;
-  const rowSize = 56;
-  const totalHeight = numRows * rowSize;
-
   return (
     <div className="space-y-4">
       <Toolbar table={table} isFetching={isFetching} isLoading={isLoading} />
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody style={{ height: `${totalHeight}px` }}>
-            <Rows
-              isLoading={isLoading}
-              numRows={numRows}
-              rowSize={rowSize}
-              columns={columns}
-              table={table}
-            />
-          </TableBody>
-        </Table>
-      </div>
+
+      <DraggableTable
+        table={table}
+        setColumnOrder={setColumnOrder}
+        isLoading={isLoading}
+        isFetching={isFetching}
+      />
+
       <Pagination
         displaySelectedRows={false}
         enableRowsPerPage={false}

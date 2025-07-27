@@ -1,18 +1,21 @@
-import { ColumnHeader } from '@/components/shared/data-table/column-header';
+import { columnHeader } from '@/components/shared/data-table/sortable-column';
 import { formatLocalizedDate } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { CircleEllipsis } from 'lucide-react';
 import { CATEGORY_ICONS, ExpenseCategory } from '../../../constants';
 import { ExpenseDisplay } from '../../../schemas';
-import ExpenseRowActions from '../row-actions';
+import ExpenseActions from '../expense-actions';
 
+// If using column reordering, make sure to specify the id of the column
 export const columns: ColumnDef<ExpenseDisplay>[] = [
   {
+    id: 'description',
     accessorKey: 'description',
     header: 'Description',
     enableHiding: false,
   },
   {
+    id: 'category',
     accessorKey: 'category',
     header: 'Category',
     cell: ({ row }) => {
@@ -34,19 +37,21 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     },
   },
   {
+    id: 'date',
     accessorKey: 'date',
-    header: ({ column }) => <ColumnHeader column={column} title="Date" />,
+    header: columnHeader('Date'),
     cell: ({ row }) => {
       const date = row.original.date;
       return <div>{date ? formatLocalizedDate(date) : ''}</div>;
     },
   },
   {
+    id: 'quantity',
     accessorKey: 'quantity',
-    header: 'Quantity',
+    header: columnHeader('Quantity'),
   },
-
   {
+    id: 'price',
     accessorKey: 'price',
     header: 'Price',
     cell: ({ row }) => {
@@ -59,6 +64,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     },
   },
   {
+    id: 'totalPrice',
     accessorKey: 'totalPrice',
     header: 'Total Price',
     cell: ({ row }) => {
@@ -77,13 +83,15 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
 
       return (
         <div className="flex justify-end">
-          <ExpenseRowActions
+          <ExpenseActions
             id={expense.optimisticId ?? expense.id!}
             disabled={!!expense.optimisticId}
+            isCompact={true}
           />
         </div>
       );
     },
     enableHiding: false,
+    enablePinning: true,
   },
 ];
