@@ -3,6 +3,7 @@
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { DesktopNavBar } from './desktop-nav-bar';
 import { MobileNavBar } from './mobile-nav-bar';
+import NavBarLoading from './nav-bar-loading';
 
 const links = [
   {
@@ -25,8 +26,7 @@ const links = [
 
 const NavBar = () => {
   const isMobile = useIsMobile();
-
-  if (typeof window === 'undefined') return null;
+  if (isMobile === undefined) return <NavBarLoading />;
 
   return isMobile ? (
     <div className="relative">
