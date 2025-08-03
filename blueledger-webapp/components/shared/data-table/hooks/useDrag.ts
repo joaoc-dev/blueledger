@@ -5,15 +5,22 @@ import { Dispatch, SetStateAction, useState } from 'react';
 interface UseDragProps {
   setColumnOrder: Dispatch<SetStateAction<string[]>>;
   columnRefs: React.RefObject<Map<string, HTMLTableCellElement>>;
+  isResizing: boolean;
 }
 
-export function useDrag({ setColumnOrder, columnRefs }: UseDragProps) {
+export function useDrag({
+  setColumnOrder,
+  columnRefs,
+  isResizing,
+}: UseDragProps) {
   const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
   const [draggedElementRect, setDraggedElementRect] = useState<DOMRect | null>(
     null
   );
 
   function handleDragStart(event: DragStartEvent) {
+    if (isResizing) return;
+
     setActiveColumnId(event.active.id as string);
 
     const cell = columnRefs.current.get(event.active.id as string);
@@ -46,5 +53,10 @@ export function useDrag({ setColumnOrder, columnRefs }: UseDragProps) {
     });
   }
 
-  return { handleDragStart, handleDragEnd, activeColumnId, draggedElementRect };
+  return {
+    handleDragStart,
+    handleDragEnd,
+    activeColumnId,
+    draggedElementRect,
+  };
 }

@@ -9,14 +9,17 @@ interface ColumnDragOverlayProps<T> {
   draggedElementRect: DOMRect | null;
 }
 
-// We share IDs between cells and headers so the drag preview reflects the dragged column.
-// However, DragOverlay uses the last rendered element matching the active ID, which is the last row's cell,
+// Note: @dnd-kit DragOverlay normally clones the dragged element based on active ID,
+// but since header and body cells share IDs, it often picks the wrong element (last row's cell),
 // causing the overlay to appear at the bottom of the table.
-// One known workaround is to render <TableHeader> after <TableBody>, as discussed here:
-// https://github.com/clauderic/dnd-kit/discussions/1401
-// But that may cause accessibility issues or break other expectations.
-// Our current workaround offsets the overlay with a CSS translate, which is brittle.
-// Ideally, we should find a more robust solution.
+//
+// Instead of relying on the default cloning, we manually position the overlay using
+// the draggedElementRect DOMRect for accurate placement.
+//
+// This approach avoids the known rendering issues but relies on accurate measurement
+// and can be brittle if layout changes during drag.
+// Ideally, a more robust solution that avoids ID conflicts or improves DragOverlay behavior
+// would be preferred.
 const ColumnDragOverlay = <T,>({
   activeColumnId,
   columns,

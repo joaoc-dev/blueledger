@@ -17,7 +17,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
       highlightColor="var(--color-card)"
       duration={1.5}
     >
-      <div className="max-w-screen-xl mx-auto min-h-screen grid grid-rows-[auto_1fr] ">
+      <div className="max-w-screen-xl mx-auto min-h-screen grid grid-rows-[auto_1fr]">
         <header className="mb-8">
           <UserProfileStoreInitializer />
           <SessionProvider>
@@ -25,7 +25,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
           </SessionProvider>
           <NavBar />
         </header>
-        <main className="p-10">{children}</main>
+        <main className="p-10 max-w-screen-xl">{children}</main>
       </div>
     </SkeletonTheme>
   );

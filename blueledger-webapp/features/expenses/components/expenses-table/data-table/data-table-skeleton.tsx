@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataTable } from './data-table';
 
-const TableSkeleton = () => {
+const DataTableSkeleton = () => {
   return (
     <div className="space-y-4">
       <DataTable data={[]} isLoading={true} />
@@ -9,4 +9,4 @@ const TableSkeleton = () => {
   );
 };
 
-export default TableSkeleton;
+export default DataTableSkeleton;

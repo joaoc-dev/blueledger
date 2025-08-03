@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Column } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { ArrowDown, ArrowDownUp, ArrowUp } from 'lucide-react';
 
 interface ColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -12,7 +12,7 @@ interface ColumnHeaderProps<TData, TValue>
 // We wrap the component because drag overlay uses header.toString() to display the header text
 export function columnHeader<TData, TValue>(title: string) {
   const fn = ({ column }: { column: Column<TData, TValue> }) => (
-    <ColumnHeaderComponent column={column} title={title} />
+    <ColumnHeaderComponent key={column.id} column={column} title={title} />
   );
   fn.toString = () => title;
   return fn;
@@ -24,23 +24,29 @@ const ColumnHeaderComponent = <TData, TValue>({
   className,
 }: ColumnHeaderProps<TData, TValue>) => {
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>;
+    return (
+      <div key={column.id} className={cn(className)}>
+        {title}
+      </div>
+    );
   }
 
   return (
-    <div className={cn('flex items-center gap-2', className)}>
+    <div key={column.id} className={cn('flex items-center gap-2', className)}>
       <Button
         variant="ghost"
         size="sm"
         className="w-full justify-start data-[state=open]:bg-accent -ml-3 h-8 cursor-pointer"
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
-        <span>{title}</span>
+        <span className="truncate">{title}</span>
         {column.getIsSorted() === 'desc' ? (
           <ArrowDown />
         ) : column.getIsSorted() === 'asc' ? (
           <ArrowUp />
-        ) : null}
+        ) : (
+          <ArrowDownUp />
+        )}
       </Button>
     </div>
   );

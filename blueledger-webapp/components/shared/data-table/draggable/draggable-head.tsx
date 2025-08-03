@@ -1,18 +1,19 @@
-import { CSSProperties } from 'react';
-import { Header } from '@tanstack/react-table';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { TableHead } from '@/components/ui/table';
-import { flexRender } from '@tanstack/react-table';
+import { Header, Table } from '@tanstack/react-table';
+import { CSSProperties } from 'react';
+import { TableHeaderCell } from '../table-header-cell';
 
 interface DraggableTableHeaderProps<T> {
   header: Header<T, unknown>;
   columnRefs: React.RefObject<Map<string, HTMLTableCellElement>>;
+  table: Table<T>;
 }
 
-export const DraggableTableHeader = <T,>({
+export const DraggableTableHead = <T,>({
   header,
   columnRefs,
+  table,
 }: DraggableTableHeaderProps<T>) => {
   const { attributes, isDragging, listeners, setNodeRef, transform } =
     useSortable({
@@ -29,26 +30,23 @@ export const DraggableTableHeader = <T,>({
     cursor: 'grab',
   };
 
-  return (
-    <TableHead
-      key={header.id}
-      colSpan={header.colSpan}
-      ref={(node) => {
-        setNodeRef(node);
+  const handleSetNodeRef = (node: HTMLTableCellElement | null) => {
+    setNodeRef(node);
 
-        if (node) {
-          columnRefs.current.set(header.column.id, node);
-        } else {
-          columnRefs.current.delete(header.column.id);
-        }
-      }}
+    if (node) {
+      columnRefs.current.set(header.column.id, node);
+    } else {
+      columnRefs.current.delete(header.column.id);
+    }
+  };
+
+  return (
+    <TableHeaderCell
+      header={header}
+      isReSizeable={true}
       style={style}
-      {...attributes}
-      {...listeners}
-    >
-      {header.isPlaceholder
-        ? null
-        : flexRender(header.column.columnDef.header, header.getContext())}
-    </TableHead>
+      dragProps={{ attributes, listeners, setNodeRef: handleSetNodeRef }}
+      table={table}
+    />
   );
 };

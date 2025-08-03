@@ -1,12 +1,15 @@
 import { expenseKeys } from '@/constants/query-keys';
 import { ExpensesTable } from '@/features/expenses/components';
 import { getExpenses } from '@/features/expenses/data';
-import { getQueryClient } from '@/lib/react-query/get-query-client';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 
 // We implement a short minimum delay to avoid snappy UI
 const delayedGetExpenses = async () => {
-  const [_, expenses] = await Promise.all([
+  const [, expenses] = await Promise.all([
     new Promise((resolve) => setTimeout(resolve, 800)),
     getExpenses(),
   ]);
@@ -14,7 +17,7 @@ const delayedGetExpenses = async () => {
 };
 
 const ExpensesPage = async () => {
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: expenseKeys.byUser,

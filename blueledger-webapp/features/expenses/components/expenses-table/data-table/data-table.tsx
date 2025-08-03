@@ -14,13 +14,14 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import DraggableTable from '@/components/shared/data-table/draggable/draggable-table';
+import { usePersistentTableState } from '@/components/shared/data-table/hooks/usePersistentTableState';
 import { Pagination } from '@/components/shared/data-table/pagination';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { ExpenseDisplay } from '../../../schemas';
-import { TABLE_CONFIG } from '../constants';
+import { EXPENSES_TABLE_CONFIG } from '../constants';
 import { Toolbar } from '../toolbar';
 import { columns } from './columns';
-import DraggableTable from './draggable-table';
 
 interface DataTableProps {
   data: ExpenseDisplay[];
@@ -30,32 +31,41 @@ interface DataTableProps {
 
 export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
   const defaultColumnOrder = columns.map((c) => c.id!).filter(Boolean);
-  const [columnOrder, setColumnOrder] = useLocalStorage<string[]>(
-    TABLE_CONFIG.LOCAL_STORAGE_KEYS.COLUMN_ORDER,
-    defaultColumnOrder
-  );
 
-  const [columnVisibility, setColumnVisibility] = useLocalStorage<
-    Record<string, boolean>
-  >(TABLE_CONFIG.LOCAL_STORAGE_KEYS.COLUMN_VISIBILITY, {});
+  const localStorageKeys = EXPENSES_TABLE_CONFIG.LOCAL_STORAGE_KEYS;
 
-  // use query params for sorting and filtering
+  const {
+    state: { columnVisibility, columnOrder, columnSizing },
+    handlers: { setColumnVisibility, setColumnOrder, setColumnSizing },
+  } = usePersistentTableState({
+    keys: {
+      COLUMN_ORDER: localStorageKeys.COLUMN_ORDER,
+      COLUMN_VISIBILITY: localStorageKeys.COLUMN_VISIBILITY,
+      COLUMN_SIZES: localStorageKeys.COLUMN_SIZES,
+    },
+    defaultColumnOrder,
+  });
+
+  // Move this to query params for sorting and filtering
   const [sorting, setSorting] = useLocalStorage<SortingState>(
-    TABLE_CONFIG.LOCAL_STORAGE_KEYS.SORTING,
+    localStorageKeys.SORTING,
     []
   );
 
   const [columnFilters, setColumnFilters] = useLocalStorage<ColumnFiltersState>(
-    TABLE_CONFIG.LOCAL_STORAGE_KEYS.COLUMN_FILTERS,
+    localStorageKeys.COLUMN_FILTERS,
     []
   );
 
   const table = useReactTable({
     data,
     columns: columns as ColumnDef<ExpenseDisplay>[],
+    defaultColumn: {
+      minSize: 60,
+    },
     initialState: {
       columnPinning: {
-        right: ['actions'],
+        right: ['filler', 'actions'],
       },
     },
     state: {
@@ -63,7 +73,9 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
       sorting,
       columnFilters,
       columnOrder,
+      columnSizing,
     },
+    columnResizeMode: 'onChange',
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -71,6 +83,7 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
     getSortedRowModel: getSortedRowModel(),
     onColumnOrderChange: setColumnOrder,
     onColumnFiltersChange: setColumnFilters,
+    onColumnSizingChange: setColumnSizing,
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
@@ -86,6 +99,7 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
         setColumnOrder={setColumnOrder}
         isLoading={isLoading}
         isFetching={isFetching}
+        columns={columns as ColumnDef<ExpenseDisplay>[]}
       />
 
       <Pagination
