@@ -1,5 +1,6 @@
 'use client';
 
+import ButtonLink from '@/components/shared/button-link';
 import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
@@ -40,17 +41,17 @@ const ExpenseActions = ({ id, disabled, isCompact }: ItemOptionsProps) => {
   return (
     <>
       {isCompact ? (
-        <Button variant="ghost" asChild disabled={disabled}>
-          <Link href={`/expenses/edit/${id}`}>
-            <SquarePen />
-          </Link>
-        </Button>
+        <ButtonLink
+          variant="ghost"
+          href={`/expenses/edit/${id}`}
+          disabled={disabled}
+        >
+          <SquarePen />
+        </ButtonLink>
       ) : (
-        <Button asChild disabled={disabled}>
-          <Link href={`/expenses/edit/${id}`}>
-            <span>Details</span>
-          </Link>
-        </Button>
+        <ButtonLink href={`/expenses/edit/${id}`} disabled={disabled}>
+          <span>Details</span>
+        </ButtonLink>
       )}
       <Dialog>
         <DialogTrigger asChild>
