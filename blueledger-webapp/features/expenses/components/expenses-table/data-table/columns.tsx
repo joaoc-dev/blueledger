@@ -4,6 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ExpenseDisplay } from '../../../schemas';
 import ExpenseActions from '../expense-actions';
 import { CategoryCell } from './category-cell';
+import NumericDisplay from '@/components/shared/numeric-display';
 
 // If using column reordering, make sure to specify the id of the column
 export const columns: ColumnDef<ExpenseDisplay>[] = [
@@ -41,6 +42,10 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     accessorKey: 'quantity',
     header: columnHeader('Quantity'),
     size: 100,
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue('quantity'));
+      return <NumericDisplay value={amount} />;
+    },
   },
   {
     id: 'price',
@@ -49,11 +54,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     size: 100,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('price'));
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'EUR',
-      }).format(amount);
-      return <div className="truncate">{formatted}</div>;
+      return <NumericDisplay value={amount} format="currency" />;
     },
   },
   {
@@ -63,11 +64,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     size: 120,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('totalPrice'));
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'EUR',
-      }).format(amount);
-      return <div className="truncate">{formatted}</div>;
+      return <NumericDisplay value={amount} format="currency" />;
     },
   },
   {
