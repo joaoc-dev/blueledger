@@ -2,7 +2,7 @@ import { ColumnDef, Table } from '@tanstack/react-table';
 import { TABLE_CONFIG } from '../constants';
 import Row from './row';
 import RowHidden from './row-hidden';
-import RowSkeleton from './row-skeleton';
+import RowFullBodySkeleton from './row-full-body-skeleton';
 
 // Rendering of hidden row ensures that all column IDs remain registered in the SortableContext,
 // which DnD-kit relies on to enable header drag-and-drop—even when no actual data rows are visible.
@@ -24,18 +24,7 @@ export const Rows = <T,>({
   const rowHeight = overrideRowHeight ?? TABLE_CONFIG.ROW_HEIGHT;
 
   if (isLoading) {
-    return (
-      <>
-        {Array.from({ length: TABLE_CONFIG.ROWS_PER_PAGE }).map((_, id) => (
-          <RowSkeleton
-            key={id.toString()}
-            id={id.toString()}
-            columns={columns}
-            rowHeight={rowHeight}
-          />
-        ))}
-      </>
-    );
+    return <RowFullBodySkeleton colSpan={columns.length} />;
   }
 
   return (

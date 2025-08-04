@@ -13,7 +13,13 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 
-export function ViewOptions<TData>({ table }: { table: Table<TData> }) {
+export function ViewOptions<TData>({
+  table,
+  disabled,
+}: {
+  table: Table<TData>;
+  disabled?: boolean;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -21,6 +27,7 @@ export function ViewOptions<TData>({ table }: { table: Table<TData> }) {
           className="hidden md:flex items-center gap-2"
           variant="outline"
           size="sm"
+          disabled={disabled}
         >
           <Settings2 />
           <span>View</span>

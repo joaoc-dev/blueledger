@@ -2,40 +2,46 @@
 
 import { Button } from '@/components/ui/button';
 import { expenseKeys } from '@/constants/query-keys';
+import { ExpensesTableSkeleton } from '@/features/expenses/components';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
 import { getExpenses } from '../../client';
 import { DataTable } from './data-table';
+import { StackedList } from './stacked-list';
 
-const ClientGetExpenses = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-
-  const expenses = await getExpenses();
-  // console.log('ClientGetExpenses', expenses);
+// We implement a short minimum delay to avoid snappy UI
+const delayedGetExpenses = async () => {
+  const [, expenses] = await Promise.all([
+    new Promise((resolve) => setTimeout(resolve, 800)),
+    getExpenses(),
+  ]);
   return expenses;
 };
 
 const ExpensesTable = () => {
-  const queryClient = getQueryClient();
-  const searchParams = useSearchParams();
+  const isMobile = useIsMobile();
 
-  const description = searchParams.get('description') ?? '';
+  const queryClient = getQueryClient();
 
   const {
     data: expenses,
     isFetching,
     isError,
     error,
+    isLoading,
   } = useQuery({
     queryKey: expenseKeys.byUser,
-    queryFn: ClientGetExpenses,
+    queryFn: delayedGetExpenses,
   });
 
+  if (isMobile === undefined) return <ExpensesTableSkeleton />;
+
   if (isError) {
+    console.log('error', error.message);
     return (
-      <div className="flex flex-col gap-4 w-[500px] mx-auto items-center justify-center h-[500px]">
-        Error: {error.message}
+      <div className="flex flex-col gap-4 mx-auto items-center justify-center h-[500px]">
+        Unexpected error. Please try again.
         <Button
           disabled={isFetching}
           onClick={() =>
@@ -48,7 +54,19 @@ const ExpensesTable = () => {
     );
   }
 
-  return <DataTable data={expenses || []} isFetching={isFetching} />;
+  return isMobile ? (
+    <StackedList
+      data={expenses || []}
+      isFetching={isFetching}
+      isLoading={isLoading}
+    />
+  ) : (
+    <DataTable
+      data={expenses || []}
+      isFetching={isFetching}
+      isLoading={isLoading}
+    />
+  );
 };
 
 export default ExpensesTable;

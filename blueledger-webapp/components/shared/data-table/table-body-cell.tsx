@@ -7,12 +7,13 @@ interface TableBodyCellProps {
   columnId?: string;
   style?: React.CSSProperties;
   className?: string;
+  colSpan?: number;
 }
 
 const TableBodyCell = React.forwardRef<
   HTMLTableCellElement,
   TableBodyCellProps
->(({ children, style, columnId, isPinned, className }, ref) => {
+>(({ children, style, columnId, isPinned, className, colSpan }, ref) => {
   const isFiller = columnId === 'filler';
   const width = isFiller ? 'auto' : `calc(var(--col-${columnId}-size) * 1px)`;
 
@@ -20,6 +21,7 @@ const TableBodyCell = React.forwardRef<
 
   return (
     <TableCell
+      colSpan={colSpan}
       style={{ ...style, width }}
       className={`${background} ${className}`}
       ref={ref}

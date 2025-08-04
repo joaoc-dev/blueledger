@@ -2,6 +2,7 @@
 
 import {
   ColumnDef,
+  ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -16,6 +17,9 @@ import { format } from 'date-fns';
 import { columns } from '../data-table/columns';
 import { Toolbar } from '../toolbar';
 import { ListCard } from './list-card';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { EXPENSES_TABLE_CONFIG } from '../constants';
+import Spinner from '@/components/shared/spinner';
 
 interface DataTableProps {
   data: ExpenseDisplay[];
@@ -24,9 +28,19 @@ interface DataTableProps {
 }
 
 export function StackedList({ data, isLoading, isFetching }: DataTableProps) {
+  const localStorageKeys = EXPENSES_TABLE_CONFIG.LOCAL_STORAGE_KEYS;
+  const [columnFilters, setColumnFilters] = useLocalStorage<ColumnFiltersState>(
+    localStorageKeys.COLUMN_FILTERS,
+    []
+  );
+
   const table = useReactTable({
     data,
     columns: columns as ColumnDef<ExpenseDisplay>[],
+    state: {
+      columnFilters,
+    },
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -38,6 +52,15 @@ export function StackedList({ data, isLoading, isFetching }: DataTableProps) {
   const tableRows = table.getRowModel().rows;
   const hasData = tableRows.length > 0;
   const groupedExpenses = groupByDate(tableRows.map((row) => row.original));
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <Toolbar table={table} isFetching={isFetching} isLoading={isLoading} />
+        <Spinner className="size-12 mx-auto mt-36" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
