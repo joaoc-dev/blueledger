@@ -34,7 +34,7 @@ export default function Modal({
   return (
     <Dialog defaultOpen={true} open={open} onOpenChange={handleClose}>
       <DialogOverlay>
-        <DialogContent className="w-fit">
+        <DialogContent className="w-full max-w-sm sm:max-w-md">
           <DialogHeader className="mb-4">
             <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
