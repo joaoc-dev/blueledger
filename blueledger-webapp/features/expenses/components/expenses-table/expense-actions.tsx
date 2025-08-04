@@ -49,7 +49,12 @@ const ExpenseActions = ({ id, disabled, isCompact }: ItemOptionsProps) => {
           <SquarePen />
         </ButtonLink>
       ) : (
-        <ButtonLink href={`/expenses/edit/${id}`} disabled={disabled}>
+        <ButtonLink
+          href={`/expenses/edit/${id}`}
+          variant="outline"
+          disabled={disabled}
+          className="flex-1"
+        >
           <span>Details</span>
         </ButtonLink>
       )}
@@ -65,8 +70,8 @@ const ExpenseActions = ({ id, disabled, isCompact }: ItemOptionsProps) => {
             </Button>
           ) : (
             <Button
-              className="cursor-pointer"
-              variant="destructive"
+              className="cursor-pointer flex-1"
+              variant="outline"
               disabled={disabled}
             >
               <span>Delete</span>
