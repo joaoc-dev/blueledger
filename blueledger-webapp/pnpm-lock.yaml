@@ -149,9 +149,6 @@ importers:
       react-hook-form:
         specifier: ^7.56.3
         version: 7.61.1(react@19.1.1)
-      react-loading-skeleton:
-        specifier: ^3.5.0
-        version: 3.5.0(react@19.1.1)
       require-in-the-middle:
         specifier: ^7.5.2
         version: 7.5.2
@@ -3544,11 +3541,6 @@ packages:
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
-
-  react-loading-skeleton@3.5.0:
-    resolution: {integrity: sha512-gxxSyLbrEAdXTKgfbpBEFZCO/P153DnqSCQau2+o6lNy1jgMRr2MmRmOzMmyrwSaSYLRB8g7b0waYPmUjz7IhQ==}
-    peerDependencies:
-      react: '>=16.8.0'
 
   react-remove-scroll-bar@2.3.8:
     resolution: {integrity: sha512-9r+yi9+mgU33AKcj6IbT9oRCO78WriSj6t/cF8DWBZJ9aOGPOTEDvdUDz1FwKim7QXWwmHqtdHnRJfhAxEG46Q==}
@@ -7531,10 +7523,6 @@ snapshots:
       react: 19.1.1
 
   react-is@16.13.1: {}
-
-  react-loading-skeleton@3.5.0(react@19.1.1):
-    dependencies:
-      react: 19.1.1
 
   react-remove-scroll-bar@2.3.8(@types/react@19.1.9)(react@19.1.1):
     dependencies:

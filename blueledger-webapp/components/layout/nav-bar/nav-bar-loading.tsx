@@ -1,4 +1,4 @@
-import Skeleton from '@/components/shared/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import { HandCoins } from 'lucide-react';
 import Link from 'next/link';
 
@@ -7,9 +7,7 @@ const NavBarLoading = () => {
     <>
       {/* mobile nav bar */}
       <div className="nav nav--mobile border-b md:hidden">
-        <div className="w-10 mx-2">
-          <Skeleton className="h-6 bg-muted rounded-md inline" />
-        </div>
+        <Skeleton className="ml-2 h-6 w-6" />
 
         <Link
           href="/"
@@ -18,9 +16,7 @@ const NavBarLoading = () => {
           <HandCoins />
         </Link>
 
-        <div className="w-20 mx-2">
-          <Skeleton className="w-5 h-6 bg-muted rounded-md inline" />
-        </div>
+        <Skeleton className="mr-2 h-6 w-20" />
       </div>
       {/* desktop nav bar */}
       <div className="nav hidden md:flex">
@@ -30,9 +26,7 @@ const NavBarLoading = () => {
             <span className="text-2xl">Blue Ledger</span>
           </Link>
         </div>
-        <div className="w-20 mx-2">
-          <Skeleton className="w-5 h-6 bg-muted rounded-md inline" />
-        </div>
+        <Skeleton className="h-6 w-30" />
       </div>
     </>
   );
