@@ -1,6 +1,7 @@
 import Modal from '@/components/shared/modal';
 import { ExpenseForm } from '@/features/expenses/components';
 import { getExpenseById } from '@/features/expenses/data';
+import { auth } from '@/lib/auth/auth';
 import { notFound } from 'next/navigation';
 
 const EditExpensePageModal = async ({
@@ -9,7 +10,11 @@ const EditExpensePageModal = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
-  const expense = await getExpenseById(id);
+
+  const session = await auth();
+  const userId = session!.user!.id;
+
+  const expense = await getExpenseById(id, userId);
 
   if (!expense) notFound();
 

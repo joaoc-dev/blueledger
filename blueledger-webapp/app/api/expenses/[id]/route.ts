@@ -22,7 +22,8 @@ export const PATCH = withAuth(async function PATCH(
     });
     if (!validationResult.success) return validationResult.error;
 
-    const expense = await updateExpense(validationResult.data!);
+    const userId = request.auth!.user!.id;
+    const expense = await updateExpense(validationResult.data!, userId);
     if (!expense)
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
 
@@ -48,7 +49,8 @@ export const DELETE = withAuth(async function DELETE(
     });
     if (!validationResult.success) return validationResult.error;
 
-    const expense = await deleteExpense(id);
+    const userId = request.auth!.user!.id;
+    const expense = await deleteExpense(id, userId);
 
     if (!expense)
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });

@@ -4,10 +4,10 @@ import { mapModelToDisplay } from './mapper-server';
 import Expense, { ExpenseDocument } from './model';
 import { CreateExpenseData, ExpenseDisplay, PatchExpenseData } from './schemas';
 
-export async function getExpenses(): Promise<ExpenseDisplay[]> {
+export async function getExpenses(userId: string): Promise<ExpenseDisplay[]> {
   await dbConnect();
 
-  const expenses = await Expense.find();
+  const expenses = await Expense.find({ user: userId });
 
   return expenses.map(mapModelToDisplay);
 }
@@ -28,23 +28,26 @@ export async function createExpense(
 }
 
 export async function getExpenseById(
-  id: string
+  id: string,
+  userId: string
 ): Promise<ExpenseDisplay | null> {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
 
   await dbConnect();
 
-  const expense = await Expense.findById(id);
+  console.log('getExpenseById', id, userId);
+  const expense = await Expense.findOne({ _id: id, user: userId });
 
   return expense ? mapModelToDisplay(expense) : null;
 }
 
 export async function updateExpense(
-  expense: PatchExpenseData
+  expense: PatchExpenseData,
+  userId: string
 ): Promise<ExpenseDisplay | null> {
   await dbConnect();
 
-  const existing = await Expense.findById(expense.id);
+  const existing = await Expense.findOne({ _id: expense.id, user: userId });
   if (!existing) return null;
 
   const updatedData = {
@@ -64,11 +67,15 @@ export async function updateExpense(
 }
 
 export async function deleteExpense(
-  id: string
+  id: string,
+  userId: string
 ): Promise<ExpenseDisplay | null> {
   await dbConnect();
 
-  const deletedExpense = await Expense.findByIdAndDelete(id);
+  const deletedExpense = await Expense.findOneAndDelete({
+    _id: id,
+    user: userId,
+  });
 
   return deletedExpense ? mapModelToDisplay(deletedExpense) : null;
 }

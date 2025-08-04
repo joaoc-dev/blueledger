@@ -30,9 +30,12 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
   }
 });
 
-export const GET = withAuth(async function GET() {
+export const GET = withAuth(async function GET(request: NextAuthRequest) {
   try {
-    const expenses = await getExpenses();
+    const userId = request.auth!.user!.id;
+
+    const expenses = await getExpenses(userId);
+
     return NextResponse.json(expenses);
   } catch (error) {
     console.log('Error getting expenses', error);
