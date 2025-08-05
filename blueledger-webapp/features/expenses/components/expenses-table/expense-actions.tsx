@@ -52,6 +52,7 @@ const ExpenseActions = ({ id, disabled, isCompact }: ItemOptionsProps) => {
         <ButtonLink
           href={`/expenses/edit/${id}`}
           variant="outline"
+          size="sm"
           disabled={disabled}
           className="flex-1"
         >
@@ -73,6 +74,7 @@ const ExpenseActions = ({ id, disabled, isCompact }: ItemOptionsProps) => {
               className="cursor-pointer flex-1"
               variant="outline"
               disabled={disabled}
+              size="sm"
             >
               <span>Delete</span>
             </Button>
