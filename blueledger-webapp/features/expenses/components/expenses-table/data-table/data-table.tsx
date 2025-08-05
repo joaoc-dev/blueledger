@@ -23,6 +23,7 @@ import { ExpenseDisplay } from '../../../schemas';
 import { EXPENSES_TABLE_CONFIG } from '../constants';
 import { Toolbar } from '../toolbar';
 import { columns } from './columns';
+import { usePaginationWithUrl } from '@/components/shared/data-table/hooks/usePaginationWithUrl';
 
 interface DataTableProps {
   data: ExpenseDisplay[];
@@ -48,6 +49,7 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
   });
 
   const [sorting, setSorting] = useSortingWithUrl('date', 'desc');
+  const [pagination, setPagination] = usePaginationWithUrl();
 
   const [columnFilters, setColumnFilters] = useLocalStorage<ColumnFiltersState>(
     localStorageKeys.COLUMN_FILTERS,
@@ -64,15 +66,21 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
       columnPinning: {
         right: ['filler', 'actions'],
       },
+      // Set initial pagination state to prevent TanStack Table from overriding it
+      pagination: pagination,
     },
+    // Prevent automatic page resets when data changes
+    autoResetPageIndex: false,
     state: {
       columnVisibility,
       sorting,
       columnFilters,
       columnOrder,
       columnSizing,
+      pagination,
     },
     columnResizeMode: 'onChange',
+    onPaginationChange: setPagination,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

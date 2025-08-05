@@ -1,5 +1,5 @@
 import { SortingState } from '@tanstack/react-table';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
 // Using the native browser history API here to update query params without triggering a server-side navigation or data refetch.
@@ -9,7 +9,9 @@ export function useSortingWithUrl(
   defaultSortKey?: string,
   defaultOrder?: 'asc' | 'desc'
 ) {
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+
   const sort = searchParams.get('sort') || defaultSortKey;
   const order = searchParams.get('order') || defaultOrder;
 
@@ -33,13 +35,13 @@ export function useSortingWithUrl(
       params.set('sort', id);
       params.set('order', desc ? 'desc' : 'asc');
 
-      window.history.replaceState(null, '', `?${params.toString()}`);
+      window.history.replaceState(null, '', `${pathname}?${params.toString()}`);
     } else {
       const params = new URLSearchParams(searchParams.toString());
       params.delete('sort');
       params.delete('order');
 
-      window.history.replaceState(null, '', `?${params.toString()}`);
+      window.history.replaceState(null, '', `${pathname}?${params.toString()}`);
     }
   };
 

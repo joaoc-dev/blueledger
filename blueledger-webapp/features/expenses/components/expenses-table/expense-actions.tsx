@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { useExpenses } from '@/features/expenses/hooks';
 import { SquarePen, Trash2 } from 'lucide-react';
-import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { toast } from 'sonner';
 
 interface ItemOptionsProps {
@@ -17,6 +18,14 @@ interface ItemOptionsProps {
 
 const ExpenseActions = ({ id, disabled, isCompact }: ItemOptionsProps) => {
   const expenses = useExpenses();
+
+  const searchParams = useSearchParams();
+  const currentQuery = useMemo(() => {
+    const params = new URLSearchParams(searchParams);
+    return params.toString() ? `?${params.toString()}` : '';
+  }, [searchParams]);
+
+  const fullHref = `/expenses/edit/${id}${currentQuery}`;
 
   const handleDelete = async () => {
     try {
@@ -41,16 +50,12 @@ const ExpenseActions = ({ id, disabled, isCompact }: ItemOptionsProps) => {
   return (
     <>
       {isCompact ? (
-        <ButtonLink
-          variant="ghost"
-          href={`/expenses/edit/${id}`}
-          disabled={disabled}
-        >
+        <ButtonLink variant="ghost" href={fullHref} disabled={disabled}>
           <SquarePen />
         </ButtonLink>
       ) : (
         <ButtonLink
-          href={`/expenses/edit/${id}`}
+          href={fullHref}
           variant="outline"
           size="sm"
           disabled={disabled}

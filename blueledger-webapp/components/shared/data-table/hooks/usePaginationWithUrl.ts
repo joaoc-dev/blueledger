@@ -1,0 +1,46 @@
+'use client';
+
+import { PaginationState } from '@tanstack/react-table';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
+
+export function usePaginationWithUrl(defaults = { pageSize: 10 }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Parse the current page from URL (e.g., "page=2" becomes pageIndex: 1)
+  // Default to page 1 if no page parameter exists
+  const initialPageIndex = parseInt(searchParams.get('page') || '1', 10) - 1;
+
+  // Create the pagination state that TanStack Table will use
+  const pagination: PaginationState = useMemo(() => {
+    return {
+      pageIndex: isNaN(initialPageIndex) ? 0 : initialPageIndex,
+      pageSize: defaults.pageSize,
+    };
+  }, [initialPageIndex]);
+
+  // Handle pagination changes and update URL
+  const setPagination = (
+    updater: PaginationState | ((old: PaginationState) => PaginationState)
+  ) => {
+    // Get current pagination state
+    const currentPagination: PaginationState = {
+      pageIndex: parseInt(searchParams.get('page') || '1', 10) - 1,
+      pageSize: defaults.pageSize,
+    };
+
+    // Execute the updater to get the new pagination state
+    const next =
+      typeof updater === 'function' ? updater(currentPagination) : updater;
+
+    // Update URL if page index is changing
+    if (next.pageIndex !== currentPagination.pageIndex) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('page', (next.pageIndex + 1).toString());
+      window.history.replaceState(null, '', `${pathname}?${params.toString()}`);
+    }
+  };
+
+  return [pagination, setPagination] as const;
+}

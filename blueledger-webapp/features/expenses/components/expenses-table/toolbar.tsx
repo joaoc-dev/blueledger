@@ -8,6 +8,8 @@ import { ExpenseDisplay } from '@/features/expenses/schemas';
 import { useQueryClient } from '@tanstack/react-query';
 import { Table } from '@tanstack/react-table';
 import { Plus, RotateCw } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
 import Filter from './filter';
 
 interface ToolbarProps {
@@ -22,6 +24,14 @@ export const Toolbar = ({ table, isFetching, isLoading }: ToolbarProps) => {
   const refreshData = () => {
     queryClient.refetchQueries({ queryKey: expenseKeys.byUser });
   };
+
+  const searchParams = useSearchParams();
+  const currentQuery = useMemo(() => {
+    const params = new URLSearchParams(searchParams);
+    return params.toString() ? `?${params.toString()}` : '';
+  }, [searchParams]);
+
+  const fullHref = `/expenses/new${currentQuery}`;
 
   const isDisabled = isLoading || isFetching;
 
@@ -39,7 +49,7 @@ export const Toolbar = ({ table, isFetching, isLoading }: ToolbarProps) => {
       <div className="flex items-center gap-2">
         <ViewOptions table={table} disabled={isLoading} />
 
-        <ButtonLink size="sm" href="/expenses/new" disabled={isLoading}>
+        <ButtonLink size="sm" href={fullHref} disabled={isLoading}>
           <Plus />
           <span className="hidden md:block">Add</span>
         </ButtonLink>
