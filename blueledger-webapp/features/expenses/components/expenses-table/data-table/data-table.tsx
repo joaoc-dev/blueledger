@@ -16,6 +16,7 @@ import {
 
 import DraggableTable from '@/components/shared/data-table/draggable/draggable-table';
 import { usePersistentTableState } from '@/components/shared/data-table/hooks/usePersistentTableState';
+import { useSortingWithUrl } from '@/components/shared/data-table/hooks/useSortingWithUrl';
 import { Pagination } from '@/components/shared/data-table/pagination';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { ExpenseDisplay } from '../../../schemas';
@@ -46,11 +47,7 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
     defaultColumnOrder,
   });
 
-  // Move this to query params for sorting and filtering
-  const [sorting, setSorting] = useLocalStorage<SortingState>(
-    localStorageKeys.SORTING,
-    []
-  );
+  const [sorting, setSorting] = useSortingWithUrl('date', 'desc');
 
   const [columnFilters, setColumnFilters] = useLocalStorage<ColumnFiltersState>(
     localStorageKeys.COLUMN_FILTERS,
