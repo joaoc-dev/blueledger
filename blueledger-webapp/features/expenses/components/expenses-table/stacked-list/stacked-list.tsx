@@ -87,8 +87,8 @@ export function StackedList({ data, isLoading, isFetching }: DataTableProps) {
 }
 
 function groupByDate(expenses: ExpenseDisplay[]) {
-  return expenses.reverse().reduce((acc, expense) => {
-    const formattedDate = format(expense.date, 'dd MMMM yyyy');
+  return expenses.reduce((acc, expense) => {
+    const formattedDate = format(expense.date, 'EEEE, dd MMM yyyy');
 
     if (!acc[formattedDate]) acc[formattedDate] = [];
     acc[formattedDate].push(expense);

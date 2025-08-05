@@ -7,7 +7,7 @@ import { CreateExpenseData, ExpenseDisplay, PatchExpenseData } from './schemas';
 export async function getExpenses(userId: string): Promise<ExpenseDisplay[]> {
   await dbConnect();
 
-  const expenses = await Expense.find({ user: userId });
+  const expenses = await Expense.find({ user: userId }).sort({ date: -1 });
 
   return expenses.map(mapModelToDisplay);
 }
@@ -35,7 +35,6 @@ export async function getExpenseById(
 
   await dbConnect();
 
-  console.log('getExpenseById', id, userId);
   const expense = await Expense.findOne({ _id: id, user: userId });
 
   return expense ? mapModelToDisplay(expense) : null;

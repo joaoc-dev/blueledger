@@ -36,6 +36,23 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
         <div className="truncate">{date ? formatLocalizedDate(date) : ''}</div>
       );
     },
+    filterFn: (row, columnId, filterValue) => {
+      const value = row.getValue(columnId);
+      if (!value) return false;
+
+      const date = new Date(value as string | Date).getTime();
+
+      const from = filterValue?.from
+        ? new Date(filterValue.from).getTime()
+        : null;
+      const to = filterValue?.to ? new Date(filterValue.to).getTime() : null;
+
+      if (from && to) return date >= from && date <= to;
+      if (from) return date >= from;
+      if (to) return date <= to;
+
+      return true;
+    },
   },
   {
     id: 'quantity',

@@ -16,6 +16,12 @@ interface ExpensesContext {
 export function useExpenses() {
   const queryClient = getQueryClient();
 
+  function sortByDateDesc(expenses: ExpenseDisplay[]): ExpenseDisplay[] {
+    return [...expenses].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }
+
   const applyOptimisticMutation = async (
     updateQueryFunction: (expenses: ExpenseDisplay[]) => ExpenseDisplay[],
     optimisticExpense?: ExpenseDisplay
@@ -40,8 +46,10 @@ export function useExpenses() {
     optimisticId: string
   ) => {
     queryClient.setQueryData<ExpenseDisplay[]>(expenseKeys.byUser, (expenses) =>
-      expenses?.map((expense) =>
-        expense.optimisticId === optimisticId ? mutationResult : expense
+      sortByDateDesc(
+        expenses?.map((expense) =>
+          expense.optimisticId === optimisticId ? mutationResult : expense
+        ) || []
       )
     );
   };
@@ -81,10 +89,8 @@ export function useExpenses() {
         updatedAt: new Date(),
       };
 
-      const updateQueryFunction = (expenses: ExpenseDisplay[]) => [
-        optimisticExpense,
-        ...expenses,
-      ];
+      const updateQueryFunction = (expenses: ExpenseDisplay[]) =>
+        sortByDateDesc([optimisticExpense, ...expenses]);
 
       return await applyOptimisticMutation(
         updateQueryFunction,
@@ -177,7 +183,7 @@ export const useExpenseForm = (expense?: ExpenseDisplay) => {
     defaultValues: {
       description: expense?.description || '',
       price: expense?.price || 0,
-      quantity: expense?.quantity,
+      quantity: expense?.quantity || 0,
       category: expense?.category || 'Other',
       date: expense?.date || new Date(),
     },
