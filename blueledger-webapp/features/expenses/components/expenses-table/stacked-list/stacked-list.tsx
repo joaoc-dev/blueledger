@@ -2,7 +2,6 @@
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -12,14 +11,13 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { useColumnFiltersWithUrl } from '@/components/shared/data-table/hooks/useColumnFiltersWithUrl';
+import Spinner from '@/components/shared/spinner';
 import { ExpenseDisplay } from '@/features/expenses/schemas';
 import { format } from 'date-fns';
 import { columns } from '../data-table/columns';
 import { Toolbar } from '../toolbar';
 import { ListCard } from './list-card';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { EXPENSES_TABLE_CONFIG } from '../constants';
-import Spinner from '@/components/shared/spinner';
 
 interface DataTableProps {
   data: ExpenseDisplay[];
@@ -28,11 +26,7 @@ interface DataTableProps {
 }
 
 export function StackedList({ data, isLoading, isFetching }: DataTableProps) {
-  const localStorageKeys = EXPENSES_TABLE_CONFIG.LOCAL_STORAGE_KEYS;
-  const [columnFilters, setColumnFilters] = useLocalStorage<ColumnFiltersState>(
-    localStorageKeys.COLUMN_FILTERS,
-    []
-  );
+  const [columnFilters, setColumnFilters] = useColumnFiltersWithUrl();
 
   const table = useReactTable({
     data,

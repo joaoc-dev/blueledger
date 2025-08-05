@@ -70,7 +70,8 @@ const NumericRangeFilter = <TData, TValue>({
         min={min}
         max={max}
         value={range ?? [min ?? 0, max ?? 0]}
-        onValueChange={handleChange}
+        onValueChange={(val) => setRange(val as [number, number])}
+        onValueCommit={handleChange}
         disabled={!possibleRange}
       />
     </div>

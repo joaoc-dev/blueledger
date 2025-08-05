@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 
-const DynamicTableWrapper = dynamic(() => import('./table'), {
+const DynamicTableWrapper = dynamic(() => import('./expenses-table'), {
   ssr: false,
 });
 

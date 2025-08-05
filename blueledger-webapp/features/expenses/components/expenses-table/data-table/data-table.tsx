@@ -2,7 +2,6 @@
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -10,20 +9,19 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 
 import DraggableTable from '@/components/shared/data-table/draggable/draggable-table';
+import { useColumnFiltersWithUrl } from '@/components/shared/data-table/hooks/useColumnFiltersWithUrl';
+import { usePaginationWithUrl } from '@/components/shared/data-table/hooks/usePaginationWithUrl';
 import { usePersistentTableState } from '@/components/shared/data-table/hooks/usePersistentTableState';
 import { useSortingWithUrl } from '@/components/shared/data-table/hooks/useSortingWithUrl';
 import { Pagination } from '@/components/shared/data-table/pagination';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { ExpenseDisplay } from '../../../schemas';
 import { EXPENSES_TABLE_CONFIG } from '../constants';
 import { Toolbar } from '../toolbar';
 import { columns } from './columns';
-import { usePaginationWithUrl } from '@/components/shared/data-table/hooks/usePaginationWithUrl';
 
 interface DataTableProps {
   data: ExpenseDisplay[];
@@ -50,11 +48,7 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
 
   const [sorting, setSorting] = useSortingWithUrl('date', 'desc');
   const [pagination, setPagination] = usePaginationWithUrl();
-
-  const [columnFilters, setColumnFilters] = useLocalStorage<ColumnFiltersState>(
-    localStorageKeys.COLUMN_FILTERS,
-    []
-  );
+  const [columnFilters, setColumnFilters] = useColumnFiltersWithUrl();
 
   const table = useReactTable({
     data,

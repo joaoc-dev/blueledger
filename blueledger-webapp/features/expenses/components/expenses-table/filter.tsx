@@ -52,10 +52,10 @@ export const Filter = ({ table, isDisabled }: FilterProps) => {
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="flex flex-col gap-4 w-[310px]"
+          className="flex flex-col w-[310px]"
           align={popoverContentAlign}
         >
-          <div className="flex items-center gap-2 justify-between">
+          <div className="flex items-center justify-between mb-2">
             <span>FILTER BY</span>
             <Button
               variant="ghost"
@@ -66,48 +66,50 @@ export const Filter = ({ table, isDisabled }: FilterProps) => {
               Clear All
             </Button>
           </div>
-          <Separator />
-          <div className="relative max-w-sm md:hidden">
-            <SearchInput table={table} isDisabled={isDisabled} />
-          </div>
-          <div>
-            <UniqueValuesFilter
-              column={table.getColumn('category')}
-              title="Category"
-              options={Object.entries(CATEGORY_ICONS).map(([key, value]) => ({
-                label: key,
-                value: key,
-                icon: value,
-              }))}
+          <Separator className="mb-4" />
+          <div className="flex flex-col gap-4">
+            <div className="relative max-w-sm md:hidden">
+              <SearchInput table={table} isDisabled={isDisabled} />
+            </div>
+            <div>
+              <UniqueValuesFilter
+                column={table.getColumn('category')}
+                title="Category"
+                options={Object.entries(CATEGORY_ICONS).map(([key, value]) => ({
+                  label: key,
+                  value: key,
+                  icon: value,
+                }))}
+              />
+            </div>
+            <NumericRangeFilter
+              table={table}
+              column={table.getColumn('price')!}
+              title="Price"
+            />
+            <NumericRangeFilter
+              table={table}
+              column={table.getColumn('quantity')!}
+              title="Quantity"
+            />
+            <NumericRangeFilter
+              table={table}
+              column={table.getColumn('totalPrice')!}
+              title="Total Price"
+            />
+            <DateFilter
+              table={table}
+              column={table.getColumn('date')!}
+              title="Start Date"
+              type="from"
+            />
+            <DateFilter
+              table={table}
+              column={table.getColumn('date')!}
+              title="End Date"
+              type="to"
             />
           </div>
-          <NumericRangeFilter
-            table={table}
-            column={table.getColumn('price')!}
-            title="Price"
-          />
-          <NumericRangeFilter
-            table={table}
-            column={table.getColumn('quantity')!}
-            title="Quantity"
-          />
-          <NumericRangeFilter
-            table={table}
-            column={table.getColumn('totalPrice')!}
-            title="Total Price"
-          />
-          <DateFilter
-            table={table}
-            column={table.getColumn('date')!}
-            title="Start Date"
-            type="from"
-          />
-          <DateFilter
-            table={table}
-            column={table.getColumn('date')!}
-            title="End Date"
-            type="to"
-          />
         </PopoverContent>
       </Popover>
     </div>
