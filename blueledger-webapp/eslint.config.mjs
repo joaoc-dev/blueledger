@@ -1,26 +1,28 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
+import antfu from '@antfu/eslint-config';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+export default antfu({
+  react: true,
+  nextjs: true,
+  typescript: true,
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  {
-    ignores: [
-      '**/dist/**',
-      '**/build/**',
-      '**/node_modules/**',
-      'components/third-party/**',
-      'components/third-party-modified/**',
-      'lib/db/client.ts',
-    ],
+  stylistic: {
+    quotes: 'single',
+    semi: true,
+    indent: 2,
   },
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
-];
 
-export default eslintConfig;
+  formatters: {
+    css: true,
+  },
+
+  ignores: [
+    'components/ui/**',
+    'components/ui-modified/**',
+    'components/third-party/**',
+    'components/third-party-modified/**',
+  ],
+}, {
+  rules: {
+    'node/prefer-global/process': 'off', // Allow using `process.env`
+  },
+});
