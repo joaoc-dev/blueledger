@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Card,
   CardContent,
@@ -6,9 +5,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { UserAvatarEdit } from '@/components/nav-bar/user-avatar-edit';
-import UserProfileForm from '@/components/users/user-profile-form';
 import { Separator } from '@/components/ui/separator';
+import { UserAvatarEdit, UserProfileForm } from '@/features/users/components';
 import { SessionProvider } from 'next-auth/react';
 
 const UserProfilePage = async () => {

@@ -1,0 +1,81 @@
+'use client';
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { UserAvatar, useUserStore } from '@/features/users/components';
+import { useUserProfile } from '@/features/users/hooks';
+import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import Link from 'next/link';
+
+export function DesktopNavUser() {
+  const { refetch } = useUserProfile();
+  const name = useUserStore((state) => state.name);
+  const email = useUserStore((state) => state.email);
+
+  const handleDropdownOpenChange = (open: boolean) => {
+    if (open) refetch();
+  };
+
+  return (
+    <DropdownMenu onOpenChange={handleDropdownOpenChange}>
+      <DropdownMenuTrigger asChild>
+        <UserAvatar className="h-8 w-8" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="w-(--radix-dropdown-menu-trigger-width) min-w-56"
+        side="bottom"
+        align="end"
+        sideOffset={8}
+      >
+        <DropdownMenuLabel className="p-0 font-normal">
+          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+            <UserAvatar />
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">{name}</span>
+              <span className="truncate text-xs">{email}</span>
+            </div>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Sparkles />
+            Upgrade to Pro(soon)
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href="/user/profile">
+              <BadgeCheck />
+              Profile
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <CreditCard />
+            Billing(soon)
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/user/notifications">
+              <Bell />
+              Notifications
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
+          <LogOut />
+          Log out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

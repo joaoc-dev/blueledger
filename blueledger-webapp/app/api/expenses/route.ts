@@ -1,38 +1,44 @@
+import { createExpense, getExpenses } from '@/features/expenses/data';
+import { createExpenseSchema } from '@/features/expenses/schemas';
 import { withAuth } from '@/lib/api/withAuth';
-import dbConnect from '@/lib/db/mongoose-client';
-import { createExpenseSchema } from '@/lib/validations/expense-schema';
-import Expense from '@/models/expense.model';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
+import { validateRequest } from '../validateRequest';
 
 export const POST = withAuth(async function POST(request: NextAuthRequest) {
   try {
     const body = await request.json();
-    const validation = createExpenseSchema.safeParse(body);
+    const userId = request.auth!.user!.id;
 
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: validation.error.format() },
-        { status: 400 }
-      );
-    }
-
-    await dbConnect();
-
-    const { description, price, quantity, category, date } = validation.data;
-    const totalPrice = price * quantity;
-    const expense = await Expense.create({
-      description,
-      price,
-      quantity,
-      totalPrice,
-      category,
-      date,
+    const validationResult = validateRequest(createExpenseSchema, {
+      data: {
+        ...body,
+        user: userId,
+      },
     });
+    if (!validationResult.success) return validationResult.error;
+
+    const expense = await createExpense(validationResult.data!);
 
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
     console.log('Error creating expense', error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
+});
+
+export const GET = withAuth(async function GET(request: NextAuthRequest) {
+  try {
+    const userId = request.auth!.user!.id;
+
+    const expenses = await getExpenses(userId);
+
+    return NextResponse.json(expenses);
+  } catch (error) {
+    console.log('Error getting expenses', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { Calendar } from '@/components/custom/calendar';
+import { Calendar } from '@/components/third-party/calendar';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import React from 'react';
@@ -28,11 +28,11 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             onBlur={onBlur}
             variant="outline"
             className={cn(
-              'w-[240px] justify-start text-left font-normal',
+              'w-full  justify-start text-left font-normal',
               !value && 'text-muted-foreground'
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="h-4 w-4" />
             {value ? format(value, 'PPP') : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>

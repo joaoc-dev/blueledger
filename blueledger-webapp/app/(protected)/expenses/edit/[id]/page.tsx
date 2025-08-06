@@ -1,7 +1,7 @@
+import { ExpenseForm } from '@/features/expenses/components';
+import { getExpenseById } from '@/features/expenses/data';
+import { auth } from '@/lib/auth/auth';
 import { notFound } from 'next/navigation';
-import React from 'react';
-import ExpenseForm from '@/components/expenses/expense-form';
-import { getExpenseById } from '@/lib/data/expenses';
 
 const EditExpensePage = async ({
   params,
@@ -9,7 +9,11 @@ const EditExpensePage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
-  const expense = await getExpenseById(id);
+
+  const session = await auth();
+  const userId = session!.user!.id;
+
+  const expense = await getExpenseById(id, userId);
 
   if (!expense) notFound();
 

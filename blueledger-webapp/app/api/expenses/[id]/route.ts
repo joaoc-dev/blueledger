@@ -1,12 +1,12 @@
-import { withAuth } from '@/lib/api/withAuth';
-import dbConnect from '@/lib/db/mongoose-client';
+import { deleteExpense, updateExpense } from '@/features/expenses/data';
 import {
   deleteExpenseSchema,
   patchExpenseSchema,
-} from '@/lib/validations/expense-schema';
-import Expense from '@/models/expense.model';
+} from '@/features/expenses/schemas';
+import { withAuth } from '@/lib/api/withAuth';
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
+import { validateRequest } from '../../validateRequest';
 
 export const PATCH = withAuth(async function PATCH(
   request: NextAuthRequest,
@@ -15,31 +15,17 @@ export const PATCH = withAuth(async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const validation = patchExpenseSchema.safeParse({ params: { id }, body });
 
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: validation.error.format() },
-        { status: 400 }
-      );
-    }
-
-    await dbConnect();
-
-    const existingExpense = await Expense.findById(id);
-    if (!existingExpense)
-      return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
-
-    const updatedData = {
-      ...existingExpense.toObject(),
-      ...validation.data.body,
-    };
-
-    updatedData.totalPrice = updatedData.price * updatedData.quantity;
-
-    const expense = await Expense.findByIdAndUpdate(id, updatedData, {
-      new: true,
+    const validationResult = validateRequest(patchExpenseSchema, {
+      id,
+      data: body,
     });
+    if (!validationResult.success) return validationResult.error;
+
+    const userId = request.auth!.user!.id;
+    const expense = await updateExpense(validationResult.data!, userId);
+    if (!expense)
+      return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
 
     return NextResponse.json(expense, { status: 200 });
   } catch (error) {
@@ -57,18 +43,14 @@ export const DELETE = withAuth(async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const validation = deleteExpenseSchema.safeParse({ params: { id } });
 
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: validation.error.format() },
-        { status: 400 }
-      );
-    }
+    const validationResult = validateRequest(deleteExpenseSchema, {
+      id,
+    });
+    if (!validationResult.success) return validationResult.error;
 
-    await dbConnect();
-
-    const expense = await Expense.findByIdAndDelete(id);
+    const userId = request.auth!.user!.id;
+    const expense = await deleteExpense(id, userId);
 
     if (!expense)
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });

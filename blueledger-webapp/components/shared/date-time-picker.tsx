@@ -36,7 +36,7 @@ export const DateTimePicker = React.forwardRef<
 
   return (
     <div className="flex gap-1">
-      <div className="w-full">
+      <div className="flex-1">
         <DatePicker
           value={value}
           onChange={handleDateChange}
@@ -44,7 +44,7 @@ export const DateTimePicker = React.forwardRef<
           ref={ref}
         />
       </div>
-      <div className="">
+      <div className="w-[9rem]">
         <Input
           type="time"
           id="time"
