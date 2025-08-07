@@ -83,8 +83,8 @@ Responsible for interacting with Azure in order to provide the web-app with adva
 |             | query-keys.ts         |                         |                                                                        |
 |             | ...                   |                         |                                                                        |
 | env/        |                       |                         | **T3 type-safe wrappers for accessing environment variables using Zod**|
-|             | client.ts             |                         | Server-only environment variables (e.g. secrets).                      |
-|             | server.ts             |                         | Public variables exposed to the client (must start with NEXT_PUBLIC_). |
+|             | server.ts             |                         | Server-only environment variables (e.g. secrets).                      |
+|             | client.ts             |                         | Public variables exposed to the client (must start with NEXT_PUBLIC_). |
 | features/   |                       |                         | **Feature-scoped code**                                                |
 |             | feature-name/         |                         |                                                                        |
 |             |                       | components/             | Feature-specific UI components                                         |
