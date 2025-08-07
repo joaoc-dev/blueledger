@@ -26,6 +26,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 🌱 Type-safe environment variables by T3 Env
 - 🧹 Code Linting with ESLint (Antfu configuration)
 - 🛡️ Strict Typescript configuration
+- ✂️ Declutter of unused files and dependencies by Knip
 - 🐰 AI Code Reviews by CodeRabbit
 - 🛰️ Performance monitoring and error tracking by Sentry
 
@@ -73,6 +74,9 @@ Responsible for interacting with Azure in order to provide the web-app with adva
 |             | pusher-events.ts      |                         |                                                                        |
 |             | query-keys.ts         |                         |                                                                        |
 |             | ...                   |                         |                                                                        |
+| env/        |                       |                         | **T3 type-safe wrappers for accessing environment variables using Zod**|
+|             | client.ts             |                         | Server-only environment variables (e.g. secrets).                      |
+|             | server.ts             |                         | Public variables exposed to the client (must start with NEXT_PUBLIC_). |
 | features/   |                       |                         | **Feature-scoped code**                                                |
 |             | feature-name/         |                         |                                                                        |
 |             |                       | components/             | Feature-specific UI components                                         |

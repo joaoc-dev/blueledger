@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:deps": "knip"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.9.1",
@@ -82,6 +83,7 @@
     "eslint-config-next": "15.3.2",
     "eslint-plugin-format": "^1.0.1",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "knip": "^5.62.0",
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
     "tw-animate-css": "^1.2.9",
