@@ -1,7 +1,7 @@
+import type { Column } from '@tanstack/react-table';
+import { ArrowDown, ArrowDownUp, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Column } from '@tanstack/react-table';
-import { ArrowDown, ArrowDownUp, ArrowUp } from 'lucide-react';
 
 interface ColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -9,20 +9,12 @@ interface ColumnHeaderProps<TData, TValue>
   title: string;
 }
 
-// We wrap the component because drag overlay uses header.toString() to display the header text
-export function columnHeader<TData, TValue>(title: string) {
-  const fn = ({ column }: { column: Column<TData, TValue> }) => (
-    <ColumnHeaderComponent key={column.id} column={column} title={title} />
-  );
-  fn.toString = () => title;
-  return fn;
-}
-
-const ColumnHeaderComponent = <TData, TValue>({
+// eslint-disable-next-line react-refresh/only-export-components
+function ColumnHeaderComponent<TData, TValue>({
   column,
   title,
   className,
-}: ColumnHeaderProps<TData, TValue>) => {
+}: ColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
     return (
       <div key={column.id} className={cn(className)}>
@@ -40,14 +32,27 @@ const ColumnHeaderComponent = <TData, TValue>({
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         <span className="truncate">{title}</span>
-        {column.getIsSorted() === 'desc' ? (
-          <ArrowDown />
-        ) : column.getIsSorted() === 'asc' ? (
-          <ArrowUp />
-        ) : (
-          <ArrowDownUp />
-        )}
+        {column.getIsSorted() === 'desc'
+          ? (
+              <ArrowDown />
+            )
+          : column.getIsSorted() === 'asc'
+            ? (
+                <ArrowUp />
+              )
+            : (
+                <ArrowDownUp />
+              )}
       </Button>
     </div>
   );
-};
+}
+
+// We wrap the component because drag overlay uses header.toString() to display the header text
+export function columnHeader<TData, TValue>(title: string) {
+  const fn = ({ column }: { column: Column<TData, TValue> }) => (
+    <ColumnHeaderComponent key={column.id} column={column} title={title} />
+  );
+  fn.toString = () => title;
+  return fn;
+}

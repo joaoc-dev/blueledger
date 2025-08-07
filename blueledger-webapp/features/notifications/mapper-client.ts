@@ -1,9 +1,9 @@
 'use client';
 
-import { NotificationApiResponse, NotificationDisplay } from './schemas';
+import type { NotificationApiResponse, NotificationDisplay } from './schemas';
 
 export function mapApiResponseToDisplay(
-  apiResponse: NotificationApiResponse
+  apiResponse: NotificationApiResponse,
 ): NotificationDisplay {
   return {
     ...apiResponse,
@@ -13,7 +13,7 @@ export function mapApiResponseToDisplay(
 }
 
 export function mapApiResponseListToDisplay(
-  apiResponses: NotificationApiResponse[]
+  apiResponses: NotificationApiResponse[],
 ): NotificationDisplay[] {
   return apiResponses.map(mapApiResponseToDisplay);
 }

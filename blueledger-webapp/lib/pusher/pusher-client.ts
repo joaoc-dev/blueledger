@@ -1,12 +1,13 @@
 'use client';
 
-import Pusher, { Channel } from 'pusher-js';
+import type { Channel } from 'pusher-js';
+import Pusher from 'pusher-js';
 
 interface PusherClient {
   subscribe: (channelName: string) => Channel;
 }
 
-let pusherClient: PusherClient | undefined = undefined;
+let pusherClient: PusherClient | undefined;
 
 function makePusherClient() {
   Pusher.logToConsole = true;

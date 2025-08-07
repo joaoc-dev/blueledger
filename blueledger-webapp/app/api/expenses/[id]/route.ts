@@ -1,17 +1,17 @@
+import type { NextAuthRequest } from 'next-auth';
+import { NextResponse } from 'next/server';
 import { deleteExpense, updateExpense } from '@/features/expenses/data';
 import {
   deleteExpenseSchema,
   patchExpenseSchema,
 } from '@/features/expenses/schemas';
 import { withAuth } from '@/lib/api/withAuth';
-import { NextAuthRequest } from 'next-auth';
-import { NextResponse } from 'next/server';
 import { validateRequest } from '../../validateRequest';
 
-export const PATCH = withAuth(async function PATCH(
+export const PATCH = withAuth(async (
   request: NextAuthRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  { params }: { params: Promise<{ id: string }> },
+) => {
   try {
     const { id } = await params;
     const body = await request.json();
@@ -20,7 +20,8 @@ export const PATCH = withAuth(async function PATCH(
       id,
       data: body,
     });
-    if (!validationResult.success) return validationResult.error;
+    if (!validationResult.success)
+      return validationResult.error;
 
     const userId = request.auth!.user!.id;
     const expense = await updateExpense(validationResult.data!, userId);
@@ -28,26 +29,28 @@ export const PATCH = withAuth(async function PATCH(
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
 
     return NextResponse.json(expense, { status: 200 });
-  } catch (error) {
-    console.log('Error patching expense', error);
+  }
+  catch (error) {
+    console.error('Error patching expense', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });
 
-export const DELETE = withAuth(async function DELETE(
+export const DELETE = withAuth(async (
   request: NextAuthRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  { params }: { params: Promise<{ id: string }> },
+) => {
   try {
     const { id } = await params;
 
     const validationResult = validateRequest(deleteExpenseSchema, {
       id,
     });
-    if (!validationResult.success) return validationResult.error;
+    if (!validationResult.success)
+      return validationResult.error;
 
     const userId = request.auth!.user!.id;
     const expense = await deleteExpense(id, userId);
@@ -56,11 +59,12 @@ export const DELETE = withAuth(async function DELETE(
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
 
     return NextResponse.json(expense, { status: 200 });
-  } catch (error) {
-    console.log('Error deleting expense', error);
+  }
+  catch (error) {
+    console.error('Error deleting expense', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

@@ -1,14 +1,14 @@
+import type { NextAuthRequest } from 'next-auth';
+import { NextResponse } from 'next/server';
+import { getUserById, removeImageFromUser } from '@/features/users/data';
 import { withAuth } from '@/lib/api/withAuth';
 import {
   destroyImage,
   handleImageUploadAndUserUpdate,
   removePreviousImageIfExists,
 } from '@/lib/cloudinary';
-import { getUserById, removeImageFromUser } from '@/features/users/data';
-import { NextAuthRequest } from 'next-auth';
-import { NextResponse } from 'next/server';
 
-export const POST = withAuth(async function POST(request: NextAuthRequest) {
+export const POST = withAuth(async (request: NextAuthRequest) => {
   let publicId: string | null | undefined;
   let imageUrl: string | null | undefined;
 
@@ -29,7 +29,8 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
       imageUrl = updatedUser.image;
 
       await removePreviousImageIfExists(originalImagePublicId);
-    } else {
+    }
+    else {
       const updatedUser = await removeImageFromUser(userId!);
       if (!updatedUser)
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -38,17 +39,18 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
     }
 
     return NextResponse.json({ image: imageUrl }, { status: 200 });
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error updating user image', error);
 
     if (publicId) {
       const destroyResult = await destroyImage(publicId);
-      console.log('destroyResult (rollback)', destroyResult);
+      console.warn('destroyResult (rollback)', destroyResult);
     }
 
     return NextResponse.json(
       { error: 'Internal Server Error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

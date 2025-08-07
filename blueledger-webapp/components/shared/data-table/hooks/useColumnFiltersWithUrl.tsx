@@ -1,6 +1,6 @@
 'use client';
 
-import { ColumnFiltersState } from '@tanstack/react-table';
+import type { ColumnFiltersState } from '@tanstack/react-table';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 
@@ -88,10 +88,10 @@ export function useColumnFiltersWithUrl() {
     (
       updater:
         | ColumnFiltersState
-        | ((prev: ColumnFiltersState) => ColumnFiltersState)
+        | ((prev: ColumnFiltersState) => ColumnFiltersState),
     ) => {
-      const currentFilters =
-        typeof updater === 'function' ? updater(filters) : updater;
+      const currentFilters
+        = typeof updater === 'function' ? updater(filters) : updater;
       const params = new URLSearchParams(searchParams.toString());
 
       const filterKeys = new Set([
@@ -108,7 +108,7 @@ export function useColumnFiltersWithUrl() {
       ]);
 
       // Clear all known filter params
-      filterKeys.forEach((key) => params.delete(key));
+      filterKeys.forEach(key => params.delete(key));
 
       for (const filter of currentFilters) {
         if (filter.id === 'description') {
@@ -121,32 +121,40 @@ export function useColumnFiltersWithUrl() {
 
         if (filter.id === 'price' && Array.isArray(filter.value)) {
           const [from, to] = filter.value;
-          if (from != null) params.set('price_from', String(from));
-          if (to != null) params.set('price_to', String(to));
+          if (from != null)
+            params.set('price_from', String(from));
+          if (to != null)
+            params.set('price_to', String(to));
         }
 
         if (filter.id === 'quantity' && Array.isArray(filter.value)) {
           const [from, to] = filter.value;
-          if (from != null) params.set('quantity_from', String(from));
-          if (to != null) params.set('quantity_to', String(to));
+          if (from != null)
+            params.set('quantity_from', String(from));
+          if (to != null)
+            params.set('quantity_to', String(to));
         }
 
         if (filter.id === 'totalPrice' && Array.isArray(filter.value)) {
           const [from, to] = filter.value;
-          if (from != null) params.set('totalPrice_from', String(from));
-          if (to != null) params.set('totalPrice_to', String(to));
+          if (from != null)
+            params.set('totalPrice_from', String(from));
+          if (to != null)
+            params.set('totalPrice_to', String(to));
         }
 
         if (filter.id === 'date' && typeof filter.value === 'object') {
           const { from, to } = filter.value as { from: string; to: string };
-          if (from) params.set('date_from', new Date(from).toISOString());
-          if (to) params.set('date_to', new Date(to).toISOString());
+          if (from)
+            params.set('date_from', new Date(from).toISOString());
+          if (to)
+            params.set('date_to', new Date(to).toISOString());
         }
       }
 
       window.history.replaceState(null, '', `${pathname}?${params.toString()}`);
     },
-    [filters, pathname, searchParams]
+    [filters, pathname, searchParams],
   );
 
   return [filters, setFilters] as const;

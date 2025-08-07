@@ -1,12 +1,12 @@
-import SendNotificationSample from '@/components/shared/send-notification-sample';
 import React from 'react';
+import SendNotificationSample from '@/components/shared/send-notification-sample';
 
-const UserNotificationsPage = async () => {
+async function UserNotificationsPage() {
   return (
     <div>
       <SendNotificationSample />
     </div>
   );
-};
+}
 
 export default UserNotificationsPage;

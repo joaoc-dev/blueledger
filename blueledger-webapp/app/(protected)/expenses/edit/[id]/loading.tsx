@@ -1,7 +1,7 @@
 import React from 'react';
 
-const EditExpenseLoadingPage = () => {
+function EditExpenseLoadingPage() {
   return <div>EditExpenseLoadingPage</div>;
-};
+}
 
 export default EditExpenseLoadingPage;

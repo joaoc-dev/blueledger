@@ -2,7 +2,7 @@ import React from 'react';
 import { DataTable } from './data-table/data-table';
 import { StackedList } from './stacked-list';
 
-const ExpensesTableSkeleton = () => {
+function ExpensesTableSkeleton() {
   return (
     <>
       <div className="md:hidden">
@@ -13,6 +13,6 @@ const ExpensesTableSkeleton = () => {
       </div>
     </>
   );
-};
+}
 
 export default ExpensesTableSkeleton;

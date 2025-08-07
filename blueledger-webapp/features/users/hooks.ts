@@ -1,10 +1,12 @@
+import type {
+  UserDisplay,
+  UserProfileFormData,
+} from './schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { getUser } from './client';
 import {
-  UserDisplay,
-  UserProfileFormData,
   userProfileFormSchema,
 } from './schemas';
 
@@ -17,7 +19,7 @@ export function useUserProfile() {
   });
 }
 
-export const useUserProfileForm = (user?: UserDisplay) => {
+export function useUserProfileForm(user?: UserDisplay) {
   const form = useForm<UserProfileFormData>({
     resolver: zodResolver(userProfileFormSchema),
     defaultValues: {
@@ -28,4 +30,4 @@ export const useUserProfileForm = (user?: UserDisplay) => {
   });
 
   return form;
-};
+}

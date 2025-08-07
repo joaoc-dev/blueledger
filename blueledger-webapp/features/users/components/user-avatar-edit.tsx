@@ -1,5 +1,9 @@
 'use client';
 
+import { Pencil } from 'lucide-react';
+import { SessionProvider, useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -8,10 +12,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { updateUserImage } from '@/features/users/client';
-import { Pencil } from 'lucide-react';
-import { SessionProvider, useSession } from 'next-auth/react';
-import { useState } from 'react';
-import { toast } from 'sonner';
 import AvatarCropperModal from './avatar-cropper-modal';
 import { useUserStore } from './store';
 import UserAvatar from './user-avatar';
@@ -20,7 +20,7 @@ export default function UserAvatarEdit() {
   const [cropperOpen, setCropperOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const setImage = useUserStore((state) => state.setImage);
+  const setImage = useUserStore(state => state.setImage);
   const { update } = useSession();
 
   const handleModalClose = () => {
@@ -44,7 +44,8 @@ export default function UserAvatarEdit() {
       });
 
       toast.success('Profile picture removed successfully');
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error removing image:', error);
       toast.error('Failed to remove profile picture');
     }

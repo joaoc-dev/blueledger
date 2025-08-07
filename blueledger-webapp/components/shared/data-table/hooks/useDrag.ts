@@ -1,6 +1,7 @@
-import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
+import type { Dispatch, SetStateAction } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 
 interface UseDragProps {
   setColumnOrder: Dispatch<SetStateAction<string[]>>;
@@ -15,11 +16,12 @@ export function useDrag({
 }: UseDragProps) {
   const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
   const [draggedElementRect, setDraggedElementRect] = useState<DOMRect | null>(
-    null
+    null,
   );
 
   function handleDragStart(event: DragStartEvent) {
-    if (isResizing) return;
+    if (isResizing)
+      return;
 
     setActiveColumnId(event.active.id as string);
 
@@ -34,12 +36,13 @@ export function useDrag({
     setDraggedElementRect(null);
 
     const { active, over } = event;
-    if (!over || active.id === over.id) return;
+    if (!over || active.id === over.id)
+      return;
 
     setColumnOrder((prev) => {
       if (
-        !prev.includes(active.id as string) ||
-        !prev.includes(over.id as string)
+        !prev.includes(active.id as string)
+        || !prev.includes(over.id as string)
       ) {
         return prev; // prevent corrupting state
       }
@@ -47,7 +50,8 @@ export function useDrag({
       const oldIndex = prev.indexOf(active.id as string);
       const newIndex = prev.indexOf(over.id as string);
 
-      if (oldIndex === newIndex) return prev;
+      if (oldIndex === newIndex)
+        return prev;
 
       return arrayMove(prev, oldIndex, newIndex);
     });

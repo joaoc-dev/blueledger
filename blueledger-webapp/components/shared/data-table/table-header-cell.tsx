@@ -1,6 +1,9 @@
+import type { DraggableAttributes } from '@dnd-kit/core';
+import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import type { Header, Table } from '@tanstack/react-table';
+import type { CSSProperties } from 'react';
+import { flexRender } from '@tanstack/react-table';
 import { TableHead } from '@/components/ui/table';
-import { flexRender, Header, Table } from '@tanstack/react-table';
-import { CSSProperties } from 'react';
 import { getCommonPinningStyles } from './utils';
 
 interface TableHeaderCellProps<T> {
@@ -8,22 +11,20 @@ interface TableHeaderCellProps<T> {
   isReSizeable?: boolean;
   style?: CSSProperties;
   dragProps?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    attributes: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    listeners: any;
+    attributes: DraggableAttributes;
+    listeners?: SyntheticListenerMap;
     setNodeRef: (node: HTMLTableCellElement | null) => void;
   };
   table: Table<T>;
 }
 
-export const TableHeaderCell = <T,>({
+export function TableHeaderCell<T,>({
   header,
   isReSizeable,
   style,
   dragProps,
   table,
-}: TableHeaderCellProps<T>) => {
+}: TableHeaderCellProps<T>) {
   const isFiller = header.column.id === 'filler';
   const width = isFiller
     ? 'auto'
@@ -37,7 +38,7 @@ export const TableHeaderCell = <T,>({
       style={{
         ...style,
         whiteSpace: 'nowrap',
-        width: width,
+        width,
         ...getCommonPinningStyles({ column: header.column, table }),
       }}
       ref={dragProps?.setNodeRef}
@@ -68,4 +69,4 @@ export const TableHeaderCell = <T,>({
       )}
     </TableHead>
   );
-};
+}

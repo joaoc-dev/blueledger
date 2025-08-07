@@ -8,7 +8,7 @@ export default function AuthRedirectClient() {
 
   useEffect(() => {
     window.location.href = `/api/auth/signin?callbackUrl=${encodeURIComponent(
-      pathname
+      pathname,
     )}`;
   }, [pathname]);
 

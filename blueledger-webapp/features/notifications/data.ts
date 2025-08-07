@@ -1,14 +1,15 @@
-import {
+import type { NotificationDocument } from './model';
+import type {
+  CreateNotificationData,
   NotificationDisplay,
   PatchNotificationData,
-  CreateNotificationData,
 } from './schemas';
-import Notification, { NotificationDocument } from './model';
 import dbConnect from '@/lib/db/mongoose-client';
 import { mapModelToDisplay } from './mapper-server';
+import Notification from './model';
 
 export async function createNotification(
-  notification: CreateNotificationData
+  notification: CreateNotificationData,
 ): Promise<NotificationDisplay> {
   await dbConnect();
 
@@ -34,7 +35,7 @@ export async function getNotifications(): Promise<NotificationDisplay[]> {
 }
 
 export async function getNotificationById(
-  id: string
+  id: string,
 ): Promise<NotificationDisplay | null> {
   await dbConnect();
 
@@ -47,12 +48,13 @@ export async function getNotificationById(
 }
 
 export async function updateNotification(
-  notification: PatchNotificationData
+  notification: PatchNotificationData,
 ): Promise<NotificationDisplay | null> {
   await dbConnect();
 
   const existing = await Notification.findById(notification.id);
-  if (!existing) return null;
+  if (!existing)
+    return null;
 
   const updatedData = {
     ...existing.toObject(),
@@ -65,7 +67,7 @@ export async function updateNotification(
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .populate({ path: 'fromUser', select: 'name image' })
     .populate({ path: 'user', select: 'name image' })
@@ -75,12 +77,12 @@ export async function updateNotification(
 }
 
 export async function markAllNotificationsAsRead(
-  userId: string
+  userId: string,
 ): Promise<void> {
   await dbConnect();
 
   await Notification.updateMany(
     { user: userId, isRead: false },
-    { isRead: true }
+    { isRead: true },
   );
 }

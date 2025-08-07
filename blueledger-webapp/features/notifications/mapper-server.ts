@@ -1,8 +1,8 @@
-import Notification, { NotificationDocument } from './model';
-import { NotificationDisplay } from './schemas';
+import type { NotificationDocument } from './model';
+import type { NotificationDisplay } from './schemas';
 
 export function mapModelToDisplay(
-  notification: NotificationDocument
+  notification: NotificationDocument,
 ): NotificationDisplay {
   const { _id, ...rest } = notification.toObject
     ? notification.toObject()

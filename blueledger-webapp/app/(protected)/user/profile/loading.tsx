@@ -1,7 +1,7 @@
 import React from 'react';
 
-const LoadingProfilePage = () => {
+function LoadingProfilePage() {
   return <div>Loading...</div>;
-};
+}
 
 export default LoadingProfilePage;

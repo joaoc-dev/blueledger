@@ -1,11 +1,13 @@
-import {
+import type {
   LucideIcon,
-  Utensils,
-  Film,
-  ShoppingBag,
-  Plane,
-  Wallet,
+} from 'lucide-react';
+import {
   CircleEllipsis,
+  Film,
+  Plane,
+  ShoppingBag,
+  Utensils,
+  Wallet,
 } from 'lucide-react';
 
 export const EXPENSE_CATEGORIES = {
@@ -29,10 +31,10 @@ export const EXPENSE_CATEGORIES_VALUES = [
 export type ExpenseCategory = (typeof EXPENSE_CATEGORIES_VALUES)[number];
 
 export const CATEGORY_ICONS: Record<ExpenseCategory, LucideIcon> = {
-  Food: Utensils,
-  Entertainment: Film,
-  Shopping: ShoppingBag,
-  Travel: Plane,
+  'Food': Utensils,
+  'Entertainment': Film,
+  'Shopping': ShoppingBag,
+  'Travel': Plane,
   'Bills & Utilities': Wallet,
-  Other: CircleEllipsis,
+  'Other': CircleEllipsis,
 };

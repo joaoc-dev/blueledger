@@ -1,4 +1,5 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import type { Document, Model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 // This interface represents the properties of an User document
 interface IUser {
@@ -30,10 +31,6 @@ const UserSchema = new Schema<UserDocument>(
       type: String,
       unique: true,
       required: [true, 'Email is required'],
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        'Email is invalid',
-      ],
     },
     image: {
       type: String,
@@ -54,12 +51,12 @@ const UserSchema = new Schema<UserDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // This is the key part - we need to specify both the document type and model type
-const User =
-  (mongoose.models.User as UserModel) ||
-  mongoose.model<UserDocument, UserModel>('User', UserSchema);
+const User
+  = (mongoose.models.User as UserModel)
+    || mongoose.model<UserDocument, UserModel>('User', UserSchema);
 
 export default User;

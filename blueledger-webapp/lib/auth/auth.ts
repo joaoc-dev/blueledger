@@ -1,8 +1,8 @@
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import NextAuth from 'next-auth';
-import authConfig from './auth.config';
 import { getUserById } from '@/features/users/data';
 import clientPromise from '../db/mongoDB-client';
+import authConfig from './auth.config';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: MongoDBAdapter(clientPromise),
@@ -30,9 +30,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // update the token with the updated user data
       if (trigger === 'update') {
         const updatedUser = session.user;
-        if ('image' in updatedUser) token.image = updatedUser.image;
-        if ('name' in updatedUser) token.name = updatedUser.name;
-        if ('bio' in updatedUser) token.bio = updatedUser.bio;
+        if ('image' in updatedUser)
+          token.image = updatedUser.image;
+        if ('name' in updatedUser)
+          token.name = updatedUser.name;
+        if ('bio' in updatedUser)
+          token.bio = updatedUser.bio;
       }
       return token;
     },

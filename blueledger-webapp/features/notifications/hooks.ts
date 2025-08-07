@@ -1,13 +1,13 @@
+import type { NotificationDisplay } from './schemas';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { notificationKeys } from '@/constants/query-keys';
+import { getQueryClient } from '@/lib/react-query/get-query-client';
 import {
   getNotifications,
   markAllNotificationsAsRead,
   markNotificationAsRead,
 } from './client';
-
-import { notificationKeys } from '@/constants/query-keys';
-import { getQueryClient } from '@/lib/react-query/get-query-client';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { NotificationDisplay } from './schemas';
 
 export function useNotifications() {
   const queryClient = getQueryClient();
@@ -21,8 +21,8 @@ export function useNotifications() {
     queryFn: getNotifications,
   });
 
-  const read = notifications?.filter((n) => n.isRead);
-  const unread = notifications?.filter((n) => !n.isRead);
+  const read = notifications?.filter(n => n.isRead);
+  const unread = notifications?.filter(n => !n.isRead);
 
   // Mutations: Optimistic with manual cache manipulation
   // IMPORTANT: Query invalidation on settled
@@ -37,29 +37,35 @@ export function useNotifications() {
     onMutate: async (id: string) => {
       await queryClient.cancelQueries({ queryKey: notificationKeys.byUser });
 
+      const unreadNotification = unread?.find(n => n.id === id);
+
+      if (!unreadNotification) {
+        throw new Error('Notification not found');
+      }
+
       const optimisticNotification: NotificationDisplay = {
-        ...unread?.find((n) => n.id === id)!,
+        ...unreadNotification,
         isRead: true,
         updatedAt: new Date(),
         id,
       };
 
-      const previousNotifications =
-        queryClient.getQueryData<NotificationDisplay[]>(
-          notificationKeys.byUser
+      const previousNotifications
+        = queryClient.getQueryData<NotificationDisplay[]>(
+          notificationKeys.byUser,
         ) || [];
 
-      const updatedNotifications = previousNotifications.map((notification) =>
-        notification.id === id ? optimisticNotification : notification
+      const updatedNotifications = previousNotifications.map(notification =>
+        notification.id === id ? optimisticNotification : notification,
       );
 
       queryClient.setQueryData<NotificationDisplay[]>(
         notificationKeys.byUser,
-        updatedNotifications
+        updatedNotifications,
       );
     },
 
-    onError: (err, id, context) => {
+    onError: (err) => {
       console.error('Failed to mark notification as read:', err);
     },
 
@@ -74,22 +80,22 @@ export function useNotifications() {
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: notificationKeys.byUser });
 
-      const previousNotifications =
-        queryClient.getQueryData<NotificationDisplay[]>(
-          notificationKeys.byUser
+      const previousNotifications
+        = queryClient.getQueryData<NotificationDisplay[]>(
+          notificationKeys.byUser,
         ) || [];
 
-      const updatedNotifications = previousNotifications.map((notification) =>
-        notification.isRead ? notification : { ...notification, isRead: true }
+      const updatedNotifications = previousNotifications.map(notification =>
+        notification.isRead ? notification : { ...notification, isRead: true },
       );
 
       queryClient.setQueryData<NotificationDisplay[]>(
         notificationKeys.byUser,
-        updatedNotifications
+        updatedNotifications,
       );
     },
 
-    onError: (err, id, context) => {
+    onError: (err) => {
       console.error('Failed to mark all notifications as read:', err);
     },
 

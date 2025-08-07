@@ -1,9 +1,9 @@
-import { withAuth } from '@/lib/api/withAuth';
+import type { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
+import { withAuth } from '@/lib/api/withAuth';
 import { authorizeChannel } from '@/lib/pusher/pusher-server';
-import { NextAuthRequest } from 'next-auth';
 
-export const POST = withAuth(async function POST(request: NextAuthRequest) {
+export const POST = withAuth(async (request: NextAuthRequest) => {
   try {
     const formData = await request.text();
     const params = new URLSearchParams(formData);
@@ -21,11 +21,12 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
     const authResponse = authorizeChannel(socket_id!, channel_name!);
 
     return NextResponse.json(authResponse);
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error authorizing channel', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

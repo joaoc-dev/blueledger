@@ -1,10 +1,10 @@
+import type { ColumnDef } from '@tanstack/react-table';
+import type { ExpenseDisplay } from '../../../schemas';
 import { columnHeader } from '@/components/shared/data-table/sortable-column';
+import NumericDisplay from '@/components/shared/numeric-display';
 import { formatLocalizedDate } from '@/lib/utils';
-import { ColumnDef } from '@tanstack/react-table';
-import { ExpenseDisplay } from '../../../schemas';
 import ExpenseActions from '../expense-actions';
 import { CategoryCell } from './category-cell';
-import NumericDisplay from '@/components/shared/numeric-display';
 
 // If using column reordering, make sure to specify the id of the column
 export const columns: ColumnDef<ExpenseDisplay>[] = [
@@ -38,7 +38,8 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     },
     filterFn: (row, columnId, filterValue) => {
       const value = row.getValue(columnId);
-      if (!value) return false;
+      if (!value)
+        return false;
 
       const date = new Date(value as string | Date).getTime();
 
@@ -47,9 +48,12 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
         : null;
       const to = filterValue?.to ? new Date(filterValue.to).getTime() : null;
 
-      if (from && to) return date >= from && date <= to;
-      if (from) return date >= from;
-      if (to) return date <= to;
+      if (from && to)
+        return date >= from && date <= to;
+      if (from)
+        return date >= from;
+      if (to)
+        return date <= to;
 
       return true;
     },
@@ -60,7 +64,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     header: columnHeader('Quantity'),
     size: 100,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('quantity'));
+      const amount = Number.parseFloat(row.getValue('quantity'));
       return <NumericDisplay value={amount} />;
     },
   },
@@ -70,7 +74,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     header: 'Price',
     size: 100,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('price'));
+      const amount = Number.parseFloat(row.getValue('price'));
       return <NumericDisplay value={amount} format="currency" />;
     },
   },
@@ -80,7 +84,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     header: 'Total Price',
     size: 120,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('totalPrice'));
+      const amount = Number.parseFloat(row.getValue('totalPrice'));
       return <NumericDisplay value={amount} format="currency" />;
     },
   },

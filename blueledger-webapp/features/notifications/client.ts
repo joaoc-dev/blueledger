@@ -1,19 +1,19 @@
-import { NotificationDisplay } from '@/features/notifications/schemas';
+import type { NotificationApiResponse } from './schemas';
+import type { NotificationDisplay } from '@/features/notifications/schemas';
 import { apiGet, apiPatch } from '@/lib/api-client';
 import {
   mapApiResponseListToDisplay,
   mapApiResponseToDisplay,
 } from './mapper-client';
-import { NotificationApiResponse } from './schemas';
 
 const endpoint = '/notifications';
 
 export async function markNotificationAsRead(
-  id: string
+  id: string,
 ): Promise<NotificationDisplay> {
   const response = await apiPatch<NotificationApiResponse>(
     `${endpoint}/${id}`,
-    { isRead: true }
+    { isRead: true },
   );
 
   return mapApiResponseToDisplay(response);
@@ -21,7 +21,7 @@ export async function markNotificationAsRead(
 
 export async function markAllNotificationsAsRead(): Promise<void> {
   const response = await apiPatch<{ success: boolean }>(
-    `${endpoint}/mark-all-read`
+    `${endpoint}/mark-all-read`,
   );
 
   if (!response.success) {

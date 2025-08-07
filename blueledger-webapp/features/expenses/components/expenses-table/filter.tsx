@@ -1,5 +1,8 @@
 'use client';
 
+import type { Table } from '@tanstack/react-table';
+import type { ExpenseDisplay } from '@/features/expenses/schemas';
+import { ListFilter, Search, X } from 'lucide-react';
 import { DateFilter } from '@/components/shared/data-table/date-filter';
 import NumericRangeFilter from '@/components/shared/data-table/numeric-range-filter';
 import { UniqueValuesFilter } from '@/components/shared/data-table/unique-values-filter';
@@ -12,17 +15,14 @@ import {
 } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
 import { CATEGORY_ICONS } from '@/features/expenses/constants';
-import { ExpenseDisplay } from '@/features/expenses/schemas';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { Table } from '@tanstack/react-table';
-import { ListFilter, Search, X } from 'lucide-react';
 
 interface FilterProps {
   table: Table<ExpenseDisplay>;
   isDisabled?: boolean;
 }
 
-export const Filter = ({ table, isDisabled }: FilterProps) => {
+export function Filter({ table, isDisabled }: FilterProps) {
   const isMobile = useIsMobile();
 
   const popoverContentAlign = isMobile ? 'start' : 'end';
@@ -114,17 +114,17 @@ export const Filter = ({ table, isDisabled }: FilterProps) => {
       </Popover>
     </div>
   );
-};
+}
 
 export default Filter;
 
-const SearchInput = ({
+function SearchInput({
   table,
   isDisabled,
 }: {
   table: Table<ExpenseDisplay>;
   isDisabled?: boolean;
-}) => {
+}) {
   return (
     <>
       <Search
@@ -136,12 +136,11 @@ const SearchInput = ({
         value={
           (table.getColumn('description')?.getFilterValue() as string) ?? ''
         }
-        onChange={(event) =>
-          table.getColumn('description')?.setFilterValue(event.target.value)
-        }
+        onChange={event =>
+          table.getColumn('description')?.setFilterValue(event.target.value)}
         className="pl-8"
         disabled={isDisabled}
       />
     </>
   );
-};
+}

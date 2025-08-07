@@ -14,26 +14,24 @@ const AvatarPreview = memo(
         height={size}
       />
     );
-  }
+  },
 );
 
 AvatarPreview.displayName = 'AvatarPreview';
 
-type Props = {
+interface Props {
   croppedImage: Blob;
-};
+}
 
 const AvatarPreviewPanel = memo(({ croppedImage }: Props) => {
   const croppedImageUrl = useMemo(
     () => URL.createObjectURL(croppedImage),
-    [croppedImage]
+    [croppedImage],
   );
 
   useEffect(() => {
     return () => URL.revokeObjectURL(croppedImageUrl); // Cleanup memory
   }, [croppedImageUrl]);
-
-  console.log('AvatarPreviewPanel rendered');
 
   return (
     <>

@@ -7,10 +7,10 @@ interface MobileNotificationDropdownProps {
   onClose: () => void;
 }
 
-const MobileNotificationSheet = ({
+function MobileNotificationSheet({
   isOpen,
   onClose,
-}: MobileNotificationDropdownProps) => {
+}: MobileNotificationDropdownProps) {
   return (
     <>
       <ul
@@ -28,6 +28,6 @@ const MobileNotificationSheet = ({
       )}
     </>
   );
-};
+}
 
 export default MobileNotificationSheet;

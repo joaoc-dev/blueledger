@@ -1,3 +1,6 @@
+import type { Column } from '@tanstack/react-table';
+import { Check, PlusCircle } from 'lucide-react';
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,9 +19,6 @@ import {
 } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Column } from '@tanstack/react-table';
-import { Check, PlusCircle } from 'lucide-react';
-import * as React from 'react';
 
 interface UniqueValuesFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -54,26 +54,30 @@ export function UniqueValuesFilter<TData, TValue>({
                 {selectedValues.size}
               </Badge>
               <div className="hidden gap-1 lg:flex">
-                {selectedValues.size > 2 ? (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
-                    {selectedValues.size} selected
-                  </Badge>
-                ) : (
-                  options
-                    .filter((option) => selectedValues.has(option.value))
-                    .map((option) => (
+                {selectedValues.size > 1
+                  ? (
                       <Badge
                         variant="secondary"
-                        key={option.value}
                         className="rounded-sm px-1 font-normal"
                       >
-                        {option.label}
+                        {selectedValues.size}
+                        {' '}
+                        selected
                       </Badge>
-                    ))
-                )}
+                    )
+                  : (
+                      options
+                        .filter(option => selectedValues.has(option.value))
+                        .map(option => (
+                          <Badge
+                            variant="secondary"
+                            key={option.value}
+                            className="rounded-sm px-1 font-normal"
+                          >
+                            {option.label}
+                          </Badge>
+                        ))
+                    )}
               </div>
             </>
           )}
@@ -93,12 +97,13 @@ export function UniqueValuesFilter<TData, TValue>({
                     onSelect={() => {
                       if (isSelected) {
                         selectedValues.delete(option.value);
-                      } else {
+                      }
+                      else {
                         selectedValues.add(option.value);
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
-                        filterValues.length ? filterValues : undefined
+                        filterValues.length ? filterValues : undefined,
                       );
                     }}
                   >
@@ -107,7 +112,7 @@ export function UniqueValuesFilter<TData, TValue>({
                         'flex size-4 items-center justify-center rounded-[4px] border',
                         isSelected
                           ? 'bg-primary border-primary text-primary-foreground'
-                          : 'border-input [&_svg]:invisible'
+                          : 'border-input [&_svg]:invisible',
                       )}
                     >
                       <Check />

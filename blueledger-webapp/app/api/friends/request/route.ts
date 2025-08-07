@@ -1,18 +1,19 @@
+import type { NextAuthRequest } from 'next-auth';
+import type { PusherEvent } from '@/constants/pusher-events';
+import { NextResponse } from 'next/server';
 import { validateRequest } from '@/app/api/validateRequest';
-import { PusherEvent, PusherEvents } from '@/constants/pusher-events';
+import { PusherEvents } from '@/constants/pusher-events';
 import { NOTIFICATION_TYPES } from '@/features/notifications/constants';
 import { createNotification } from '@/features/notifications/data';
 import { createNotificationSchema } from '@/features/notifications/schemas';
 import { withAuth } from '@/lib/api/withAuth';
 import { sendToPusher } from '@/lib/pusher/pusher-server';
-import { NextAuthRequest } from 'next-auth';
-import { NextResponse } from 'next/server';
 
-export const POST = withAuth(async function POST(request: NextAuthRequest) {
+export const POST = withAuth(async (request: NextAuthRequest) => {
   try {
     const body = await request.json();
-    //const userId = request.auth!.user!.id;
-    //fromUser = userId;
+    // const userId = request.auth!.user!.id;
+    // fromUser = userId;
 
     const validationResult = validateRequest(createNotificationSchema, {
       user: body.targetUserId,
@@ -21,7 +22,8 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
       isRead: false,
     });
 
-    if (!validationResult.success) return validationResult.error;
+    if (!validationResult.success)
+      return validationResult.error;
 
     await createNotification(validationResult.data!);
 
@@ -30,13 +32,14 @@ export const POST = withAuth(async function POST(request: NextAuthRequest) {
 
     return NextResponse.json(
       { message: 'Friend request sent' },
-      { status: 201 }
+      { status: 201 },
     );
-  } catch (error) {
-    console.log('Error sending friend request', error);
+  }
+  catch (error) {
+    console.error('Error sending friend request', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

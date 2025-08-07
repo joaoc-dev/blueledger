@@ -1,4 +1,4 @@
-import { UserDisplay } from '@/features/users/schemas';
+import type { UserDisplay } from '@/features/users/schemas';
 
 export const dummyUsers: UserDisplay[] = [
   {

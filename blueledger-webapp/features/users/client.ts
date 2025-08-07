@@ -1,9 +1,9 @@
+import type { UserApiResponse, UserDisplay, UserProfileFormData } from './schemas';
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client';
 import {
   mapApiResponseToDisplay,
   mapFormDataToApiRequest,
 } from './mapper-client';
-import { UserApiResponse, UserDisplay, UserProfileFormData } from './schemas';
 
 export async function getUser(): Promise<UserDisplay> {
   const response = await apiGet<UserApiResponse>(`/users/me`);
@@ -11,7 +11,7 @@ export async function getUser(): Promise<UserDisplay> {
 }
 
 export async function updateUser(
-  data: UserProfileFormData
+  data: UserProfileFormData,
 ): Promise<UserDisplay> {
   const request = mapFormDataToApiRequest(data);
   const response = await apiPatch<UserApiResponse>(`/users/me`, request);
@@ -19,7 +19,7 @@ export async function updateUser(
 }
 
 export async function updateUserImage(
-  image: Blob | null
+  image: Blob | null,
 ): Promise<UserDisplay> {
   const formData = new FormData();
   if (image) {

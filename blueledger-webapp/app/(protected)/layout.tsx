@@ -1,14 +1,15 @@
+import { SessionProvider } from 'next-auth/react';
 import NavBar from '@/components/layout/nav-bar';
 import AuthRedirectClient from '@/components/shared/auth-redirect-client';
-import { auth } from '@/lib/auth/auth';
-import UserProfileStoreInitializer from '@/features/users/components/store/store-initializer';
 import NotificationsStoreInitializer from '@/features/notifications/components/store/store-initializer';
-import { SessionProvider } from 'next-auth/react';
+import UserProfileStoreInitializer from '@/features/users/components/store/store-initializer';
+import { auth } from '@/lib/auth/auth';
 
-const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
+async function AuthLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
 
-  if (!session || !session.user) return <AuthRedirectClient />;
+  if (!session || !session.user)
+    return <AuthRedirectClient />;
 
   return (
     <div className="max-w-screen-xl mx-auto min-h-screen grid grid-rows-[auto_1fr]">
@@ -22,6 +23,6 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
       <main className="p-10 max-w-screen-xl">{children}</main>
     </div>
   );
-};
+}
 
 export default AuthLayout;

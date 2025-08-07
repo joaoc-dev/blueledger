@@ -1,19 +1,16 @@
 import { TableCell } from '@/components/ui/table';
-import React from 'react';
 
 interface TableBodyCellProps {
-  children: React.ReactNode;
+  ref?: React.Ref<HTMLTableCellElement | null>;
   isPinned: boolean;
+  children?: React.ReactNode;
   columnId?: string;
   style?: React.CSSProperties;
   className?: string;
   colSpan?: number;
 }
 
-const TableBodyCell = React.forwardRef<
-  HTMLTableCellElement,
-  TableBodyCellProps
->(({ children, style, columnId, isPinned, className, colSpan }, ref) => {
+function TableBodyCell({ ref, children, style, columnId, isPinned, className, colSpan }: TableBodyCellProps) {
   const isFiller = columnId === 'filler';
   const width = isFiller ? 'auto' : `calc(var(--col-${columnId}-size) * 1px)`;
 
@@ -29,7 +26,7 @@ const TableBodyCell = React.forwardRef<
       {children}
     </TableCell>
   );
-});
+}
 
 TableBodyCell.displayName = 'TableBodyCell';
 

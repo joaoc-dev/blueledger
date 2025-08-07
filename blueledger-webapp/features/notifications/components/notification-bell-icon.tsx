@@ -1,12 +1,8 @@
-import { useNotifications } from '../hooks';
-import { cn } from '@/lib/utils';
 import { Bell } from 'lucide-react';
-import { forwardRef } from 'react';
+import { cn } from '@/lib/utils';
+import { useNotifications } from '../hooks';
 
-const NotificationBellIcon = forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+function NotificationBellIcon({ ref, className, ...props }: React.HTMLAttributes<HTMLDivElement> & { ref?: React.RefObject<HTMLDivElement | null> }) {
   const { unread } = useNotifications();
 
   return (
@@ -19,7 +15,7 @@ const NotificationBellIcon = forwardRef<
       )}
     </div>
   );
-});
+}
 
 NotificationBellIcon.displayName = 'NotificationBellIcon';
 

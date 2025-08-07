@@ -1,37 +1,24 @@
 'use client';
 
-import { ThemeToggle } from '@/components/theme-toggle';
-import { DesktopNotificationBell } from '@/features/notifications/components';
-import { cn } from '@/lib/utils';
 import { HandCoins } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { DesktopNotificationBell } from '@/features/notifications/components';
+import { cn } from '@/lib/utils';
 import { DesktopNavUser } from './desktop-nav-user';
 
 interface DesktopNavBarProps {
   links: { label: string; href: string }[];
 }
 
-const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
+function DesktopNavBar({ links }: DesktopNavBarProps) {
   const pathname = usePathname();
   const activeLinkRef = useRef<HTMLAnchorElement>(null);
   const navListRef = useRef<HTMLUListElement>(null);
   const [underlineX, setUnderlineX] = useState(0);
   const [underlineW, setUnderlineW] = useState(0);
-
-  useEffect(() => {
-    const handleResize = () => {
-      renderUnderline();
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    renderUnderline();
-  }, [pathname]);
 
   const renderUnderline = () => {
     const activeLinkElement = activeLinkRef.current;
@@ -46,10 +33,24 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
 
         setUnderlineW(linkWidth / navListWidth);
       }
-    } else {
+    }
+    else {
       setUnderlineW(0);
     }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      renderUnderline();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useLayoutEffect(() => {
+    renderUnderline();
+  }, [pathname]);
 
   return (
     <nav className="nav">
@@ -78,7 +79,7 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
                 ref={isActive ? activeLinkRef : null}
                 className={cn(
                   'nav__item hover:text-foreground',
-                  isActive && 'text-foreground'
+                  isActive && 'text-foreground',
                 )}
                 href={link.href}
               >
@@ -95,6 +96,6 @@ const DesktopNavBar = ({ links }: DesktopNavBarProps) => {
       </div>
     </nav>
   );
-};
+}
 
 export default DesktopNavBar;

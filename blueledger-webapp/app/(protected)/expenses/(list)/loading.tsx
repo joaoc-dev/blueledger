@@ -1,7 +1,7 @@
 import { ExpensesTableSkeleton } from '@/features/expenses/components';
 
-const LoadingExpensesPage = () => {
+function LoadingExpensesPage() {
   return <ExpensesTableSkeleton />;
-};
+}
 
 export default LoadingExpensesPage;

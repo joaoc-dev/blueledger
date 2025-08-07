@@ -1,5 +1,5 @@
-import { ExpenseDocument } from './model';
-import { ExpenseDisplay } from './schemas';
+import type { ExpenseDocument } from './model';
+import type { ExpenseDisplay } from './schemas';
 
 export function mapModelToDisplay(expense: ExpenseDocument): ExpenseDisplay {
   const obj = expense.toObject();

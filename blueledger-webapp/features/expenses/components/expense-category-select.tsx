@@ -1,5 +1,8 @@
-import * as React from 'react';
+import type {
+  ExpenseCategory,
+} from '../constants';
 
+import * as React from 'react';
 import {
   Select,
   SelectContent,
@@ -12,19 +15,16 @@ import {
 import {
   CATEGORY_ICONS,
   EXPENSE_CATEGORIES_VALUES,
-  ExpenseCategory,
 } from '../constants';
 
 interface ExpenseCategorySelectProps {
+  ref?: React.Ref<HTMLButtonElement>;
   value: ExpenseCategory | undefined;
   onChange: (value: ExpenseCategory) => void;
   onBlur: () => void;
 }
 
-export const ExpenseCategorySelect = React.forwardRef<
-  HTMLButtonElement,
-  ExpenseCategorySelectProps
->(({ value, onChange, onBlur }, ref) => {
+export function ExpenseCategorySelect({ ref, value, onChange, onBlur }: ExpenseCategorySelectProps) {
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger ref={ref} onBlur={onBlur} className="w-full">
@@ -48,6 +48,6 @@ export const ExpenseCategorySelect = React.forwardRef<
       </SelectContent>
     </Select>
   );
-});
+}
 
 ExpenseCategorySelect.displayName = 'ExpenseCategorySelect';

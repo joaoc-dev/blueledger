@@ -1,6 +1,6 @@
+import type { Column, Table } from '@tanstack/react-table';
+import { useLayoutEffect, useState } from 'react';
 import { Slider } from '@/components/ui/slider';
-import { Column, Table } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
 
 interface RangeFilterProps<TData, TValue> {
   table: Table<TData>;
@@ -8,24 +8,24 @@ interface RangeFilterProps<TData, TValue> {
   title?: string;
 }
 
-const NumericRangeFilter = <TData, TValue>({
+function NumericRangeFilter<TData, TValue>({
   table,
   column,
   title,
-}: RangeFilterProps<TData, TValue>) => {
+}: RangeFilterProps<TData, TValue>) {
   const [range, setRange] = useState<[number, number] | null>(null);
 
   const allRows = table.getCoreRowModel().flatRows;
 
   const globalValues = allRows
-    .map((row) => row.getValue(column.id))
+    .map(row => row.getValue(column.id))
     .filter((v): v is number => typeof v === 'number');
 
   const min = globalValues.length ? Math.min(...globalValues) : 0;
   const max = globalValues.length ? Math.max(...globalValues) : 0;
   const possibleRange = [min, max];
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const filterValue = column.getFilterValue() as [number, number] | null;
 
     const newRange: [number, number] = [
@@ -36,6 +36,7 @@ const NumericRangeFilter = <TData, TValue>({
     if (!range || range[0] !== newRange[0] || range[1] !== newRange[1]) {
       setRange(newRange);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.getState().columnFilters]);
 
   const handleChange = (value: [number, number]) => {
@@ -48,12 +49,13 @@ const NumericRangeFilter = <TData, TValue>({
     }
 
     // Clear the filter if full range is selected
-    const isFilterCleared =
-      min != null && max != null && value[0] === min && value[1] === max;
+    const isFilterCleared
+      = min != null && max != null && value[0] === min && value[1] === max;
 
     if (isFilterCleared) {
       column.setFilterValue(undefined);
-    } else {
+    }
+    else {
       column.setFilterValue(value);
     }
   };
@@ -70,12 +72,12 @@ const NumericRangeFilter = <TData, TValue>({
         min={min}
         max={max}
         value={range ?? [min ?? 0, max ?? 0]}
-        onValueChange={(val) => setRange(val as [number, number])}
+        onValueChange={val => setRange(val as [number, number])}
         onValueCommit={handleChange}
         disabled={!possibleRange}
       />
     </div>
   );
-};
+}
 
 export default NumericRangeFilter;

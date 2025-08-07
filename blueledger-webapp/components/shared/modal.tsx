@@ -1,14 +1,14 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
   DialogOverlay,
+  DialogTitle,
 } from '@/components/ui/dialog';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 interface ModalProps {
   children: React.ReactNode;
@@ -20,15 +20,15 @@ interface ModalProps {
 export default function Modal({
   children,
   title,
-  onClose = () => {},
+  onClose,
 }: ModalProps) {
   const router = useRouter();
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {
     setOpen(false);
+    onClose?.();
     router.back();
-    onClose();
   };
 
   return (

@@ -11,32 +11,34 @@ interface ButtonLinkProps {
   disabled?: boolean;
 }
 
-const ButtonLink = ({
+function ButtonLink({
   href,
   children,
   variant,
   size,
   className,
   disabled,
-}: ButtonLinkProps) => {
+}: ButtonLinkProps) {
   return (
     <>
-      {disabled ? (
-        <Button
-          variant={variant}
-          size={size}
-          className={className}
-          disabled={true}
-        >
-          {children}
-        </Button>
-      ) : (
-        <Button asChild variant={variant} size={size} className={className}>
-          <Link href={href}>{children}</Link>
-        </Button>
-      )}
+      {disabled
+        ? (
+            <Button
+              variant={variant}
+              size={size}
+              className={className}
+              disabled={true}
+            >
+              {children}
+            </Button>
+          )
+        : (
+            <Button asChild variant={variant} size={size} className={className}>
+              <Link href={href}>{children}</Link>
+            </Button>
+          )}
     </>
   );
-};
+}
 
 export default ButtonLink;

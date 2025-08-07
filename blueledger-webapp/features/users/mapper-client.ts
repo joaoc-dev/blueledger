@@ -1,7 +1,7 @@
-import { UserApiResponse, UserDisplay, UserProfileFormData } from './schemas';
+import type { UserApiResponse, UserDisplay, UserProfileFormData } from './schemas';
 
 export function mapApiResponseToDisplay(
-  apiResponse: UserApiResponse
+  apiResponse: UserApiResponse,
 ): UserDisplay {
   return {
     ...apiResponse,

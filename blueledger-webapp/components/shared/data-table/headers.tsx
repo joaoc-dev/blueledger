@@ -1,5 +1,5 @@
+import type { Table } from '@tanstack/react-table';
 import { TableRow } from '@/components/ui/table';
-import { Table } from '@tanstack/react-table';
 import { DraggableTableHead } from '../data-table/draggable/draggable-head';
 import { TableHeaderCell } from '../data-table/table-header-cell';
 
@@ -10,12 +10,12 @@ interface HeadersProps<T> {
   isFetching?: boolean;
 }
 
-export const Headers = <T,>({
+export function Headers<T,>({
   table,
   columnRefs,
   isLoading,
   isFetching,
-}: HeadersProps<T>) => {
+}: HeadersProps<T>) {
   const isResizing = !!table.getState().columnSizingInfo.isResizingColumn;
 
   return table.getHeaderGroups().map((headerGroup) => {
@@ -51,4 +51,4 @@ export const Headers = <T,>({
       </TableRow>
     );
   });
-};
+}

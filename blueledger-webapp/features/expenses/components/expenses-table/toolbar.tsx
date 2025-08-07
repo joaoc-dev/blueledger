@@ -1,15 +1,15 @@
 'use client';
 
+import type { Table } from '@tanstack/react-table';
+import type { ExpenseDisplay } from '@/features/expenses/schemas';
+import { useQueryClient } from '@tanstack/react-query';
+import { Plus, RotateCw } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
 import ButtonLink from '@/components/shared/button-link';
 import { ViewOptions } from '@/components/shared/data-table/view-options';
 import { Button } from '@/components/ui/button';
 import { expenseKeys } from '@/constants/query-keys';
-import { ExpenseDisplay } from '@/features/expenses/schemas';
-import { useQueryClient } from '@tanstack/react-query';
-import { Table } from '@tanstack/react-table';
-import { Plus, RotateCw } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
 import Filter from './filter';
 
 interface ToolbarProps {
@@ -18,7 +18,7 @@ interface ToolbarProps {
   isFetching?: boolean;
 }
 
-export const Toolbar = ({ table, isFetching, isLoading }: ToolbarProps) => {
+export function Toolbar({ table, isFetching, isLoading }: ToolbarProps) {
   const queryClient = useQueryClient();
 
   const refreshData = () => {
@@ -65,4 +65,4 @@ export const Toolbar = ({ table, isFetching, isLoading }: ToolbarProps) => {
       </div>
     </div>
   );
-};
+}

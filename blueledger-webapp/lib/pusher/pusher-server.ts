@@ -1,4 +1,4 @@
-import { PusherEvent } from '@/constants/pusher-events';
+import type { PusherEvent } from '@/constants/pusher-events';
 import Pusher from 'pusher';
 
 const pusherServer = new Pusher({
@@ -9,18 +9,14 @@ const pusherServer = new Pusher({
   useTLS: true,
 });
 
-const sendToPusher = async (
-  channel: string,
-  event: PusherEvent,
-  message: string
-) => {
+async function sendToPusher(channel: string, event: PusherEvent, message: string) {
   await pusherServer.trigger(channel, event, {
     message,
   });
-};
+}
 
-const authorizeChannel = (socket_id: string, channel_name: string) => {
+function authorizeChannel(socket_id: string, channel_name: string) {
   return pusherServer.authorizeChannel(socket_id, channel_name);
-};
+}
 
-export { sendToPusher, authorizeChannel };
+export { authorizeChannel, sendToPusher };

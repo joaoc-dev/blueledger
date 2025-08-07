@@ -1,14 +1,19 @@
 import mongoose from 'mongoose';
 
-declare global {
-  // eslint-disable-next-line
-  var mongoose: any; // This must be a `var` and not a `let / const`
+interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
 }
 
-let cached = global.mongoose;
+declare global {
+  // eslint-disable-next-line vars-on-top
+  var mongoose: MongooseCache;
+}
+
+let cached = globalThis.mongoose;
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+  cached = globalThis.mongoose = { conn: null, promise: null };
 }
 
 async function dbConnect() {
@@ -16,7 +21,7 @@ async function dbConnect() {
 
   if (!MONGODB_URI) {
     throw new Error(
-      'Please define the MONGODB_URI environment variable inside .env.local'
+      'Please define the MONGODB_URI environment variable inside .env.local',
     );
   }
 
@@ -33,7 +38,8 @@ async function dbConnect() {
   }
   try {
     cached.conn = await cached.promise;
-  } catch (e) {
+  }
+  catch (e) {
     cached.promise = null;
     throw e;
   }

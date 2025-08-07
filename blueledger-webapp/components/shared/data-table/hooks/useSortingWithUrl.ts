@@ -1,4 +1,4 @@
-import { SortingState } from '@tanstack/react-table';
+import type { SortingState } from '@tanstack/react-table';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 // If server-side sorting/pagination/filtering is added later, switching back to Next.js router methods (e.g., router.replace) would be recommended.
 export function useSortingWithUrl(
   defaultSortKey?: string,
-  defaultOrder?: 'asc' | 'desc'
+  defaultOrder?: 'asc' | 'desc',
 ) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -20,14 +20,14 @@ export function useSortingWithUrl(
   }, [sort, order]);
 
   const setSorting = (
-    updater: SortingState | ((old: SortingState) => SortingState)
+    updater: SortingState | ((old: SortingState) => SortingState),
   ) => {
     const currentSorting: SortingState = sort
       ? [{ id: sort, desc: order === 'desc' }]
       : [];
 
-    const next =
-      typeof updater === 'function' ? updater(currentSorting) : updater;
+    const next
+      = typeof updater === 'function' ? updater(currentSorting) : updater;
 
     if (next.length > 0) {
       const { id, desc } = next[0];
@@ -36,7 +36,8 @@ export function useSortingWithUrl(
       params.set('order', desc ? 'desc' : 'asc');
 
       window.history.replaceState(null, '', `${pathname}?${params.toString()}`);
-    } else {
+    }
+    else {
       const params = new URLSearchParams(searchParams.toString());
       params.delete('sort');
       params.delete('order');

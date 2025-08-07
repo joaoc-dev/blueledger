@@ -1,5 +1,8 @@
-import { ExpenseDisplay } from '@/features/expenses/schemas';
+import type { ExpenseCategory } from '@/features/expenses/constants';
 
+import type { ExpenseDisplay } from '@/features/expenses/schemas';
+import { format } from 'date-fns';
+import { CircleEllipsis, Dot } from 'lucide-react';
 import NumericDisplay from '@/components/shared/numeric-display';
 import {
   Card,
@@ -8,18 +11,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { CATEGORY_ICONS, ExpenseCategory } from '@/features/expenses/constants';
-import { CircleEllipsis, Dot } from 'lucide-react';
+import { CATEGORY_ICONS } from '@/features/expenses/constants';
 import ExpenseActions from '../expense-actions';
-import { format } from 'date-fns';
 
 interface CardProps {
   expense: ExpenseDisplay;
 }
 
-export const ListCard = ({ expense }: CardProps) => {
-  const Icon =
-    expense.category && expense.category in CATEGORY_ICONS
+export function ListCard({ expense }: CardProps) {
+  const Icon
+    = expense.category && expense.category in CATEGORY_ICONS
       ? CATEGORY_ICONS[expense.category as ExpenseCategory]
       : CircleEllipsis;
 
@@ -65,4 +66,4 @@ export const ListCard = ({ expense }: CardProps) => {
       </div>
     </Card>
   );
-};
+}

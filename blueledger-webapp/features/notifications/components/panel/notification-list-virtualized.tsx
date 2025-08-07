@@ -1,16 +1,16 @@
-import { ScrollArea } from '@/components/ui-modified/scroll-area';
+import type { NotificationDisplay } from '../../schemas';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
-import { NotificationDisplay } from '../../schemas';
+import { ScrollArea } from '@/components/ui-modified/scroll-area';
 import NotificationItem from './notification-item';
 
-export const NotificationListVirtualized = ({
+export function NotificationListVirtualized({
   notificationsList,
   setNotificationRead,
 }: {
   notificationsList: NotificationDisplay[];
   setNotificationRead: (id: string) => Promise<NotificationDisplay>;
-}) => {
+}) {
   const parentRef = useRef<HTMLDivElement>(null);
 
   const rowVirtualizer = useVirtualizer({
@@ -55,6 +55,6 @@ export const NotificationListVirtualized = ({
       </ScrollArea>
     </div>
   );
-};
+}
 
 export default NotificationListVirtualized;

@@ -24,17 +24,20 @@ const links = [
   },
 ];
 
-const NavBar = () => {
+function NavBar() {
   const isMobile = useIsMobile();
-  if (isMobile === undefined) return <NavBarLoading />;
+  if (isMobile === undefined)
+    return <NavBarLoading />;
 
-  return isMobile ? (
-    <div className="relative">
-      <MobileNavBar links={links} />
-    </div>
-  ) : (
-    <DesktopNavBar links={links} />
-  );
-};
+  return isMobile
+    ? (
+        <div className="relative">
+          <MobileNavBar links={links} />
+        </div>
+      )
+    : (
+        <DesktopNavBar links={links} />
+      );
+}
 
 export default NavBar;

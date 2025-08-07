@@ -1,26 +1,26 @@
 'use client';
 
 import React from 'react';
-import { Button } from '../ui/button';
 import { apiPost } from '@/lib/api-client';
+import { Button } from '../ui/button';
 
-const SendNotificationSample = () => {
-  //all of the following should be rate limited
+function SendNotificationSample() {
+  // all of the following should be rate limited
 
-  //on creating friendship, a notification should be sent to the other user
-  //if friendship already exists but is pending, no notification should be sent
+  // on creating friendship, a notification should be sent to the other user
+  // if friendship already exists but is pending, no notification should be sent
   const sendFriendRequest = () => {
     apiPost('/friends/request', {
       targetUserId: '685287dc739c1c2fd7d8922e',
-    }).then((res) => console.log(res));
+    }).then(res => console.warn(res));
   };
 
-  //on creating or updating a group,
-  //a notification should be sent to the other user that is being added to the group
+  // on creating or updating a group,
+  // a notification should be sent to the other user that is being added to the group
   const sendGroupInvitation = () => {
     apiPost('/groups/invite', {
       targetUserId: '685287dc739c1c2fd7d8922e',
-    }).then((res) => console.log(res));
+    }).then(res => console.warn(res));
   };
 
   // this should be replaced by logic in the post expense endpoint
@@ -31,7 +31,7 @@ const SendNotificationSample = () => {
   const sendExpenseNotification = () => {
     apiPost('/expenses/notification', {
       targetUserId: '685287dc739c1c2fd7d8922e',
-    }).then((res) => console.log(res));
+    }).then(res => console.warn(res));
   };
 
   return (
@@ -45,6 +45,6 @@ const SendNotificationSample = () => {
       </Button>
     </div>
   );
-};
+}
 
 export default SendNotificationSample;
