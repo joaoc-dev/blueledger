@@ -10,6 +10,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 ### Built with:
 
 - ⚛️ Next.js 15.4.5 (App Router)
+- 🌐 RESTful API via Next.js App Router (`app/api`) — consumed with an Axios client wrapper
 - 🧩 Composable utility classes by Tailwind
 - 🎨 Customized Shadcn UI components
 - 🍃 MongoDB + 📦 Mongoose ODM
@@ -19,7 +20,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
   - MongoDB adapter
 - 🧊 Modals with Parallel + Intercepting Routes
 - 🔄 Data fetching, caching, and optimistic updates powered by TanStack Query
-- 📊 Custom implementation of grid/list display of powered by TanStack Table
+- 📊 Custom grid/list display powered by TanStack Table
 - 📜 Smooth rendering of large data sets powered by TanStack Virtual
 - 🧲 Drag and drop by dndkit
 - 🔔 Real time notifications by Pusher
@@ -32,6 +33,8 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 🧹 Code Linting with ESLint (Antfu configuration)
 - 🛡️ Strict Typescript configuration
 - ✂️ Declutter of unused files and dependencies by Knip
+- 🤖 Automated dependency updates by Dependabot
+- 🚀 Automated versioning and changelog generation by semantic-release
 - 🐰 AI Code Reviews by CodeRabbit
 - 🛰️ Performance monitoring and error tracking by Sentry
 
