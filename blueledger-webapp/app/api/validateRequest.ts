@@ -1,4 +1,5 @@
 import type { z } from 'zod';
+import * as Sentry from '@sentry/nextjs';
 
 type ValidationResult<T extends z.ZodTypeAny>
   = | { success: true; data: z.infer<T> }
@@ -34,7 +35,8 @@ export function validateRequest<T extends z.ZodTypeAny>(
     };
   }
   catch (error) {
-    console.error('Error validating request', error);
+    Sentry.captureException(error);
+
     return {
       success: false,
       error: {

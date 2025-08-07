@@ -1,8 +1,11 @@
 import type { UserDisplay } from '@/features/users/schemas';
 import { Buffer } from 'node:buffer';
+import * as Sentry from '@sentry/nextjs';
 import { v2 as cloudinary } from 'cloudinary';
+import { LogEvents } from '@/constants/log-events';
 import { env } from '@/env/server';
 import { updateUser } from '@/features/users/data';
+import { createLogger } from '@/lib/logger';
 
 cloudinary.config({
   cloud_name: env.CLOUDINARY_CLOUD_NAME,
@@ -29,10 +32,17 @@ async function uploadImage(image: Blob): Promise<{
   public_id: string;
   secure_url: string;
 }> {
+  const logger = createLogger('lib/cloudinary');
+  const startTime = Date.now();
+
   const arrayBuffer = await image.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
   const { signature, timestamp } = await getSignature();
+
+  logger.info(LogEvents.CLOUDINARY_UPLOAD_STARTED, {
+    timestamp,
+  });
 
   const uploadResult = await new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
@@ -44,8 +54,21 @@ async function uploadImage(image: Blob): Promise<{
         filename_override: timestamp.toString(),
       },
       (error, result) => {
-        if (error)
+        if (error) {
+          Sentry.captureException(error);
+
+          logger.error(LogEvents.CLOUDINARY_UPLOAD_FAILED, {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            durationMs: Date.now() - startTime,
+          });
+
           return reject(error);
+        }
+
+        logger.info(LogEvents.CLOUDINARY_UPLOAD_SUCCESS, {
+          durationMs: Date.now() - startTime,
+        });
+
         return resolve(result);
       },
     );
@@ -60,12 +83,24 @@ async function uploadImage(image: Blob): Promise<{
 }
 
 async function destroyImage(publicId: string) {
+  const logger = createLogger('lib/cloudinary');
+  const startTime = Date.now();
+
+  logger.info(LogEvents.CLOUDINARY_DESTROY_STARTED, { publicId });
+
   const destroyResult = await new Promise((resolve, reject) => {
     cloudinary.uploader.destroy(publicId, (error, result) => {
-      if (error)
+      if (error) {
+        Sentry.captureException(error);
         return reject(error);
+      }
       return resolve(result);
     });
+  });
+
+  logger.info(LogEvents.CLOUDINARY_DESTROY_SUCCESS, {
+    publicId,
+    durationMs: Date.now() - startTime,
   });
 
   return destroyResult;
@@ -100,11 +135,23 @@ async function removePreviousImageIfExists(
   if (!publicId)
     return;
   try {
+    const logger = createLogger('lib/cloudinary');
     const result = await destroyImage(publicId);
-    console.warn('Previous image destroyed:', result);
+
+    logger.warn(LogEvents.CLOUDINARY_DESTROY_SUCCESS, {
+      publicId,
+      result,
+    });
   }
   catch (error) {
-    console.warn('Failed to destroy old image:', error);
+    const logger = createLogger('lib/cloudinary');
+
+    Sentry.captureException(error);
+
+    logger.warn(LogEvents.CLOUDINARY_DESTROY_FAILED, {
+      publicId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 }
 

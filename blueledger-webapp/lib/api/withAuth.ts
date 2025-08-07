@@ -1,6 +1,8 @@
 import type { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
+import { LogEvents } from '@/constants/log-events';
 import { auth } from '@/lib/auth/auth';
+import { createLogger, generateRequestId } from '@/lib/logger';
 
 type Handler<P = undefined> = (
   request: NextAuthRequest,
@@ -10,6 +12,16 @@ type Handler<P = undefined> = (
 export function withAuth<P = undefined>(handler: Handler<P>) {
   return auth(async (request: NextAuthRequest, context) => {
     if (!request.auth || !request.auth.user) {
+      const logger = createLogger('api/auth');
+
+      const requestId = generateRequestId(request);
+
+      logger.warn(LogEvents.UNAUTHORIZED_REQUEST, {
+        requestId,
+        method: request.method,
+        path: request.nextUrl.pathname,
+        userAgent: request.headers.get('user-agent') ?? undefined,
+      });
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
