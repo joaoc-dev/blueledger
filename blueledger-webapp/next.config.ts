@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 import { withSentryConfig } from '@sentry/nextjs';
+import './env/server';
+import './env/client';
 
 const nextConfig: NextConfig = {
   typescript: {

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { env } from '@/env/server';
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -17,7 +18,7 @@ if (!cached) {
 }
 
 async function dbConnect() {
-  const MONGODB_URI = process.env.MONGODB_URI!;
+  const MONGODB_URI = env.MONGODB_URI;
 
   if (!MONGODB_URI) {
     throw new Error(

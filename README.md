@@ -23,6 +23,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 🐻 Seamless user profile updates and notifications by Zustand
 - 📝 Form handling by React Hook Form
 - ✅ Schema Validations by Zod
+- 🌱 Type-safe environment variables by T3 Env
 - 🧹 Code Linting with ESLint (Antfu configuration)
 - 🛡️ Strict Typescript configuration
 - 🐰 AI Code Reviews by CodeRabbit
