@@ -2,6 +2,11 @@
 
 A modern, performant expense-tracking web app with advanced UI/UX and AI integration.
 
+[![CI - main](https://img.shields.io/github/actions/workflow/status/joaoc-dev/blueledger/ci.yaml?branch=main&label=CI%20%7C%20main)](https://github.com/joaoc-dev/blueledger/actions/workflows/ci.yaml)
+
+[![CI - dev](https://img.shields.io/github/actions/workflow/status/joaoc-dev/blueledger/ci.yaml?branch=dev&label=CI%20%7C%20dev)](https://github.com/joaoc-dev/blueledger/actions/workflows/ci.yaml)
+
+
 ### Built with:
 
 - ⚛️ Next.js 15.4.5 (App Router)
