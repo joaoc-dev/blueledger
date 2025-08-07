@@ -1,5 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { DragOverlay } from '@dnd-kit/core';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { Move } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -43,6 +44,7 @@ function ColumnDragOverlay<T,>({
         pointerEvents: 'none',
       }}
       dropAnimation={null}
+      modifiers={[restrictToWindowEdges]}
     >
       {activeColumnId
         ? (

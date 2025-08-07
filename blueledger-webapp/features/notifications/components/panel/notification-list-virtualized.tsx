@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { ScrollArea } from '@/components/ui-modified/scroll-area';
 import NotificationItem from './notification-item';
 
-export function NotificationListVirtualized({
+function NotificationListVirtualized({
   notificationsList,
   setNotificationRead,
 }: {

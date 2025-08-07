@@ -2,9 +2,15 @@
 
 A modern, performant expense-tracking web app with advanced UI/UX and AI integration.
 
+[![CI - main](https://img.shields.io/github/actions/workflow/status/joaoc-dev/blueledger/ci.yaml?branch=main&label=CI%20%7C%20main)](https://github.com/joaoc-dev/blueledger/actions/workflows/ci.yaml)
+
+[![CI - dev](https://img.shields.io/github/actions/workflow/status/joaoc-dev/blueledger/ci.yaml?branch=dev&label=CI%20%7C%20dev)](https://github.com/joaoc-dev/blueledger/actions/workflows/ci.yaml)
+
+
 ### Built with:
 
 - ⚛️ Next.js 15.4.5 (App Router)
+- 🌐 RESTful API via Next.js App Router (`app/api`) — consumed with an Axios client wrapper
 - 🧩 Composable utility classes by Tailwind
 - 🎨 Customized Shadcn UI components
 - 🍃 MongoDB + 📦 Mongoose ODM
@@ -14,7 +20,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
   - MongoDB adapter
 - 🧊 Modals with Parallel + Intercepting Routes
 - 🔄 Data fetching, caching, and optimistic updates powered by TanStack Query
-- 📊 Custom implementation of grid/list display of powered by TanStack Table
+- 📊 Custom grid/list display powered by TanStack Table
 - 📜 Smooth rendering of large data sets powered by TanStack Virtual
 - 🧲 Drag and drop by dndkit
 - 🔔 Real time notifications by Pusher
@@ -26,6 +32,9 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 🌱 Type-safe environment variables by T3 Env
 - 🧹 Code Linting with ESLint (Antfu configuration)
 - 🛡️ Strict Typescript configuration
+- ✂️ Declutter of unused files and dependencies by Knip
+- 🤖 Automated dependency updates by Dependabot
+- 🚀 Automated versioning and changelog generation by semantic-release
 - 🐰 AI Code Reviews by CodeRabbit
 - 🛰️ Performance monitoring and error tracking by Sentry
 
@@ -73,6 +82,9 @@ Responsible for interacting with Azure in order to provide the web-app with adva
 |             | pusher-events.ts      |                         |                                                                        |
 |             | query-keys.ts         |                         |                                                                        |
 |             | ...                   |                         |                                                                        |
+| env/        |                       |                         | **T3 type-safe wrappers for accessing environment variables using Zod**|
+|             | client.ts             |                         | Server-only environment variables (e.g. secrets).                      |
+|             | server.ts             |                         | Public variables exposed to the client (must start with NEXT_PUBLIC_). |
 | features/   |                       |                         | **Feature-scoped code**                                                |
 |             | feature-name/         |                         |                                                                        |
 |             |                       | components/             | Feature-specific UI components                                         |
