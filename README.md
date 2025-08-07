@@ -24,6 +24,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 📝 Form handling by React Hook Form
 - ✅ Schema Validations by Zod
 - 🧹 Code Linting with ESLint (Antfu configuration)
+- 🛡️ Strict Typescript configuration
 - 🐰 AI Code Reviews by CodeRabbit
 - 🛰️ Performance monitoring and error tracking by Sentry
 
