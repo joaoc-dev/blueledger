@@ -1,7 +1,7 @@
-import { ExpenseDisplay, ExpenseFormData, ExpenseApiResponse } from './schemas';
+import type { ExpenseApiResponse, ExpenseDisplay, ExpenseFormData } from './schemas';
 
 export function mapApiResponseToDisplay(
-  apiResponse: ExpenseApiResponse
+  apiResponse: ExpenseApiResponse,
 ): ExpenseDisplay {
   return {
     ...apiResponse,
@@ -19,7 +19,7 @@ export function mapFormDataToApiRequest(data: ExpenseFormData): any {
 }
 
 export function mapApiResponseListToDisplay(
-  apiResponses: ExpenseApiResponse[]
+  apiResponses: ExpenseApiResponse[],
 ): ExpenseDisplay[] {
   return apiResponses.map(mapApiResponseToDisplay);
 }

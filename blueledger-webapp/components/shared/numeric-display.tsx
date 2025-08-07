@@ -12,20 +12,20 @@ interface NumericDisplayProps {
   className?: string;
 }
 
-const NumericDisplay = ({
+function NumericDisplay({
   value,
   format = 'number',
   currency = 'EUR',
   locale = 'en-US',
   className = '',
-}: NumericDisplayProps) => {
+}: NumericDisplayProps) {
   const formatter = new Intl.NumberFormat(locale, {
     style:
       format === 'currency'
         ? 'currency'
         : format === 'percent'
-        ? 'percent'
-        : 'decimal',
+          ? 'percent'
+          : 'decimal',
     currency: format === 'currency' ? currency : undefined,
     notation: format === 'compact' ? 'compact' : undefined,
     maximumFractionDigits: format === 'percent' ? 2 : 0,
@@ -34,6 +34,6 @@ const NumericDisplay = ({
   return (
     <div className={`truncate ${className}`}>{formatter.format(value)}</div>
   );
-};
+}
 
 export default NumericDisplay;

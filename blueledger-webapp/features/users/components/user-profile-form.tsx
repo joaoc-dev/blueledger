@@ -1,5 +1,9 @@
 'use client';
 
+import type { UserDisplay, UserProfileFormData } from '../schemas';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -12,23 +16,19 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 import { updateUser } from '../client';
 import { useUserProfile, useUserProfileForm } from '../hooks';
-import { UserDisplay, UserProfileFormData } from '../schemas';
 import { useUserStore } from './store';
 
-const UserProfileForm = () => {
+function UserProfileForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { refetch } = useUserProfile();
 
-  const name = useUserStore((state) => state.name);
-  const setName = useUserStore((state) => state.setName);
-  const email = useUserStore((state) => state.email);
-  const bio = useUserStore((state) => state.bio);
-  const setBio = useUserStore((state) => state.setBio);
+  const name = useUserStore(state => state.name);
+  const setName = useUserStore(state => state.setName);
+  const email = useUserStore(state => state.email);
+  const bio = useUserStore(state => state.bio);
+  const setBio = useUserStore(state => state.setBio);
 
   const user = {
     name,
@@ -71,10 +71,12 @@ const UserProfileForm = () => {
         },
       });
       toast.success('Profile updated successfully');
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
       toast.error('Failed to update profile');
-    } finally {
+    }
+    finally {
       setIsLoading(false);
     }
   }
@@ -139,6 +141,6 @@ const UserProfileForm = () => {
       </form>
     </Form>
   );
-};
+}
 
 export default UserProfileForm;

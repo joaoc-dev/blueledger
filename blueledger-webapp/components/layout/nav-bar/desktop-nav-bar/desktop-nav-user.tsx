@@ -1,5 +1,8 @@
 'use client';
 
+import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,17 +14,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { UserAvatar, useUserStore } from '@/features/users/components';
 import { useUserProfile } from '@/features/users/hooks';
-import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
-import { signOut } from 'next-auth/react';
-import Link from 'next/link';
 
 export function DesktopNavUser() {
   const { refetch } = useUserProfile();
-  const name = useUserStore((state) => state.name);
-  const email = useUserStore((state) => state.email);
+  const name = useUserStore(state => state.name);
+  const email = useUserStore(state => state.email);
 
   const handleDropdownOpenChange = (open: boolean) => {
-    if (open) refetch();
+    if (open)
+      refetch();
   };
 
   return (

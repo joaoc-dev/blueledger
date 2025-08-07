@@ -37,8 +37,8 @@ export type ExpenseFormData = z.infer<typeof expenseFormSchema>;
 
 const dateStringToDateSchema = z
   .string()
-  .transform((str) => new Date(str))
-  .refine((date) => !isNaN(date.getTime()), { message: 'Invalid date' });
+  .transform(str => new Date(str))
+  .refine(date => !Number.isNaN(date.getTime()), { message: 'Invalid date' });
 
 export const createExpenseSchema = z.strictObject({
   data: z.strictObject({
@@ -61,10 +61,10 @@ export const patchExpenseSchema = z.object({
       date: dateStringToDateSchema.optional(),
     })
     .refine(
-      (data) => Object.values(data).some((value) => value !== undefined),
+      data => Object.values(data).some(value => value !== undefined),
       {
         message: 'At least one field must be provided',
-      }
+      },
     ),
 });
 

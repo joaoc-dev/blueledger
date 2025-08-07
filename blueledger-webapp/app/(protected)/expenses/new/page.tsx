@@ -1,7 +1,7 @@
 import { ExpenseForm } from '@/features/expenses/components';
 
-const NewExpensePage = () => {
+function NewExpensePage() {
   return <ExpenseForm />;
-};
+}
 
 export default NewExpensePage;

@@ -1,14 +1,14 @@
+import { notFound } from 'next/navigation';
 import Modal from '@/components/shared/modal';
 import { ExpenseForm } from '@/features/expenses/components';
 import { getExpenseById } from '@/features/expenses/data';
 import { auth } from '@/lib/auth/auth';
-import { notFound } from 'next/navigation';
 
-const EditExpensePageModal = async ({
+async function EditExpensePageModal({
   params,
 }: {
   params: Promise<{ id: string }>;
-}) => {
+}) {
   const { id } = await params;
 
   const session = await auth();
@@ -16,13 +16,14 @@ const EditExpensePageModal = async ({
 
   const expense = await getExpenseById(id, userId);
 
-  if (!expense) notFound();
+  if (!expense)
+    notFound();
 
   return (
     <Modal title="Edit Expense" open={true}>
       <ExpenseForm expense={expense} />
     </Modal>
   );
-};
+}
 
 export default EditExpensePageModal;

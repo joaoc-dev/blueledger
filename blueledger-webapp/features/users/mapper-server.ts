@@ -1,5 +1,5 @@
-import { UserDocument } from './model';
-import { UserDisplay } from './schemas';
+import type { UserDocument } from './model';
+import type { UserDisplay } from './schemas';
 
 export function mapModelToDisplay(user: UserDocument): UserDisplay {
   const obj = user.toObject();

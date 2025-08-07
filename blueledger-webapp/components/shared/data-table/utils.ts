@@ -1,5 +1,5 @@
-import { Column, Table } from '@tanstack/react-table';
-import { CSSProperties } from 'react';
+import type { Column, Table } from '@tanstack/react-table';
+import type { CSSProperties } from 'react';
 
 interface GetCommonPinningStylesProps<T> {
   column: Column<T>;
@@ -8,10 +8,10 @@ interface GetCommonPinningStylesProps<T> {
 
 // These are the important styles to make sticky column pinning work!
 // Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
-export const getCommonPinningStyles = <T>({
+export function getCommonPinningStyles<T>({
   column,
   table,
-}: GetCommonPinningStylesProps<T>): CSSProperties => {
+}: GetCommonPinningStylesProps<T>): CSSProperties {
   const isPinned = column.getIsPinned();
 
   const leftPinnedColumn = getLeftMostPinnedColumn(table);
@@ -25,9 +25,11 @@ export const getCommonPinningStyles = <T>({
     right: '-2px 0 2px -2px gray inset',
   };
 
-  let boxShadow = undefined;
-  if (isLeftPinnedColumn) boxShadow = boxShadows.right;
-  if (isRightPinnedColumn) boxShadow = boxShadows.left;
+  let boxShadow;
+  if (isLeftPinnedColumn)
+    boxShadow = boxShadows.right;
+  if (isRightPinnedColumn)
+    boxShadow = boxShadows.left;
 
   return {
     boxShadow,
@@ -36,36 +38,40 @@ export const getCommonPinningStyles = <T>({
     position: isPinned ? 'sticky' : 'relative',
     zIndex: isPinned ? 1 : 0,
   };
-};
+}
 
-const getLeftMostPinnedColumn = <T>(table: Table<T>): Column<T> | undefined => {
+function getLeftMostPinnedColumn<T>(table: Table<T>): Column<T> | undefined {
   const leftPinnedColumns = table
     .getAllColumns()
-    .filter((col) => col.getIsPinned() === 'left');
+    .filter(col => col.getIsPinned() === 'left');
 
   const len = leftPinnedColumns.length;
-  if (len === 0) return undefined;
-  if (len === 1) return leftPinnedColumns[0];
+  if (len === 0)
+    return undefined;
+  if (len === 1)
+    return leftPinnedColumns[0];
 
   // len >= 2
   const last = leftPinnedColumns[len - 1];
-  if (last.id !== 'filler') return last;
+  if (last?.id !== 'filler')
+    return last;
   return leftPinnedColumns[len - 2];
-};
+}
 
-const getRightMostPinnedColumn = <T>(
-  table: Table<T>
-): Column<T> | undefined => {
+function getRightMostPinnedColumn<T>(table: Table<T>): Column<T> | undefined {
   const rightPinnedColumns = table
     .getAllColumns()
-    .filter((col) => col.getIsPinned() === 'right');
+    .filter(col => col.getIsPinned() === 'right');
 
   const len = rightPinnedColumns.length;
-  if (len === 0) return undefined;
-  if (len === 1) return rightPinnedColumns[0];
+  if (len === 0)
+    return undefined;
+  if (len === 1)
+    return rightPinnedColumns[0];
 
   // len >= 2
   const first = rightPinnedColumns[0];
-  if (first.id !== 'filler') return first;
+  if (first?.id !== 'filler')
+    return first;
   return rightPinnedColumns[1];
-};
+}

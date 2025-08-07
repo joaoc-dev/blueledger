@@ -1,11 +1,11 @@
 import { ExpensesTable } from '@/features/expenses/components';
 
-const ExpensesPage = async () => {
+async function ExpensesPage() {
   return (
     <div>
       <ExpensesTable />
     </div>
   );
-};
+}
 
 export default ExpensesPage;

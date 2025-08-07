@@ -1,27 +1,26 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
 import React from 'react';
+import { Input } from '@/components/ui/input';
 import { DatePicker } from './date-picker';
 
 interface DateTimePickerProps {
+  ref?: React.Ref<HTMLButtonElement | null>;
   value: Date;
   onChange: (date: Date) => void;
   onBlur: () => void;
 }
 
-export const DateTimePicker = React.forwardRef<
-  HTMLButtonElement,
-  DateTimePickerProps
->(({ value, onChange, onBlur }, ref) => {
+export function DateTimePicker({ ref, value, onChange, onBlur }: DateTimePickerProps) {
   const pad = (num: number) => num.toString().padStart(2, '0');
 
   const timeValue = `${pad(value.getHours())}:${pad(value.getMinutes())}:${pad(
-    value.getSeconds()
+    value.getSeconds(),
   )}`;
 
   const handleDateChange = (date: Date | undefined) => {
-    if (!date) return;
+    if (!date)
+      return;
     const newDate = new Date(date);
     newDate.setHours(value.getHours(), value.getMinutes(), value.getSeconds());
     onChange(newDate);
@@ -30,7 +29,7 @@ export const DateTimePicker = React.forwardRef<
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const [hours, minutes, seconds] = e.target.value.split(':').map(Number);
     const newDate = new Date(value);
-    newDate.setHours(hours, minutes, seconds || 0);
+    newDate.setHours(hours ?? 0, minutes ?? 0, seconds ?? 0);
     onChange(newDate);
   };
 
@@ -57,6 +56,6 @@ export const DateTimePicker = React.forwardRef<
       </div>
     </div>
   );
-});
+}
 
 DateTimePicker.displayName = 'DateTimePicker';

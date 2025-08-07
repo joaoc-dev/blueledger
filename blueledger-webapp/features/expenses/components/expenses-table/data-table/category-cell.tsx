@@ -1,23 +1,27 @@
-import { CATEGORY_ICONS } from '@/features/expenses/constants';
-import { Row } from '@tanstack/react-table';
+import type { Row } from '@tanstack/react-table';
+import type { ExpenseDisplay } from '../../../schemas';
 import { CircleEllipsis } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { ExpenseDisplay } from '../../../schemas';
+import { CATEGORY_ICONS } from '@/features/expenses/constants';
 
 export function CategoryCell({ row }: { row: Row<ExpenseDisplay> }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isNarrow, setIsNarrow] = useState(false);
 
-  const Icon =
-    row.original.category && row.original.category in CATEGORY_ICONS
+  const Icon
+    = row.original.category && row.original.category in CATEGORY_ICONS
       ? CATEGORY_ICONS[row.original.category]
       : CircleEllipsis;
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el)
+      return;
 
     const observer = new ResizeObserver(([entry]) => {
+      if (!entry)
+        return;
+
       setIsNarrow(entry.contentRect.width < 60);
     });
 

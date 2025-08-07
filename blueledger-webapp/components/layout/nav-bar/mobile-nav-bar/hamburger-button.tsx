@@ -3,9 +3,10 @@ interface HamburgerButtonProps {
   onClick: () => void;
 }
 
-const HamburgerButton = ({ isOpen, onClick }: HamburgerButtonProps) => {
+function HamburgerButton({ isOpen, onClick }: HamburgerButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className="icon-button"
       aria-label={isOpen ? 'Close menu' : 'Open menu'}
@@ -28,6 +29,6 @@ const HamburgerButton = ({ isOpen, onClick }: HamburgerButtonProps) => {
       />
     </button>
   );
-};
+}
 
 export default HamburgerButton;

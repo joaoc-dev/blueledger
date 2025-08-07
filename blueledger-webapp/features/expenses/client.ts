@@ -1,10 +1,10 @@
+import type { ExpenseApiResponse, ExpenseDisplay, ExpenseFormData } from './schemas';
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/lib/api-client';
 import {
   mapApiResponseListToDisplay,
   mapApiResponseToDisplay,
   mapFormDataToApiRequest,
 } from './mapper-client';
-import { ExpenseApiResponse, ExpenseDisplay, ExpenseFormData } from './schemas';
 
 const endpoint = '/expenses';
 
@@ -19,7 +19,7 @@ export async function getExpenseById(id: string): Promise<ExpenseDisplay> {
 }
 
 export async function createExpense(
-  data: ExpenseFormData
+  data: ExpenseFormData,
 ): Promise<ExpenseDisplay> {
   const request = mapFormDataToApiRequest(data);
   const response = await apiPost<ExpenseApiResponse>(endpoint, request);
@@ -28,12 +28,12 @@ export async function createExpense(
 
 export async function updateExpense(
   id: string,
-  data: ExpenseFormData
+  data: ExpenseFormData,
 ): Promise<ExpenseDisplay> {
   const request = mapFormDataToApiRequest(data);
   const response = await apiPatch<ExpenseApiResponse>(
     `${endpoint}/${id}`,
-    request
+    request,
   );
   return mapApiResponseToDisplay(response);
 }

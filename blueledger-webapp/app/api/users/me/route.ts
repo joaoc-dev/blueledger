@@ -1,11 +1,11 @@
+import type { NextAuthRequest } from 'next-auth';
+import { NextResponse } from 'next/server';
 import { validateRequest } from '@/app/api/validateRequest';
 import { getUserById, updateUser } from '@/features/users/data';
 import { patchUserSchema } from '@/features/users/schemas';
 import { withAuth } from '@/lib/api/withAuth';
-import { NextAuthRequest } from 'next-auth';
-import { NextResponse } from 'next/server';
 
-export const GET = withAuth(async function GET(request: NextAuthRequest) {
+export const GET = withAuth(async (request: NextAuthRequest) => {
   try {
     const userId = request.auth?.user?.id;
 
@@ -15,16 +15,17 @@ export const GET = withAuth(async function GET(request: NextAuthRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
     return NextResponse.json(user);
-  } catch (error) {
-    console.log('Error getting user', error);
+  }
+  catch (error) {
+    console.error('Error getting user', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });
 
-export const PATCH = withAuth(async function PATCH(request: NextAuthRequest) {
+export const PATCH = withAuth(async (request: NextAuthRequest) => {
   try {
     const userId = request.auth?.user?.id;
     const body = await request.json();
@@ -33,7 +34,8 @@ export const PATCH = withAuth(async function PATCH(request: NextAuthRequest) {
       id: userId,
       data: body,
     });
-    if (!validationResult.success) return validationResult.error;
+    if (!validationResult.success)
+      return validationResult.error;
 
     const user = await updateUser(validationResult.data!);
 
@@ -41,11 +43,12 @@ export const PATCH = withAuth(async function PATCH(request: NextAuthRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
     return NextResponse.json({ user, message: 'User updated successfully' });
-  } catch (error) {
-    console.log('Error updating user', error);
+  }
+  catch (error) {
+    console.error('Error updating user', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

@@ -1,11 +1,12 @@
-import { expenseKeys } from '@/constants/query-keys';
-import { getQueryClient } from '@/lib/react-query/get-query-client';
+import type { ExpenseDisplay, ExpenseFormData } from './schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
+import { expenseKeys } from '@/constants/query-keys';
+import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { createExpense, deleteExpense, updateExpense } from './client';
-import { ExpenseDisplay, ExpenseFormData, expenseFormSchema } from './schemas';
+import { expenseFormSchema } from './schemas';
 
 interface ExpensesContext {
   previousExpenses: ExpenseDisplay[];
@@ -18,24 +19,24 @@ export function useExpenses() {
 
   function sortByDateDesc(expenses: ExpenseDisplay[]): ExpenseDisplay[] {
     return [...expenses].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
     );
   }
 
   const applyOptimisticMutation = async (
     updateQueryFunction: (expenses: ExpenseDisplay[]) => ExpenseDisplay[],
-    optimisticExpense?: ExpenseDisplay
+    optimisticExpense?: ExpenseDisplay,
   ) => {
     await queryClient.cancelQueries({ queryKey: expenseKeys.byUser });
 
-    const previousExpenses =
-      queryClient.getQueryData<ExpenseDisplay[]>(expenseKeys.byUser) || [];
+    const previousExpenses
+      = queryClient.getQueryData<ExpenseDisplay[]>(expenseKeys.byUser) || [];
 
     const updatedExpenses = updateQueryFunction(previousExpenses);
 
     queryClient.setQueryData<ExpenseDisplay[]>(
       expenseKeys.byUser,
-      updatedExpenses
+      updatedExpenses,
     );
 
     return { previousExpenses, optimisticExpense };
@@ -43,32 +44,31 @@ export function useExpenses() {
 
   const applyNewMutationResult = (
     mutationResult: ExpenseDisplay,
-    optimisticId: string
+    optimisticId: string,
   ) => {
-    queryClient.setQueryData<ExpenseDisplay[]>(expenseKeys.byUser, (expenses) =>
+    queryClient.setQueryData<ExpenseDisplay[]>(expenseKeys.byUser, expenses =>
       sortByDateDesc(
-        expenses?.map((expense) =>
-          expense.optimisticId === optimisticId ? mutationResult : expense
-        ) || []
-      )
-    );
+        expenses?.map(expense =>
+          expense.optimisticId === optimisticId ? mutationResult : expense,
+        ) || [],
+      ));
   };
 
   const applyUpdateMutationResult = (
     mutationResult: ExpenseDisplay,
-    id: string
+    id: string,
   ) => {
-    queryClient.setQueryData<ExpenseDisplay[]>(expenseKeys.byUser, (expenses) =>
-      expenses?.map((expense) => (expense.id === id ? mutationResult : expense))
-    );
+    queryClient.setQueryData<ExpenseDisplay[]>(expenseKeys.byUser, expenses =>
+      expenses?.map(expense => (expense.id === id ? mutationResult : expense)));
   };
 
   const rollbackMutation = (previousExpenses: ExpenseDisplay[] | undefined) => {
-    if (!previousExpenses) return;
+    if (!previousExpenses)
+      return;
 
     queryClient.setQueryData<ExpenseDisplay[]>(
       expenseKeys.byUser,
-      previousExpenses
+      previousExpenses,
     );
   };
 
@@ -94,18 +94,22 @@ export function useExpenses() {
 
       return await applyOptimisticMutation(
         updateQueryFunction,
-        optimisticExpense
+        optimisticExpense,
       );
     },
 
-    onSuccess: async (mutationResult, newExpense, context) => {
+    onSuccess: async (mutationResult, _newExpense, context) => {
+      if (!context?.optimisticExpense)
+        return;
+
       applyNewMutationResult(
         mutationResult,
-        context?.optimisticExpense!.optimisticId!
+        context.optimisticExpense.optimisticId!,
       );
     },
 
     onError: (error, newExpense, context) => {
+      console.error('Failed to add expense: ', error, newExpense);
       rollbackMutation(context?.previousExpenses);
     },
   });
@@ -128,24 +132,28 @@ export function useExpenses() {
       };
 
       const updateQueryFunction = (expenses: ExpenseDisplay[]) =>
-        expenses.map((expense) =>
-          expense.id === id ? optimisticExpense : expense
+        expenses.map(expense =>
+          expense.id === id ? optimisticExpense : expense,
         );
 
       return await applyOptimisticMutation(
         updateQueryFunction,
-        optimisticExpense
+        optimisticExpense,
       );
     },
 
-    onSuccess: async (mutationResult, updatedExpense, context) => {
+    onSuccess: async (mutationResult, _updatedExpense, context) => {
+      if (!context?.optimisticExpense)
+        return;
+
       applyUpdateMutationResult(
         mutationResult,
-        context?.optimisticExpense!.optimisticId!
+        context.optimisticExpense.optimisticId!,
       );
     },
 
     onError: (error, updatedExpense, context) => {
+      console.error('Failed to update expense: ', error, updatedExpense);
       rollbackMutation(context?.previousExpenses);
     },
   });
@@ -160,12 +168,13 @@ export function useExpenses() {
 
     onMutate: async (id) => {
       const updateQueryFunction = (expenses: ExpenseDisplay[]) =>
-        expenses.filter((expense) => expense.id !== id);
+        expenses.filter(expense => expense.id !== id);
 
       return await applyOptimisticMutation(updateQueryFunction);
     },
 
     onError: (error, id, context) => {
+      console.error('Failed to delete expense: ', error, id);
       rollbackMutation(context?.previousExpenses);
     },
   });
@@ -177,7 +186,7 @@ export function useExpenses() {
   };
 }
 
-export const useExpenseForm = (expense?: ExpenseDisplay) => {
+export function useExpenseForm(expense?: ExpenseDisplay) {
   const form = useForm<ExpenseFormData>({
     resolver: zodResolver(expenseFormSchema),
     defaultValues: {
@@ -190,4 +199,4 @@ export const useExpenseForm = (expense?: ExpenseDisplay) => {
   });
 
   return form;
-};
+}

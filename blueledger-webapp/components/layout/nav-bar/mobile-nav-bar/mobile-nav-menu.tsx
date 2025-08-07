@@ -1,8 +1,8 @@
 'use client';
 
-import { UserProfileLinks } from '@/features/users/components';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { UserProfileLinks } from '@/features/users/components';
 
 interface MobileNavMenuProps {
   links: { label: string; href: string }[];
@@ -10,7 +10,7 @@ interface MobileNavMenuProps {
   onClose: () => void;
 }
 
-const MobileNavMenu = ({ links, isOpen, onClose }: MobileNavMenuProps) => {
+function MobileNavMenu({ links, isOpen, onClose }: MobileNavMenuProps) {
   const pathname = usePathname();
 
   return (
@@ -50,6 +50,6 @@ const MobileNavMenu = ({ links, isOpen, onClose }: MobileNavMenuProps) => {
       )}
     </>
   );
-};
+}
 
 export default MobileNavMenu;

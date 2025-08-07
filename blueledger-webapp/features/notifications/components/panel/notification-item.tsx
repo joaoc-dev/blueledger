@@ -1,17 +1,17 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import type { NotificationDisplay } from '../../schemas';
 import { formatDistanceToNow } from 'date-fns';
 import { Clock, UserRound } from 'lucide-react';
-import { NotificationDisplay } from '../../schemas';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import NotificationActions from './notification-actions';
 import NotificationMessage from './notification-message';
 
-const NotificationItem = ({
+function NotificationItem({
   notification,
   setNotificationRead,
 }: {
   notification: NotificationDisplay;
   setNotificationRead: (id: string) => Promise<NotificationDisplay>;
-}) => {
+}) {
   return (
     <div>
       <div className="grid grid-cols-[auto_1fr] gap-2 px-2 py-1 h-25">
@@ -46,6 +46,6 @@ const NotificationItem = ({
       </div>
     </div>
   );
-};
+}
 
 export default NotificationItem;

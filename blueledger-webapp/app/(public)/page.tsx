@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Home() {
   return (
@@ -17,10 +17,12 @@ export default function Home() {
           </p>
           <br />
           <p>
-            Go to{' '}
+            Go to
+            {' '}
             <Link href="/dashboard" className="underline">
               Dashboard
-            </Link>{' '}
+            </Link>
+            {' '}
             to get started.
           </p>
         </CardContent>

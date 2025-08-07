@@ -1,7 +1,7 @@
+import type { Header, Table } from '@tanstack/react-table';
+import type { CSSProperties } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Header, Table } from '@tanstack/react-table';
-import { CSSProperties } from 'react';
 import { TableHeaderCell } from '../table-header-cell';
 
 interface DraggableTableHeaderProps<T> {
@@ -10,13 +10,13 @@ interface DraggableTableHeaderProps<T> {
   table: Table<T>;
 }
 
-export const DraggableTableHead = <T,>({
+export function DraggableTableHead<T,>({
   header,
   columnRefs,
   table,
-}: DraggableTableHeaderProps<T>) => {
-  const { attributes, isDragging, listeners, setNodeRef, transform } =
-    useSortable({
+}: DraggableTableHeaderProps<T>) {
+  const { attributes, isDragging, listeners, setNodeRef, transform }
+    = useSortable({
       id: header.column.id,
     });
 
@@ -35,7 +35,8 @@ export const DraggableTableHead = <T,>({
 
     if (node) {
       columnRefs.current.set(header.column.id, node);
-    } else {
+    }
+    else {
       columnRefs.current.delete(header.column.id);
     }
   };
@@ -49,4 +50,4 @@ export const DraggableTableHead = <T,>({
       table={table}
     />
   );
-};
+}

@@ -1,15 +1,15 @@
-import { ScrollArea } from '@/components/ui-modified/scroll-area';
+import type { NotificationDisplay } from '../../schemas';
 import { AnimatePresence, motion } from 'motion/react';
-import { NotificationDisplay } from '../../schemas';
+import { ScrollArea } from '@/components/ui-modified/scroll-area';
 import NotificationItem from './notification-item';
 
-const NotificationListAnimated = ({
+function NotificationListAnimated({
   notificationsList,
   setNotificationRead,
 }: {
   notificationsList: NotificationDisplay[];
   setNotificationRead: (id: string) => Promise<NotificationDisplay>;
-}) => {
+}) {
   return (
     <div>
       <ScrollArea className="notifications__scroll-area">
@@ -35,6 +35,6 @@ const NotificationListAnimated = ({
       </ScrollArea>
     </div>
   );
-};
+}
 
 export default NotificationListAnimated;

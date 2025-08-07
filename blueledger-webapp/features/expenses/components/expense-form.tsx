@@ -1,5 +1,10 @@
 'use client';
 
+import type { ExpenseDisplay, ExpenseFormData } from '../schemas';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { v4 as uuidv4 } from 'uuid';
 import { DateTimePicker } from '@/components/shared/date-time-picker';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,19 +16,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import { v4 as uuidv4 } from 'uuid';
 import { useExpenseForm, useExpenses } from '../hooks';
-import { ExpenseDisplay, ExpenseFormData } from '../schemas';
 import { ExpenseCategorySelect } from './expense-category-select';
 
 interface ExpenseFormProps {
   expense?: ExpenseDisplay;
 }
 
-const ExpenseForm = ({ expense }: ExpenseFormProps) => {
+function ExpenseForm({ expense }: ExpenseFormProps) {
   const form = useExpenseForm(expense);
   const router = useRouter();
   const expenses = useExpenses();
@@ -42,7 +42,8 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
           id: expense.id!,
           updatedExpense: data,
         });
-      } else {
+      }
+      else {
         await expenses.addExpenseMutation.mutateAsync(data);
       }
 
@@ -51,8 +52,9 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
       });
 
       router.back();
-    } catch (error) {
-      console.log('Error submitting expense', error);
+    }
+    catch (error) {
+      console.error('Error submitting expense', error);
       toast.error(`Failed to ${isUpdate ? 'update' : 'add'} expense`, {
         id: toastId,
       });
@@ -92,9 +94,10 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
                     const value = e.target.value;
                     const number = Number(value);
 
-                    if (isNaN(number)) {
+                    if (Number.isNaN(number)) {
                       field.onChange(0);
-                    } else {
+                    }
+                    else {
                       field.onChange(number);
                     }
                   }}
@@ -118,9 +121,10 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
                     const value = e.target.value;
                     const number = Number(value);
 
-                    if (isNaN(number)) {
+                    if (Number.isNaN(number)) {
                       field.onChange(0);
-                    } else {
+                    }
+                    else {
                       field.onChange(number);
                     }
                   }}
@@ -171,17 +175,21 @@ const ExpenseForm = ({ expense }: ExpenseFormProps) => {
           type="submit"
           disabled={form.formState.isSubmitting}
         >
-          {form.formState.isSubmitting ? (
-            <>
-              <Loader2 className="animate-spin" /> Submitting...
-            </>
-          ) : (
-            'Submit'
-          )}
+          {form.formState.isSubmitting
+            ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  {' '}
+                  Submitting...
+                </>
+              )
+            : (
+                'Submit'
+              )}
         </Button>
       </form>
     </Form>
   );
-};
+}
 
 export default ExpenseForm;

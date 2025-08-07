@@ -1,5 +1,7 @@
-import mongoose, { Document, Model, ObjectId, Schema } from 'mongoose';
-import { EXPENSE_CATEGORIES, ExpenseCategory } from './constants';
+import type { Document, Model, ObjectId } from 'mongoose';
+import type { ExpenseCategory } from './constants';
+import mongoose, { Schema } from 'mongoose';
+import { EXPENSE_CATEGORIES } from './constants';
 
 // This interface represents the properties of an Expense document
 interface IExpense {
@@ -64,12 +66,12 @@ const ExpenseSchema = new Schema<ExpenseDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // This is the key part - we need to specify both the document type and model type
-const Expense =
-  (mongoose.models.Expense as ExpenseModel) ||
-  mongoose.model<ExpenseDocument, ExpenseModel>('Expense', ExpenseSchema);
+const Expense
+  = (mongoose.models.Expense as ExpenseModel)
+    || mongoose.model<ExpenseDocument, ExpenseModel>('Expense', ExpenseSchema);
 
 export default Expense;

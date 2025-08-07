@@ -1,7 +1,7 @@
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { OnChangeFn } from '@tanstack/react-table';
+import type { OnChangeFn } from '@tanstack/react-table';
 import debounce from 'lodash.debounce';
 import { useEffect, useMemo, useState } from 'react';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface TableStateKeys {
   COLUMN_ORDER: string;
@@ -22,7 +22,7 @@ export function usePersistentTableState({
 
   const [columnOrder, setColumnOrder] = useLocalStorage<string[]>(
     keys.COLUMN_ORDER,
-    defaultColumnOrder
+    defaultColumnOrder,
   );
 
   const { columnSizing, handleColumnSizingChange } = useColumnSizing(keys);
@@ -41,30 +41,15 @@ export function usePersistentTableState({
   };
 }
 
-const useColumnSizing = (keys: TableStateKeys) => {
+function useColumnSizing(keys: TableStateKeys) {
   // Keep localStorage synced sizing, but keep UI updates separate
-  const [columnSizingLocalStorage, setColumnSizingLocalStorage] =
-    useLocalStorage<Record<string, number>>(keys.COLUMN_SIZES, {});
+  const [columnSizingLocalStorage, setColumnSizingLocalStorage]
+    = useLocalStorage<Record<string, number>>(keys.COLUMN_SIZES, {});
 
   // Local state for immediate UI updates
   const [columnSizing, setColumnSizing] = useState<Record<string, number>>(
-    columnSizingLocalStorage
+    columnSizingLocalStorage,
   );
-
-  // Handler called by table on sizing change
-  const handleColumnSizingChange: OnChangeFn<Record<string, number>> = (
-    updater
-  ) => {
-    // Calculate next sizing value
-    const nextSizing =
-      typeof updater === 'function' ? updater(columnSizing) : updater;
-
-    // Immediate UI update
-    setColumnSizing(nextSizing);
-
-    // // Debounced localStorage update
-    saveSizingDebounced(nextSizing);
-  };
 
   // Debounce localStorage update
   const saveSizingDebounced = useMemo(() => {
@@ -72,6 +57,21 @@ const useColumnSizing = (keys: TableStateKeys) => {
       setColumnSizingLocalStorage(nextSizing);
     }, 500);
   }, [setColumnSizingLocalStorage]);
+
+  // Handler called by table on sizing change
+  const handleColumnSizingChange: OnChangeFn<Record<string, number>> = (
+    updater,
+  ) => {
+    // Calculate next sizing value
+    const nextSizing
+      = typeof updater === 'function' ? updater(columnSizing) : updater;
+
+    // Immediate UI update
+    setColumnSizing(nextSizing);
+
+    // // Debounced localStorage update
+    saveSizingDebounced(nextSizing);
+  };
 
   // Cancel debounce on unmount
   useEffect(() => {
@@ -82,4 +82,4 @@ const useColumnSizing = (keys: TableStateKeys) => {
     columnSizing,
     handleColumnSizingChange,
   };
-};
+}

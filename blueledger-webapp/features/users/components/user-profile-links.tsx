@@ -1,10 +1,10 @@
 'use client';
 
-import { Separator } from '@/components/ui/separator';
-import UserAvatar from '../components/user-avatar';
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { Separator } from '@/components/ui/separator';
+import UserAvatar from '../components/user-avatar';
 import { useUserStore } from './store';
 
 interface UserProfileLinksProps {
@@ -12,9 +12,9 @@ interface UserProfileLinksProps {
   pathname: string;
 }
 
-const UserProfileLinks = ({ onClose, pathname }: UserProfileLinksProps) => {
-  const name = useUserStore((state) => state.name);
-  const email = useUserStore((state) => state.email);
+function UserProfileLinks({ onClose, pathname }: UserProfileLinksProps) {
+  const name = useUserStore(state => state.name);
+  const email = useUserStore(state => state.email);
 
   return (
     <ul className="flex flex-col gap-4">
@@ -87,6 +87,6 @@ const UserProfileLinks = ({ onClose, pathname }: UserProfileLinksProps) => {
       </li>
     </ul>
   );
-};
+}
 
 export default UserProfileLinks;

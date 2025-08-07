@@ -10,14 +10,15 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
 
 export function cropImage(
   img: HTMLImageElement,
-  crop: { x: number; y: number; width: number; height: number }
+  crop: { x: number; y: number; width: number; height: number },
 ): HTMLCanvasElement {
   const canvas = document.createElement('canvas');
   canvas.width = crop.width;
   canvas.height = crop.height;
 
   const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('Could not get canvas context');
+  if (!ctx)
+    throw new Error('Could not get canvas context');
 
   ctx.drawImage(
     img,
@@ -28,7 +29,7 @@ export function cropImage(
     0,
     0,
     crop.width,
-    crop.height
+    crop.height,
   );
 
   return canvas;
@@ -36,7 +37,7 @@ export function cropImage(
 
 export function canvasToBlob(
   canvas: HTMLCanvasElement,
-  type = 'image/jpeg'
+  type = 'image/jpeg',
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
@@ -51,7 +52,7 @@ export function canvasToBlob(
 
 export async function getCroppedImg(
   imageSrc: string,
-  crop: { x: number; y: number; width: number; height: number }
+  crop: { x: number; y: number; width: number; height: number },
 ): Promise<Blob> {
   const img = await loadImage(imageSrc);
   const canvas = cropImage(img, crop);

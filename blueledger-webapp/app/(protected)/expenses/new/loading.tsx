@@ -1,7 +1,7 @@
 import React from 'react';
 
-const LoadingNewExpensePage = () => {
+function LoadingNewExpensePage() {
   return <div>Loading new expense...</div>;
-};
+}
 
 export default LoadingNewExpensePage;

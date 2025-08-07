@@ -1,7 +1,7 @@
-import { Badge } from '@/components/ui/badge';
+import type { ColumnDef } from '@tanstack/react-table';
 import { DragOverlay } from '@dnd-kit/core';
-import { ColumnDef } from '@tanstack/react-table';
 import { Move } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface ColumnDragOverlayProps<T> {
   activeColumnId: string | null;
@@ -20,14 +20,14 @@ interface ColumnDragOverlayProps<T> {
 // and can be brittle if layout changes during drag.
 // Ideally, a more robust solution that avoids ID conflicts or improves DragOverlay behavior
 // would be preferred.
-const ColumnDragOverlay = <T,>({
+function ColumnDragOverlay<T,>({
   activeColumnId,
   columns,
   draggedElementRect,
-}: ColumnDragOverlayProps<T>) => {
-  const activeColumn = columns.find((c) => c.id === activeColumnId);
-  const headerText =
-    typeof activeColumn?.header === 'string'
+}: ColumnDragOverlayProps<T>) {
+  const activeColumn = columns.find(c => c.id === activeColumnId);
+  const headerText
+    = typeof activeColumn?.header === 'string'
       ? activeColumn.header
       : activeColumn?.id;
 
@@ -44,23 +44,25 @@ const ColumnDragOverlay = <T,>({
       }}
       dropAnimation={null}
     >
-      {activeColumnId ? (
-        <Badge
-          variant="outline"
-          style={{
-            cursor: 'grabbing',
-            pointerEvents: 'auto',
-          }}
-          className="h-12 px-4 bg-muted/90 flex items-center gap-3 text-md font-medium cursor-grabbing select-none justify-start shadow-xl"
-        >
-          <span className="flex items-center justify-center">
-            <Move className="w-4 h-4" />
-          </span>
-          {headerText || activeColumnId}
-        </Badge>
-      ) : null}
+      {activeColumnId
+        ? (
+            <Badge
+              variant="outline"
+              style={{
+                cursor: 'grabbing',
+                pointerEvents: 'auto',
+              }}
+              className="h-12 px-4 bg-muted/90 flex items-center gap-3 text-md font-medium cursor-grabbing select-none justify-start shadow-xl"
+            >
+              <span className="flex items-center justify-center">
+                <Move className="w-4 h-4" />
+              </span>
+              {headerText || activeColumnId}
+            </Badge>
+          )
+        : null}
     </DragOverlay>
   );
-};
+}
 
 export default ColumnDragOverlay;

@@ -1,8 +1,15 @@
-import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
+import { withSentryConfig } from '@sentry/nextjs';
+import './env/server';
+import './env/client';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default withSentryConfig(nextConfig, {

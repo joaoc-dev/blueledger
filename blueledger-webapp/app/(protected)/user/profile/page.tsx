@@ -1,3 +1,4 @@
+import { SessionProvider } from 'next-auth/react';
 import {
   Card,
   CardContent,
@@ -7,9 +8,8 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { UserAvatarEdit, UserProfileForm } from '@/features/users/components';
-import { SessionProvider } from 'next-auth/react';
 
-const UserProfilePage = async () => {
+async function UserProfilePage() {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
@@ -33,6 +33,6 @@ const UserProfilePage = async () => {
       <CardFooter></CardFooter>
     </Card>
   );
-};
+}
 
 export default UserProfilePage;

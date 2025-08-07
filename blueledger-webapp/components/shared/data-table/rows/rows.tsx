@@ -1,45 +1,52 @@
-import { ColumnDef, Table } from '@tanstack/react-table';
+import type { Table } from '@tanstack/react-table';
 import { TABLE_CONFIG } from '../constants';
 import Row from './row';
-import RowHidden from './row-hidden';
 import RowFullBodySkeleton from './row-full-body-skeleton';
+import RowHidden from './row-hidden';
 
 // Rendering of hidden row ensures that all column IDs remain registered in the SortableContext,
 // which DnD-kit relies on to enable header drag-and-drop—even when no actual data rows are visible.
-export const Rows = <T,>({
+export function Rows<T,>({
   isLoading,
-  columns,
   table,
   overrideRowHeight,
 }: {
   isLoading?: boolean;
-  columns: ColumnDef<T>[];
   table: Table<T>;
   overrideRowHeight?: number;
-}) => {
+}) {
   const tableRows = table.getRowModel().rows;
 
   // Table has fixed height, so we need to fill missing rows
   const emptyRows = TABLE_CONFIG.ROWS_PER_PAGE - tableRows.length;
   const rowHeight = overrideRowHeight ?? TABLE_CONFIG.ROW_HEIGHT;
 
+  const visibleColumns = table.getHeaderGroups()
+    .map(headerGroup => headerGroup.headers.map(header => header.column))
+    .flat();
+
   if (isLoading) {
-    return <RowFullBodySkeleton colSpan={columns.length} />;
+    return <RowFullBodySkeleton columns={visibleColumns} />;
   }
+
+  const fillerRows = Array.from({ length: emptyRows }, (_, idx) => ({
+    stableKey: `empty-${idx}`,
+    id: `empty-${idx}`,
+  }));
 
   return (
     <>
-      {tableRows.map((row) => (
+      {tableRows.map(row => (
         <Row<T> key={row.id} row={row} rowHeight={rowHeight} table={table} />
       ))}
-      {Array.from({ length: emptyRows }).map((_, id) => (
+      {fillerRows.map(row => (
         <RowHidden
-          key={id.toString()}
-          id={id.toString()}
+          key={row.stableKey}
+          id={row.id}
           table={table}
           rowHeight={rowHeight}
         />
       ))}
     </>
   );
-};
+}

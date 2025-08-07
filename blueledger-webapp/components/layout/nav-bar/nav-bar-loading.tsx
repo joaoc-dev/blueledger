@@ -1,8 +1,8 @@
-import { Skeleton } from '@/components/ui/skeleton';
 import { HandCoins } from 'lucide-react';
 import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const NavBarLoading = () => {
+function NavBarLoading() {
   return (
     <>
       {/* mobile nav bar */}
@@ -30,6 +30,6 @@ const NavBarLoading = () => {
       </div>
     </>
   );
-};
+}
 
 export default NavBarLoading;

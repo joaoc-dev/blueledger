@@ -1,13 +1,13 @@
 'use client';
 
+import { HandCoins } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import {
   MobileNotificationBell,
   MobileNotificationSheet,
 } from '@/features/notifications/components';
-import { HandCoins } from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
 import HamburgerButton from './hamburger-button';
 import MobileNavMenu from './mobile-nav-menu';
 
@@ -15,10 +15,10 @@ interface MobileNavBarProps {
   links: { label: string; href: string }[];
 }
 
-const MobileNavBar = ({ links }: MobileNavBarProps) => {
+function MobileNavBar({ links }: MobileNavBarProps) {
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
-  const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
-    useState(false);
+  const [isNotificationDropdownOpen, setIsNotificationDropdownOpen]
+    = useState(false);
 
   const handleNavMenuClick = () => {
     setIsNavMenuOpen(!isNavMenuOpen);
@@ -58,6 +58,6 @@ const MobileNavBar = ({ links }: MobileNavBarProps) => {
       />
     </>
   );
-};
+}
 
 export default MobileNavBar;

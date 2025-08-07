@@ -1,7 +1,11 @@
 'use client';
 
-import {
+import type {
   ColumnDef,
+} from '@tanstack/react-table';
+import type { ExpenseDisplay } from '../../../schemas';
+
+import {
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -11,14 +15,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-
 import DraggableTable from '@/components/shared/data-table/draggable/draggable-table';
 import { useColumnFiltersWithUrl } from '@/components/shared/data-table/hooks/useColumnFiltersWithUrl';
 import { usePaginationWithUrl } from '@/components/shared/data-table/hooks/usePaginationWithUrl';
 import { usePersistentTableState } from '@/components/shared/data-table/hooks/usePersistentTableState';
 import { useSortingWithUrl } from '@/components/shared/data-table/hooks/useSortingWithUrl';
 import { Pagination } from '@/components/shared/data-table/pagination';
-import { ExpenseDisplay } from '../../../schemas';
 import { EXPENSES_TABLE_CONFIG } from '../constants';
 import { Toolbar } from '../toolbar';
 import { columns } from './columns';
@@ -30,7 +32,7 @@ interface DataTableProps {
 }
 
 export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
-  const defaultColumnOrder = columns.map((c) => c.id!).filter(Boolean);
+  const defaultColumnOrder = columns.map(c => c.id!).filter(Boolean);
 
   const localStorageKeys = EXPENSES_TABLE_CONFIG.LOCAL_STORAGE_KEYS;
 
@@ -61,7 +63,7 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
         right: ['filler', 'actions'],
       },
       // Set initial pagination state to prevent TanStack Table from overriding it
-      pagination: pagination,
+      pagination,
     },
     // Prevent automatic page resets when data changes
     autoResetPageIndex: false,

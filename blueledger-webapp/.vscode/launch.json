@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+
+    {
+      "name": "Next.js: debug server‑side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm run dev"
+    },
+    {
+      "name": "Next.js: debug full stack (Sentry off)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/next/dist/bin/next",
+      "runtimeArgs": ["--inspect"],
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "NEXT_PUBLIC_SENTRY_DISABLED": "true"
+      },
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "killOnServerStop": true,
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "webRoot": "${workspaceFolder}"
+      }
+    }
+  ]
+}

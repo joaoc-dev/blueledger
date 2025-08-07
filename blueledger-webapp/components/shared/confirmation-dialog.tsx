@@ -17,14 +17,14 @@ interface ConfirmationDialogProps {
   onCancel?: () => void;
 }
 
-const ConfirmationDialog = ({
+function ConfirmationDialog({
   title = 'Dialog Title',
   description = 'Dialog description',
   cancelButtonText = 'Cancel',
   confirmButtonText = 'Confirm',
   onConfirm,
   onCancel,
-}: ConfirmationDialogProps) => {
+}: ConfirmationDialogProps) {
   return (
     <DialogContent>
       <DialogHeader>
@@ -45,6 +45,6 @@ const ConfirmationDialog = ({
       </DialogFooter>
     </DialogContent>
   );
-};
+}
 
 export default ConfirmationDialog;

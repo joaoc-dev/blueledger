@@ -12,15 +12,15 @@ interface UserStore {
   reset: () => void;
 }
 
-const useUserStore = create<UserStore>((set) => ({
+const useUserStore = create<UserStore>(set => ({
   image: undefined,
   name: undefined,
   email: undefined,
   bio: undefined,
-  setImage: (image) => set({ image }),
-  setName: (name) => set({ name }),
-  setEmail: (email) => set({ email }),
-  setBio: (bio) => set({ bio }),
+  setImage: image => set({ image }),
+  setName: name => set({ name }),
+  setEmail: email => set({ email }),
+  setBio: bio => set({ bio }),
   reset: () =>
     set({
       image: undefined,

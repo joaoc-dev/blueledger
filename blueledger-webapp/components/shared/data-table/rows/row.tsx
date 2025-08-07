@@ -1,9 +1,11 @@
-import { TableRow } from '@/components/ui/table';
-import {
-  flexRender,
+import type {
   Row as RowType,
   Table as TableType,
 } from '@tanstack/react-table';
+import {
+  flexRender,
+} from '@tanstack/react-table';
+import { TableRow } from '@/components/ui/table';
 import { DragAlongCell } from '../draggable/drag-along-cell';
 import TableBodyCell from '../table-body-cell';
 import { getCommonPinningStyles } from '../utils';
@@ -14,38 +16,40 @@ interface RowProps<T> {
   table: TableType<T>;
 }
 
-const Row = <T,>({ row, rowHeight, table }: RowProps<T>) => {
+function Row<T,>({ row, rowHeight, table }: RowProps<T>) {
   return (
     <TableRow key={row.id} style={{ height: `${rowHeight}px` }}>
-      {row.getVisibleCells().map((cell) =>
-        cell.column.getIsPinned() ? (
-          <TableBodyCell
-            key={cell.id}
-            columnId={cell.column.id}
-            isPinned={!!cell.column.getIsPinned()}
-            style={{
-              ...getCommonPinningStyles({ column: cell.column, table }),
-            }}
-          >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </TableBodyCell>
-        ) : (
-          <DragAlongCell
-            key={cell.id}
-            columnId={cell.column.id}
-            style={{
-              ...getCommonPinningStyles({
-                column: cell.column,
-                table,
-              }),
-            }}
-          >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </DragAlongCell>
-        )
+      {row.getVisibleCells().map(cell =>
+        cell.column.getIsPinned()
+          ? (
+              <TableBodyCell
+                key={cell.id}
+                columnId={cell.column.id}
+                isPinned={!!cell.column.getIsPinned()}
+                style={{
+                  ...getCommonPinningStyles({ column: cell.column, table }),
+                }}
+              >
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </TableBodyCell>
+            )
+          : (
+              <DragAlongCell
+                key={cell.id}
+                columnId={cell.column.id}
+                style={{
+                  ...getCommonPinningStyles({
+                    column: cell.column,
+                    table,
+                  }),
+                }}
+              >
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </DragAlongCell>
+            ),
       )}
     </TableRow>
   );
-};
+}
 
 export default Row;

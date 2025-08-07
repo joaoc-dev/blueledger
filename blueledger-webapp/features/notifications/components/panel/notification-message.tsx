@@ -1,12 +1,12 @@
+import type { NotificationDisplay } from '../../schemas';
 import { Badge } from '@/components/ui/badge';
 import { NOTIFICATION_TYPES } from '../../constants';
-import { NotificationDisplay } from '../../schemas';
 
-const NotificationMessage = ({
+function NotificationMessage({
   notification,
 }: {
   notification: NotificationDisplay;
-}) => {
+}) {
   switch (notification.type) {
     case NOTIFICATION_TYPES.FRIEND_REQUEST:
       return (
@@ -39,6 +39,6 @@ const NotificationMessage = ({
         </div>
       );
   }
-};
+}
 
 export default NotificationMessage;

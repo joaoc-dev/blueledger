@@ -1,5 +1,7 @@
-import mongoose, { Document, Model, ObjectId, Schema } from 'mongoose';
-import { NOTIFICATION_TYPE_VALUES, NotificationType } from './constants';
+import type { Document, Model, ObjectId } from 'mongoose';
+import type { NotificationType } from './constants';
+import mongoose, { Schema } from 'mongoose';
+import { NOTIFICATION_TYPE_VALUES } from './constants';
 
 interface INotification {
   user: ObjectId | string;
@@ -41,14 +43,14 @@ const NotificationSchema = new Schema<NotificationDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const Notification =
-  (mongoose.models.Notification as NotificationModel) ||
-  mongoose.model<NotificationDocument, NotificationModel>(
-    'Notification',
-    NotificationSchema
-  );
+const Notification
+  = (mongoose.models.Notification as NotificationModel)
+    || mongoose.model<NotificationDocument, NotificationModel>(
+      'Notification',
+      NotificationSchema,
+    );
 
 export default Notification;

@@ -1,7 +1,11 @@
 'use client';
 
-import {
+import type {
   ColumnDef,
+} from '@tanstack/react-table';
+import type { ExpenseDisplay } from '@/features/expenses/schemas';
+
+import {
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -10,11 +14,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-
+import { format } from 'date-fns';
 import { useColumnFiltersWithUrl } from '@/components/shared/data-table/hooks/useColumnFiltersWithUrl';
 import Spinner from '@/components/shared/spinner';
-import { ExpenseDisplay } from '@/features/expenses/schemas';
-import { format } from 'date-fns';
 import { columns } from '../data-table/columns';
 import { Toolbar } from '../toolbar';
 import { ListCard } from './list-card';
@@ -45,7 +47,7 @@ export function StackedList({ data, isLoading, isFetching }: DataTableProps) {
 
   const tableRows = table.getRowModel().rows;
   const hasData = tableRows.length > 0;
-  const groupedExpenses = groupByDate(tableRows.map((row) => row.original));
+  const groupedExpenses = groupByDate(tableRows.map(row => row.original));
 
   if (isLoading) {
     return (
@@ -61,20 +63,22 @@ export function StackedList({ data, isLoading, isFetching }: DataTableProps) {
       <Toolbar table={table} isFetching={isFetching} isLoading={isLoading} />
 
       <div className="flex flex-col gap-2">
-        {hasData ? (
-          Object.entries(groupedExpenses).map(([date, expenses]) => (
-            <div key={date} className="space-y-2 mb-6">
-              <h3 className="text-md font-semibold">{date}</h3>
-              {expenses.map((expense) => (
-                <ListCard key={expense.id} expense={expense} />
-              ))}
-            </div>
-          ))
-        ) : (
-          <div className="text-center text-sm text-muted-foreground">
-            No results.
-          </div>
-        )}
+        {hasData
+          ? (
+              Object.entries(groupedExpenses).map(([date, expenses]) => (
+                <div key={date} className="space-y-2 mb-6">
+                  <h3 className="text-md font-semibold">{date}</h3>
+                  {expenses.map(expense => (
+                    <ListCard key={expense.id} expense={expense} />
+                  ))}
+                </div>
+              ))
+            )
+          : (
+              <div className="text-center text-sm text-muted-foreground">
+                No results.
+              </div>
+            )}
       </div>
     </div>
   );
@@ -84,7 +88,8 @@ function groupByDate(expenses: ExpenseDisplay[]) {
   return expenses.reduce((acc, expense) => {
     const formattedDate = format(expense.date, 'EEEE, dd MMM yyyy');
 
-    if (!acc[formattedDate]) acc[formattedDate] = [];
+    if (!acc[formattedDate])
+      acc[formattedDate] = [];
     acc[formattedDate].push(expense);
 
     return acc;

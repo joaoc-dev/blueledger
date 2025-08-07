@@ -1,6 +1,6 @@
+import type { ColumnDef } from '@tanstack/react-table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TableRow } from '@/components/ui/table';
-import { ColumnDef } from '@tanstack/react-table';
 import TableBodyCell from '../table-body-cell';
 
 interface RowSkeletonProps<T> {
@@ -9,16 +9,22 @@ interface RowSkeletonProps<T> {
   rowHeight: number;
 }
 
-const RowSkeleton = <T,>({ id, columns, rowHeight }: RowSkeletonProps<T>) => {
+function RowSkeleton<T,>({ id, columns, rowHeight }: RowSkeletonProps<T>) {
+  const fillerColumns = Array.from({ length: columns.length }, (_, idx) => ({
+    stableKey: `empty-${idx}`,
+    id: `empty-${idx}`,
+  }));
+
   return (
     <TableRow key={id} style={{ height: `${rowHeight}px` }}>
-      {columns.map((_, j) => (
-        <TableBodyCell key={`${id}-${j}`} isPinned={false}>
+      {fillerColumns.map(column => (
+        <TableBodyCell key={column.stableKey} isPinned={false}>
           <Skeleton className="h-4" />
         </TableBodyCell>
       ))}
+
     </TableRow>
   );
-};
+}
 
 export default RowSkeleton;
