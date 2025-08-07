@@ -2,6 +2,7 @@
 
 import { Pencil } from 'lucide-react';
 import { SessionProvider, useSession } from 'next-auth/react';
+import posthog from 'posthog-js';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { updateUserImage } from '@/features/users/client';
 import AvatarCropperModal from './avatar-cropper-modal';
 import { useUserStore } from './store';
@@ -31,10 +33,12 @@ export default function UserAvatarEdit() {
     // Close dropdown first, then open modal
     setDropdownOpen(false);
     setCropperOpen(true);
+    posthog.capture(AnalyticsEvents.AVATAR_UPLOAD_CLICKED);
   };
 
   const handleRemove = async () => {
     try {
+      posthog.capture(AnalyticsEvents.AVATAR_REMOVE_CLICKED);
       await updateUserImage(null);
       setImage(undefined);
       await update({
@@ -44,10 +48,12 @@ export default function UserAvatarEdit() {
       });
 
       toast.success('Profile picture removed successfully');
+      posthog.capture(AnalyticsEvents.AVATAR_REMOVE_SUCCESS);
     }
     catch (error) {
       console.error('Error removing image:', error);
       toast.error('Failed to remove profile picture');
+      posthog.capture(AnalyticsEvents.AVATAR_REMOVE_ERROR);
     }
   };
 

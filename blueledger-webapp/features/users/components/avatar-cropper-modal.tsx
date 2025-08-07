@@ -3,6 +3,7 @@
 import type { Area } from 'react-easy-crop';
 import debounce from 'lodash.debounce';
 import { useSession } from 'next-auth/react';
+import posthog from 'posthog-js';
 import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import { toast } from 'sonner';
@@ -16,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { updateUserImage } from '@/features/users/client';
 import { getCroppedImg } from '@/lib/utils/image';
 import AvatarPreviewPanel from './avatar-preview-panel';
@@ -67,6 +69,7 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
     reader.readAsDataURL(file);
     reader.onload = () => {
       setImageSrc(reader.result as string);
+      posthog.capture(AnalyticsEvents.AVATAR_FILE_DROPPED);
     };
   };
 
@@ -88,6 +91,7 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
       return;
     setIsUploading(true);
     try {
+      posthog.capture(AnalyticsEvents.AVATAR_UPLOAD_SUBMIT);
       const updatedUser = await updateUserImage(croppedImage);
       await update({
         user: { image: updatedUser.image! },
@@ -95,10 +99,12 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
       setImage(updatedUser.image!);
       closeModal();
       toast.success('Profile picture uploaded successfully');
+      posthog.capture(AnalyticsEvents.AVATAR_UPLOAD_SUCCESS);
     }
     catch (error) {
       console.error(error);
       toast.error('Failed to upload profile picture');
+      posthog.capture(AnalyticsEvents.AVATAR_UPLOAD_ERROR);
     }
     finally {
       setIsUploading(false);

@@ -3,6 +3,7 @@
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import posthog from 'posthog-js';
 import { Separator } from '@/components/ui/separator';
 import UserAvatar from '../components/user-avatar';
 import { useUserStore } from './store';
@@ -76,6 +77,7 @@ function UserProfileLinks({ onClose, pathname }: UserProfileLinksProps) {
           href="#"
           onClick={(e) => {
             e.preventDefault();
+            posthog.reset();
             signOut();
             onClose();
           }}

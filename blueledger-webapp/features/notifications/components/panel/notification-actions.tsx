@@ -1,5 +1,7 @@
 import type { NotificationDisplay } from '../../schemas';
+import posthog from 'posthog-js';
 import { Button } from '@/components/ui/button';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 
 // TODO: Add actions by notification type
 function NotificationActions({
@@ -15,6 +17,7 @@ function NotificationActions({
 
   const handleMarkAsRead = async () => {
     try {
+      posthog.capture(AnalyticsEvents.NOTIFICATION_MARK_AS_READ_CLICKED, { id: notification.id });
       await setNotificationRead(notification.id!);
     }
     catch (error) {

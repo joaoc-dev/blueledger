@@ -1,7 +1,9 @@
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import type { Dispatch, SetStateAction } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
+import posthog from 'posthog-js';
 import { useState } from 'react';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 
 interface UseDragProps {
   setColumnOrder: Dispatch<SetStateAction<string[]>>;
@@ -24,6 +26,7 @@ export function useDrag({
       return;
 
     setActiveColumnId(event.active.id as string);
+    posthog.capture(AnalyticsEvents.TABLE_COLUMN_DRAG_START, { column: event.active.id });
 
     const cell = columnRefs.current.get(event.active.id as string);
     if (cell) {
@@ -53,6 +56,10 @@ export function useDrag({
       if (oldIndex === newIndex)
         return prev;
 
+      posthog.capture(AnalyticsEvents.TABLE_COLUMN_DRAG_END, {
+        from: active.id,
+        to: over.id,
+      });
       return arrayMove(prev, oldIndex, newIndex);
     });
   }

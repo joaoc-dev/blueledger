@@ -1,6 +1,7 @@
 import type { NotificationDisplay } from './schemas';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
+import posthog from 'posthog-js';
 import { notificationKeys } from '@/constants/query-keys';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import {
@@ -67,6 +68,10 @@ export function useNotifications() {
 
     onError: (err) => {
       console.error('Failed to mark notification as read:', err);
+      posthog.capture('notification_mark_as_read_error');
+    },
+    onSuccess: () => {
+      posthog.capture('notification_mark_as_read_success');
     },
 
     onSettled: () => {
@@ -97,6 +102,10 @@ export function useNotifications() {
 
     onError: (err) => {
       console.error('Failed to mark all notifications as read:', err);
+      posthog.capture('notification_mark_all_as_read_error');
+    },
+    onSuccess: () => {
+      posthog.capture('notification_mark_all_as_read_success');
     },
 
     onSettled: () => {

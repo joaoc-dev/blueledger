@@ -3,8 +3,9 @@
 import type { Table } from '@tanstack/react-table';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { Settings2 } from 'lucide-react';
-
+import posthog from 'posthog-js';
 import { Button } from '@/components/ui/button';
+
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -12,6 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 
 export function ViewOptions<TData>({
   table,
@@ -47,6 +49,10 @@ export function ViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => {
                   column.toggleVisibility(!!value);
+                  posthog.capture(AnalyticsEvents.TABLE_COLUMN_VISIBILITY_TOGGLED, {
+                    column: column.id,
+                    visible: !!value,
+                  });
                 }}
               >
                 {column.id}

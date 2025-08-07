@@ -1,6 +1,7 @@
 import { SessionProvider } from 'next-auth/react';
 import NavBar from '@/components/layout/nav-bar';
 import AuthRedirectClient from '@/components/shared/auth-redirect-client';
+import PostHogIdentify from '@/components/shared/posthog-identify';
 import { LogEvents } from '@/constants/log-events';
 import NotificationsStoreInitializer from '@/features/notifications/components/store/store-initializer';
 import UserProfileStoreInitializer from '@/features/users/components/store/store-initializer';
@@ -25,6 +26,7 @@ async function AuthLayout({ children }: { children: React.ReactNode }) {
         <UserProfileStoreInitializer />
         <SessionProvider>
           <NotificationsStoreInitializer />
+          <PostHogIdentify />
         </SessionProvider>
         <NavBar />
       </header>

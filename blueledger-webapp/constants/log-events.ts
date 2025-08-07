@@ -66,5 +66,3 @@ export const LogEvents = {
   DB_CONNECT_SUCCESS: 'db_connect_success',
   DB_CONNECT_FAILED: 'db_connect_failed',
 } as const;
-
-export type LogEvent = (typeof LogEvents)[keyof typeof LogEvents];

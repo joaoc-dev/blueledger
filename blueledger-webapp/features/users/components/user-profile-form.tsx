@@ -2,6 +2,7 @@
 
 import type { UserDisplay, UserProfileFormData } from '../schemas';
 import { useSession } from 'next-auth/react';
+import posthog from 'posthog-js';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { updateUser } from '../client';
 import { useUserProfile, useUserProfileForm } from '../hooks';
 import { useUserStore } from './store';
@@ -57,6 +59,7 @@ function UserProfileForm() {
   async function onSubmit(data: UserProfileFormData) {
     try {
       setIsLoading(true);
+      posthog.capture(AnalyticsEvents.USER_PROFILE_SUBMIT);
       await updateUser(data);
 
       // Update store
@@ -71,10 +74,12 @@ function UserProfileForm() {
         },
       });
       toast.success('Profile updated successfully');
+      posthog.capture(AnalyticsEvents.USER_PROFILE_SUBMIT_SUCCESS);
     }
     catch (error) {
       console.error(error);
       toast.error('Failed to update profile');
+      posthog.capture(AnalyticsEvents.USER_PROFILE_SUBMIT_ERROR);
     }
     finally {
       setIsLoading(false);

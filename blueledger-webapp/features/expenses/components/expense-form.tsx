@@ -3,6 +3,7 @@
 import type { ExpenseDisplay, ExpenseFormData } from '../schemas';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 import { DateTimePicker } from '@/components/shared/date-time-picker';
@@ -37,6 +38,11 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
     });
 
     try {
+      posthog.capture('expense_submit', {
+        action: isUpdate ? 'update' : 'create',
+        category: data.category,
+      });
+
       if (isUpdate) {
         await expenses.updateExpenseMutation.mutateAsync({
           id: expense.id!,
@@ -55,6 +61,7 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
     }
     catch (error) {
       console.error('Error submitting expense', error);
+
       toast.error(`Failed to ${isUpdate ? 'update' : 'add'} expense`, {
         id: toastId,
       });

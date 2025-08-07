@@ -1,6 +1,7 @@
 import type { ExpenseDisplay, ExpenseFormData } from './schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import posthog from 'posthog-js';
 import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { expenseKeys } from '@/constants/query-keys';
@@ -106,11 +107,16 @@ export function useExpenses() {
         mutationResult,
         context.optimisticExpense.optimisticId!,
       );
+      posthog.capture('expense_submit_success', {
+        action: 'create',
+        category: mutationResult.category,
+      });
     },
 
     onError: (error, newExpense, context) => {
       console.error('Failed to add expense: ', error, newExpense);
       rollbackMutation(context?.previousExpenses);
+      posthog.capture('expense_submit_error', { action: 'create' });
     },
   });
 
@@ -150,11 +156,16 @@ export function useExpenses() {
         mutationResult,
         context.optimisticExpense.optimisticId!,
       );
+      posthog.capture('expense_submit_success', {
+        action: 'update',
+        category: mutationResult.category,
+      });
     },
 
     onError: (error, updatedExpense, context) => {
       console.error('Failed to update expense: ', error, updatedExpense);
       rollbackMutation(context?.previousExpenses);
+      posthog.capture('expense_submit_error', { action: 'update' });
     },
   });
 
@@ -176,6 +187,10 @@ export function useExpenses() {
     onError: (error, id, context) => {
       console.error('Failed to delete expense: ', error, id);
       rollbackMutation(context?.previousExpenses);
+      posthog.capture('expense_delete_error', { id });
+    },
+    onSuccess: () => {
+      posthog.capture('expense_delete_success');
     },
   });
 
