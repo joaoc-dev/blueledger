@@ -31,10 +31,13 @@ export function NotificationListVirtualized({
           }}
         >
           {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-            const n = notificationsList[virtualItem.index];
+            const notification = notificationsList[virtualItem.index];
+            if (!notification)
+              return null;
+
             return (
               <div
-                key={n.id}
+                key={notification?.id}
                 style={{
                   position: 'absolute',
                   top: 0,
@@ -44,8 +47,8 @@ export function NotificationListVirtualized({
                 }}
               >
                 <NotificationItem
-                  key={n.id}
-                  notification={n}
+                  key={notification?.id}
+                  notification={notification}
                   setNotificationRead={setNotificationRead}
                 />
               </div>

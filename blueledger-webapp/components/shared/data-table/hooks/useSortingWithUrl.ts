@@ -30,7 +30,7 @@ export function useSortingWithUrl(
       = typeof updater === 'function' ? updater(currentSorting) : updater;
 
     if (next.length > 0) {
-      const { id, desc } = next[0];
+      const { id, desc } = next[0]!;
       const params = new URLSearchParams(searchParams.toString());
       params.set('sort', id);
       params.set('order', desc ? 'desc' : 'asc');

@@ -60,6 +60,9 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
   const handleDrop = (files: File[]) => {
     const file = files[0];
 
+    if (!file)
+      return;
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
@@ -148,7 +151,7 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
                       max={3}
                       step={0.1}
                       className="w-full"
-                      onValueChange={value => setZoom(value[0])}
+                      onValueChange={value => setZoom(value[0] ?? 1)}
                     />
                     <div className="flex items-center justify-center gap-12 w-full">
                       {croppedImage && (

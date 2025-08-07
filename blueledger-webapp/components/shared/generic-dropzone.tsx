@@ -14,11 +14,11 @@ function getMimeLabels(accept: { [key: string]: string[] }): string {
   };
 
   const types = Object.keys(accept).map((mime) => {
-    return mimeToLabel[mime] || mime.split('/')[1].toUpperCase();
+    return mimeToLabel[mime] ?? mime.split('/')[1]?.toUpperCase() ?? '';
   });
 
   if (types.length === 1) {
-    return types[0];
+    return types[0]!;
   }
 
   if (types.length === 2) {
@@ -60,10 +60,10 @@ export default function GenericDropzone({
       if (fileRejections.length > maxFiles) {
         setError(`Maximum number of files: ${maxFiles}`);
       }
-      else if (fileRejections[0].errors[0].code === 'file-too-large') {
+      else if (fileRejections[0]?.errors[0]?.code === 'file-too-large') {
         setError(`File size must be less than ${maxFileSize / 1024 / 1024}MB`);
       }
-      else if (fileRejections[0].errors[0].code === 'file-invalid-type') {
+      else if (fileRejections[0]?.errors[0]?.code === 'file-invalid-type') {
         setError(`File must be a ${getMimeLabels(accept)}`);
       }
       else {

@@ -20,5 +20,6 @@ export function getLocalStorageItem<T>(key: string): T | undefined {
   }
   catch (error) {
     console.error('Error getting item from localStorage:', error);
+    return undefined;
   }
 }

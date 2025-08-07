@@ -53,7 +53,7 @@ function getLeftMostPinnedColumn<T>(table: Table<T>): Column<T> | undefined {
 
   // len >= 2
   const last = leftPinnedColumns[len - 1];
-  if (last.id !== 'filler')
+  if (last?.id !== 'filler')
     return last;
   return leftPinnedColumns[len - 2];
 }
@@ -71,7 +71,7 @@ function getRightMostPinnedColumn<T>(table: Table<T>): Column<T> | undefined {
 
   // len >= 2
   const first = rightPinnedColumns[0];
-  if (first.id !== 'filler')
+  if (first?.id !== 'filler')
     return first;
   return rightPinnedColumns[1];
 }

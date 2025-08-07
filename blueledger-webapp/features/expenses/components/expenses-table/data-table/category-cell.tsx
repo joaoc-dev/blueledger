@@ -19,6 +19,9 @@ export function CategoryCell({ row }: { row: Row<ExpenseDisplay> }) {
       return;
 
     const observer = new ResizeObserver(([entry]) => {
+      if (!entry)
+        return;
+
       setIsNarrow(entry.contentRect.width < 60);
     });
 

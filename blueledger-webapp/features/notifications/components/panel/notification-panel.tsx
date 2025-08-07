@@ -31,7 +31,7 @@ function NotificationPanel() {
       <Separator />
 
       <Tabs
-        defaultValue={tabs[0].value}
+        defaultValue={tabs[0]?.value}
         className="flex h-full w-full flex-col py-2"
       >
         <TabsList className="w-full">
@@ -44,8 +44,8 @@ function NotificationPanel() {
 
         <TabsContent
           className="h-full mb-2"
-          key={tabs[0].value}
-          value={tabs[0].value}
+          key={tabs[0]?.value}
+          value={tabs[0]?.value ?? 'unread'}
         >
           {unread && unread.length > 0
             ? (
@@ -63,8 +63,8 @@ function NotificationPanel() {
 
         <TabsContent
           className="h-full"
-          key={tabs[1].value}
-          value={tabs[1].value}
+          key={tabs[1]?.value}
+          value={tabs[1]?.value ?? 'read'}
         >
           {read && read.length > 0
             ? (

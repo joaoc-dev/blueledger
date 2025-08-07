@@ -98,7 +98,7 @@ export function useExpenses() {
       );
     },
 
-    onSuccess: async (mutationResult, newExpense, context) => {
+    onSuccess: async (mutationResult, _newExpense, context) => {
       if (!context?.optimisticExpense)
         return;
 
@@ -142,7 +142,7 @@ export function useExpenses() {
       );
     },
 
-    onSuccess: async (mutationResult, updatedExpense, context) => {
+    onSuccess: async (mutationResult, _updatedExpense, context) => {
       if (!context?.optimisticExpense)
         return;
 
