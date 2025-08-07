@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataTable } from './data-table/data-table';
+import { DataTable } from './data-table';
 import { StackedList } from './stacked-list';
 
 function ExpensesTableSkeleton() {

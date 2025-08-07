@@ -1,7 +1,7 @@
 import type { z } from 'zod';
 import { NextResponse } from 'next/server';
 
-export type ValidationResult<T extends z.ZodTypeAny>
+type ValidationResult<T extends z.ZodTypeAny>
   = | { success: true; data: z.infer<T> }
     | { success: false; error: NextResponse };
 

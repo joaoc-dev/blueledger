@@ -22,7 +22,7 @@ interface FilterProps {
   isDisabled?: boolean;
 }
 
-export function Filter({ table, isDisabled }: FilterProps) {
+function Filter({ table, isDisabled }: FilterProps) {
   const isMobile = useIsMobile();
 
   const popoverContentAlign = isMobile ? 'start' : 'end';

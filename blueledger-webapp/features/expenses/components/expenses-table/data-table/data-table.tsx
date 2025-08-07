@@ -111,5 +111,3 @@ export function DataTable({ data, isLoading, isFetching }: DataTableProps) {
     </div>
   );
 }
-
-export default DataTable;
