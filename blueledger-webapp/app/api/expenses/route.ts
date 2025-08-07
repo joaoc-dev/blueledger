@@ -16,8 +16,9 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
         user: userId,
       },
     });
+
     if (!validationResult.success)
-      return validationResult.error;
+      return NextResponse.json(validationResult.error, { status: 400 });
 
     const expense = await createExpense(validationResult.data!);
 

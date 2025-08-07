@@ -20,8 +20,9 @@ export const PATCH = withAuth(async (
       id,
       data: body,
     });
+
     if (!validationResult.success)
-      return validationResult.error;
+      return NextResponse.json(validationResult.error, { status: 400 });
 
     const userId = request.auth!.user!.id;
     const expense = await updateExpense(validationResult.data!, userId);
@@ -49,8 +50,9 @@ export const DELETE = withAuth(async (
     const validationResult = validateRequest(deleteExpenseSchema, {
       id,
     });
+
     if (!validationResult.success)
-      return validationResult.error;
+      return NextResponse.json(validationResult.error, { status: 400 });
 
     const userId = request.auth!.user!.id;
     const expense = await deleteExpense(id, userId);

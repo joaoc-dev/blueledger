@@ -17,8 +17,9 @@ export const PATCH = withAuth(async (
       id,
       data: body,
     });
+
     if (!validationResult.success)
-      return validationResult.error;
+      return NextResponse.json(validationResult.error, { status: 400 });
 
     const notification = await updateNotification(validationResult.data!);
 

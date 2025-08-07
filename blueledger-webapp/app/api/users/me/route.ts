@@ -34,8 +34,9 @@ export const PATCH = withAuth(async (request: NextAuthRequest) => {
       id: userId,
       data: body,
     });
+
     if (!validationResult.success)
-      return validationResult.error;
+      return NextResponse.json(validationResult.error, { status: 400 });
 
     const user = await updateUser(validationResult.data!);
 

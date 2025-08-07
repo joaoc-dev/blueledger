@@ -23,7 +23,7 @@ export const POST = withAuth(async (request: NextRequest) => {
     });
 
     if (!validationResult.success)
-      return validationResult.error;
+      return NextResponse.json(validationResult.error, { status: 400 });
 
     await createNotification(validationResult.data!);
 
