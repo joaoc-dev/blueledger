@@ -3,6 +3,10 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: blueledger-webapp
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,3 +23,6 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Check dependencies
+        run: pnpm check:deps
