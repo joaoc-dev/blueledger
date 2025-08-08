@@ -9,6 +9,7 @@ export const env = createEnv({
     NEXT_PUBLIC_AXIOM_TOKEN: z.string().min(1),
     NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1),
     NEXT_PUBLIC_POSTHOG_HOST: z.string().min(1),
+    NEXT_PUBLIC_SENTRY_DSN: z.string().min(1),
   },
   runtimeEnv: {
     NEXT_PUBLIC_PUSHER_KEY: process.env.NEXT_PUBLIC_PUSHER_KEY,
@@ -17,5 +18,6 @@ export const env = createEnv({
     NEXT_PUBLIC_AXIOM_TOKEN: process.env.NEXT_PUBLIC_AXIOM_TOKEN,
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   },
 });

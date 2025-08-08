@@ -17,7 +17,7 @@ export function logRequest(logger: Logger, request: NextAuthRequest) {
     requestId,
     method: request.method,
     path: request.nextUrl.pathname,
-    userId: request.auth!.user!.id,
+    userId: request.auth?.user?.id ?? null,
   });
 
   return { requestId };
