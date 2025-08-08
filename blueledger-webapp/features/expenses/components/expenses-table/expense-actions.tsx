@@ -64,7 +64,7 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
               variant="outline"
               size="sm"
               disabled={disabled}
-              className="flex-1"
+              className="flex-1 text-primary border-primary hover:bg-primary/10 dark:hover:bg-primary/15 hover:shadow-xs focus-visible:ring-2 focus-visible:ring-ring/40"
             >
               <span>Details</span>
             </ButtonLink>
@@ -83,7 +83,7 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
               )
             : (
                 <Button
-                  className="cursor-pointer flex-1"
+                  className="flex-1 border-destructive text-destructive/90 hover:bg-destructive/10 focus-visible:ring-destructive/40 cursor-pointer"
                   variant="outline"
                   disabled={disabled}
                   size="sm"

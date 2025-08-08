@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
 interface ButtonLinkProps {
@@ -21,6 +22,7 @@ function ButtonLink({
   disabled,
   onClick,
 }: ButtonLinkProps) {
+  const buttonClass = 'cursor-pointer hover:bg-primary/90 dark:hover:bg-primary/85 hover:shadow-sm focus-visible:ring-ring/40';
   return (
     <>
       {disabled
@@ -36,7 +38,13 @@ function ButtonLink({
             </Button>
           )
         : (
-            <Button asChild variant={variant} size={size} className={className} onClick={onClick}>
+            <Button
+              asChild
+              variant={variant}
+              size={size}
+              className={cn(buttonClass, className)}
+              onClick={onClick}
+            >
               <Link href={href}>{children}</Link>
             </Button>
           )}
