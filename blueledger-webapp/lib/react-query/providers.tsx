@@ -15,7 +15,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       {children}
       {/* Development tools for React Query */}
-      <ReactQueryDevtools />
+      <div style={{ zIndex: 99999, position: 'fixed', bottom: 15, right: 80 }}>
+        <ReactQueryDevtools buttonPosition="relative" initialIsOpen={false} />
+      </div>
     </QueryClientProvider>
   );
 }

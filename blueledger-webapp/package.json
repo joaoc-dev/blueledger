@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev:spotlight": "pnpx @spotlightjs/spotlight@latest",
+    "dev:next": "next dev --turbopack",
     "seed": "dotenv -e .env.local -- tsx scripts/seed.ts",
     "build": "next build",
     "start": "next start",
@@ -75,6 +76,7 @@
     "@next/eslint-plugin-next": "^15.4.6",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "@spotlightjs/spotlight": "^3.0.2",
     "@tailwindcss/postcss": "^4",
     "@types/lodash.debounce": "^4.0.9",
     "@types/ms": "^2.1.0",

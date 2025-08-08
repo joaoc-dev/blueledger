@@ -3,6 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
+import * as Spotlight from '@spotlightjs/spotlight';
 import posthog from 'posthog-js';
 import { env } from './env/client';
 
@@ -34,5 +35,9 @@ Sentry.init({
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
 });
+
+if (process.env.NODE_ENV === 'development') {
+  Spotlight.init();
+}
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
