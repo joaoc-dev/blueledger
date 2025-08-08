@@ -178,7 +178,8 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
           )}
         />
         <Button
-          className="mt-6 w-full cursor-pointer"
+          className="mt-6 w-full cursor-pointer hover:bg-primary/90
+            dark:hover:bg-primary/85 hover:shadow-sm focus-visible:ring-ring/40"
           type="submit"
           disabled={form.formState.isSubmitting}
         >

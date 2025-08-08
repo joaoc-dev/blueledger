@@ -25,11 +25,11 @@ export function ListCard({ expense }: CardProps) {
       : CircleEllipsis;
 
   return (
-    <Card className="h-46 py-4">
+    <Card className="group h-46 py-4 rounded-lg border-l-2 border-primary/30 transition-colors hover:border-primary/60">
       <div className="w-full grid grid-rows-[auto_1fr_auto] h-full">
         <CardHeader className="px-4">
           <CardTitle className="flex items-center gap-2">
-            <Icon className="h-8 w-8 shrink-0" />
+            <Icon className="h-8 w-8 shrink-0 text-primary/60" />
             <span className="line-clamp-2 break-words pr-4">
               {expense.description}
             </span>
@@ -39,11 +39,11 @@ export function ListCard({ expense }: CardProps) {
           <div className="flex items-center gap-2 text-muted-foreground justify-between">
             <div className="text-sm flex items-center max-w-[clamp(7rem,30vw,18rem)]">
               <NumericDisplay value={expense.price} format="currency" />
-              <Dot />
+              <Dot className="text-primary/60" />
               <NumericDisplay value={expense.quantity} format="number" />
             </div>
             <div className="flex gap-2 items-center">
-              <span className="text-sm">Total</span>
+              <span className="text-sm text-primary/60 group-hover:text-primary">Total</span>
               <NumericDisplay
                 className="text-lg max-w-[clamp(8rem,30vw,20rem)]"
                 value={expense.totalPrice}

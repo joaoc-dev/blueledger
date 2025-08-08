@@ -52,7 +52,7 @@ function TableElement<T,>({
   }, [columnSizingInfo, columnSizing]);
 
   return (
-    <div className="rounded-md border grid">
+    <div className="rounded-lg border bg-card shadow-md grid">
       <Table
         className="table-fixed"
         style={{

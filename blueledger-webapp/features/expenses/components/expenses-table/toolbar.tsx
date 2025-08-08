@@ -65,6 +65,7 @@ export function Toolbar({ table, isFetching, isLoading }: ToolbarProps) {
         <Button
           className="h-8"
           variant="outline"
+          data-variant="blue-outline"
           onClick={refreshData}
           disabled={isDisabled}
         >
