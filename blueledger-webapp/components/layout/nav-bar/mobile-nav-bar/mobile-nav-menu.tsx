@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import posthog from 'posthog-js';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { UserProfileLinks } from '@/features/users/components';
 
 interface MobileNavMenuProps {
@@ -26,7 +28,10 @@ function MobileNavMenu({ links, isOpen, onClose }: MobileNavMenuProps) {
           return (
             <li key={link.label}>
               <Link
-                onClick={onClose}
+                onClick={() => {
+                  posthog.capture(AnalyticsEvents.NAV_LINK_CLICKED, { label: link.label, href: link.href });
+                  onClose();
+                }}
                 className={`nav__item px-6 py-2 hover:text-foreground ${
                   isActive
                     ? 'text-foreground border-l border-foreground'

@@ -30,13 +30,16 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 📝 Form handling by React Hook Form
 - ✅ Schema Validations by Zod
 - 🌱 Type-safe environment variables by T3 Env
+- 📝 Logging with next-axiom and Axiom
+- 🐗 Product analytics powered by PostHog
+- 🔍 Local error detection and debugging by Sentry Spotlight
+- 🛰️ Performance monitoring and error tracking by Sentry
 - 🧹 Code Linting with ESLint (Antfu configuration)
 - 🛡️ Strict Typescript configuration
 - ✂️ Declutter of unused files and dependencies by Knip
 - 🤖 Automated dependency updates by Dependabot
 - 🚀 Automated versioning and changelog generation by semantic-release
 - 🐰 AI Code Reviews by CodeRabbit
-- 🛰️ Performance monitoring and error tracking by Sentry
 
 ## ai-service
 
@@ -83,8 +86,8 @@ Responsible for interacting with Azure in order to provide the web-app with adva
 |             | query-keys.ts         |                         |                                                                        |
 |             | ...                   |                         |                                                                        |
 | env/        |                       |                         | **T3 type-safe wrappers for accessing environment variables using Zod**|
-|             | client.ts             |                         | Server-only environment variables (e.g. secrets).                      |
-|             | server.ts             |                         | Public variables exposed to the client (must start with NEXT_PUBLIC_). |
+|             | server.ts             |                         | Server-only environment variables (e.g. secrets).                      |
+|             | client.ts             |                         | Public variables exposed to the client (must start with NEXT_PUBLIC_). |
 | features/   |                       |                         | **Feature-scoped code**                                                |
 |             | feature-name/         |                         |                                                                        |
 |             |                       | components/             | Feature-specific UI components                                         |

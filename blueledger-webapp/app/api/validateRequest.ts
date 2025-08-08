@@ -1,9 +1,12 @@
 import type { z } from 'zod';
-import { NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 
 type ValidationResult<T extends z.ZodTypeAny>
   = | { success: true; data: z.infer<T> }
-    | { success: false; error: NextResponse };
+    | { success: false; error: {
+      error: string;
+      details: { field: string; message: string }[];
+    }; };
 
 export function validateRequest<T extends z.ZodTypeAny>(
   schema: T,
@@ -15,7 +18,7 @@ export function validateRequest<T extends z.ZodTypeAny>(
     if (!validation.success) {
       return {
         success: false,
-        error: NextResponse.json(
+        error:
           {
             error: 'Error validating schema',
             details: validation.error.errors.map(e => ({
@@ -23,8 +26,6 @@ export function validateRequest<T extends z.ZodTypeAny>(
               message: e.message,
             })),
           },
-          { status: 400 },
-        ),
       };
     }
 
@@ -34,13 +35,14 @@ export function validateRequest<T extends z.ZodTypeAny>(
     };
   }
   catch (error) {
-    console.error('Error validating request', error);
+    Sentry.captureException(error);
+
     return {
       success: false,
-      error: NextResponse.json(
-        { error: 'Internal validation error' },
-        { status: 500 },
-      ),
+      error: {
+        error: 'Internal validation error',
+        details: [],
+      },
     };
   }
 }

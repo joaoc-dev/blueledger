@@ -5,10 +5,12 @@ import type { ExpenseDisplay } from '@/features/expenses/schemas';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RotateCw } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useMemo } from 'react';
 import ButtonLink from '@/components/shared/button-link';
 import { ViewOptions } from '@/components/shared/data-table/view-options';
 import { Button } from '@/components/ui/button';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { expenseKeys } from '@/constants/query-keys';
 import Filter from './filter';
 
@@ -22,6 +24,7 @@ export function Toolbar({ table, isFetching, isLoading }: ToolbarProps) {
   const queryClient = useQueryClient();
 
   const refreshData = () => {
+    posthog.capture(AnalyticsEvents.TABLE_REFRESH_CLICKED);
     queryClient.refetchQueries({ queryKey: expenseKeys.byUser });
   };
 
@@ -49,7 +52,12 @@ export function Toolbar({ table, isFetching, isLoading }: ToolbarProps) {
       <div className="flex items-center gap-2">
         <ViewOptions table={table} disabled={isLoading} />
 
-        <ButtonLink size="sm" href={fullHref} disabled={isLoading}>
+        <ButtonLink
+          size="sm"
+          href={fullHref}
+          disabled={isLoading}
+          onClick={() => posthog.capture(AnalyticsEvents.EXPENSE_ADD_CLICKED)}
+        >
           <Plus />
           <span className="hidden md:block">Add</span>
         </ButtonLink>

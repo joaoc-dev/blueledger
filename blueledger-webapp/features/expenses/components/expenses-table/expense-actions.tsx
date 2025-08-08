@@ -2,6 +2,7 @@
 
 import { SquarePen, Trash2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useMemo } from 'react';
 import { toast } from 'sonner';
 import ButtonLink from '@/components/shared/button-link';
@@ -29,6 +30,7 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
 
   const handleDelete = async () => {
     try {
+      posthog.capture('expense_delete_clicked', { id });
       toast.loading('Deleting expense...', {
         id,
       });

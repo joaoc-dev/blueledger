@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { AxiomWebVitals } from 'next-axiom';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
@@ -27,6 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <AxiomWebVitals />
       <body
         className={`${geistSans.variable} ${geistMono.variable} 
           antialiased`}

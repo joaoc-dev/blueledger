@@ -9,6 +9,7 @@ interface ButtonLinkProps {
   size?: 'default' | 'sm' | 'lg' | 'icon';
   className?: string;
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 function ButtonLink({
@@ -18,6 +19,7 @@ function ButtonLink({
   size,
   className,
   disabled,
+  onClick,
 }: ButtonLinkProps) {
   return (
     <>
@@ -28,12 +30,13 @@ function ButtonLink({
               size={size}
               className={className}
               disabled={true}
+              onClick={onClick}
             >
               {children}
             </Button>
           )
         : (
-            <Button asChild variant={variant} size={size} className={className}>
+            <Button asChild variant={variant} size={size} className={className} onClick={onClick}>
               <Link href={href}>{children}</Link>
             </Button>
           )}

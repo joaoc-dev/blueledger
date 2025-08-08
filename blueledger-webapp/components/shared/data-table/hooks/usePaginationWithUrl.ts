@@ -2,7 +2,9 @@
 
 import type { PaginationState } from '@tanstack/react-table';
 import { usePathname, useSearchParams } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useMemo } from 'react';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 
 export function usePaginationWithUrl(defaults = { pageSize: 10 }) {
   const pathname = usePathname();
@@ -38,6 +40,9 @@ export function usePaginationWithUrl(defaults = { pageSize: 10 }) {
     if (next.pageIndex !== currentPagination.pageIndex) {
       const params = new URLSearchParams(searchParams.toString());
       params.set('page', (next.pageIndex + 1).toString());
+
+      posthog.capture(AnalyticsEvents.TABLE_PAGE_CHANGED, { page: next.pageIndex + 1 });
+
       window.history.replaceState(null, '', `${pathname}?${params.toString()}`);
     }
   };

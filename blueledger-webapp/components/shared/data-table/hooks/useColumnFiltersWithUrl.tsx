@@ -1,8 +1,11 @@
 'use client';
 
 import type { ColumnFiltersState } from '@tanstack/react-table';
+import debounce from 'lodash.debounce';
 import { usePathname, useSearchParams } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useCallback, useMemo } from 'react';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 
 export function useColumnFiltersWithUrl() {
   const pathname = usePathname();
@@ -110,13 +113,16 @@ export function useColumnFiltersWithUrl() {
       // Clear all known filter params
       filterKeys.forEach(key => params.delete(key));
 
+      const capture = debounce((id: string) => posthog.capture(AnalyticsEvents.TABLE_FILTER_CHANGED, { id }), 400);
       for (const filter of currentFilters) {
         if (filter.id === 'description') {
           params.set('description', filter.value as string);
+          capture('description');
         }
 
         if (filter.id === 'category') {
           params.set('category', (filter.value as string[]).join(','));
+          capture('category');
         }
 
         if (filter.id === 'price' && Array.isArray(filter.value)) {
@@ -125,6 +131,7 @@ export function useColumnFiltersWithUrl() {
             params.set('price_from', String(from));
           if (to != null)
             params.set('price_to', String(to));
+          capture('price');
         }
 
         if (filter.id === 'quantity' && Array.isArray(filter.value)) {
@@ -133,6 +140,7 @@ export function useColumnFiltersWithUrl() {
             params.set('quantity_from', String(from));
           if (to != null)
             params.set('quantity_to', String(to));
+          capture('quantity');
         }
 
         if (filter.id === 'totalPrice' && Array.isArray(filter.value)) {
@@ -141,6 +149,7 @@ export function useColumnFiltersWithUrl() {
             params.set('totalPrice_from', String(from));
           if (to != null)
             params.set('totalPrice_to', String(to));
+          capture('totalPrice');
         }
 
         if (filter.id === 'date' && typeof filter.value === 'object') {
@@ -149,6 +158,7 @@ export function useColumnFiltersWithUrl() {
             params.set('date_from', new Date(from).toISOString());
           if (to)
             params.set('date_to', new Date(to).toISOString());
+          capture('date');
         }
       }
 
