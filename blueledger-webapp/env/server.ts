@@ -16,6 +16,7 @@ export const env = createEnv({
     CLOUDINARY_API_SECRET: z.string().min(1),
     PUSHER_APP_ID: z.string().min(1),
     PUSHER_SECRET: z.string().min(1),
+    RESEND_API_KEY: z.string().min(1),
   },
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   // runtimeEnv: {
