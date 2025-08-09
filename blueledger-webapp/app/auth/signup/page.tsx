@@ -1,0 +1,29 @@
+import { redirect } from 'next/navigation';
+import { LogEvents } from '@/constants/log-events';
+import { auth } from '@/lib/auth/auth';
+import { createLogger } from '@/lib/logger';
+
+async function SignUpPage() {
+  const logger = createLogger('app/auth/signup');
+  const session = await auth();
+
+  if (session && session.user) {
+    logger.warn(LogEvents.ALREADY_AUTHENTICATED, {
+      path: '/auth/signup',
+      status: 302,
+      user: session.user.id,
+    });
+
+    if (session.user.emailVerified) {
+      redirect('/dashboard');
+    }
+
+    redirect('/auth/verify-email');
+  }
+
+  return (
+    <div>Sign up</div>
+  );
+}
+
+export default SignUpPage;

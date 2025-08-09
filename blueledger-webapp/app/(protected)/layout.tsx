@@ -1,4 +1,5 @@
 import { SessionProvider } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 import NavBar from '@/components/layout/nav-bar';
 import AuthRedirectClient from '@/components/shared/auth-redirect-client';
 import PostHogIdentify from '@/components/shared/posthog-identify';
@@ -8,7 +9,7 @@ import UserProfileStoreInitializer from '@/features/users/components/store/store
 import { auth } from '@/lib/auth/auth';
 import { createLogger } from '@/lib/logger';
 
-async function AuthLayout({ children }: { children: React.ReactNode }) {
+async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const logger = createLogger('app/protected/layout');
   const session = await auth();
 
@@ -18,6 +19,14 @@ async function AuthLayout({ children }: { children: React.ReactNode }) {
       status: 302,
     });
     return <AuthRedirectClient />;
+  }
+
+  if (!session.user.emailVerified) {
+    logger.warn(LogEvents.UNVERIFIED_EMAIL, {
+      path: '/',
+      status: 302,
+    });
+    redirect('/auth/verify-email');
   }
 
   return (
@@ -35,4 +44,4 @@ async function AuthLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default AuthLayout;
+export default ProtectedLayout;
