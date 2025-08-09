@@ -19,6 +19,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
   - GitHub OAuth
   - Email verification
   - MongoDB adapter
+  - Custom pages supported by NextJS server actions
 - 📬 Resend + 📨 React Email
 - 🚧 Rate limiting powered by Upstash
 - 🧊 Modals with Parallel + Intercepting Routes
