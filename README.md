@@ -20,6 +20,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
   - Email verification
   - MongoDB adapter
 - 📬 Resend + 📨 React Email
+- 🚧 Rate limiting powered by Upstash
 - 🧊 Modals with Parallel + Intercepting Routes
 - 🔄 Data fetching, caching, and optimistic updates powered by TanStack Query
 - 📊 Custom grid/list display powered by TanStack Table
