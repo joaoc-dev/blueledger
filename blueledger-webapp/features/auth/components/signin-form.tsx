@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { signInGithub } from '@/lib/auth/actions';
+import { signInGithub } from '@/features/auth/actions';
 
 interface SignInFormProps {
   callbackUrl?: string;

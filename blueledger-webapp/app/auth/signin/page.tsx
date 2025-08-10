@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { LogEvents } from '@/constants/log-events';
-import SignInForm from '@/features/auth/signin-form';
+import SignInForm from '@/features/auth/components/signin-form';
 import { auth } from '@/lib/auth/auth';
 import { createLogger } from '@/lib/logger';
 
