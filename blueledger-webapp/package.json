@@ -71,6 +71,7 @@
     "resend": "^6.0.1",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.3.1",
+    "usehooks-ts": "^3.1.1",
     "uuid": "^11.1.0",
     "zod": "^3.24.4",
     "zustand": "^5.0.5"
