@@ -1,6 +1,6 @@
 import type { OnChangeFn } from '@tanstack/react-table';
-import debounce from 'lodash.debounce';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface TableStateKeys {
@@ -51,12 +51,7 @@ function useColumnSizing(keys: TableStateKeys) {
     columnSizingLocalStorage,
   );
 
-  // Debounce localStorage update
-  const saveSizingDebounced = useMemo(() => {
-    return debounce((nextSizing: Record<string, number>) => {
-      setColumnSizingLocalStorage(nextSizing);
-    }, 500);
-  }, [setColumnSizingLocalStorage]);
+  const saveSizingDebounced = useDebounceCallback(setColumnSizingLocalStorage, 350);
 
   // Handler called by table on sizing change
   const handleColumnSizingChange: OnChangeFn<Record<string, number>> = (
@@ -72,11 +67,6 @@ function useColumnSizing(keys: TableStateKeys) {
     // // Debounced localStorage update
     saveSizingDebounced(nextSizing);
   };
-
-  // Cancel debounce on unmount
-  useEffect(() => {
-    return () => saveSizingDebounced.cancel();
-  }, [saveSizingDebounced]);
 
   return {
     columnSizing,

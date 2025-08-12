@@ -59,9 +59,7 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
 
       router.back();
     }
-    catch (error) {
-      console.error('Error submitting expense', error);
-
+    catch {
       toast.error(`Failed to ${isUpdate ? 'update' : 'add'} expense`, {
         id: toastId,
       });
