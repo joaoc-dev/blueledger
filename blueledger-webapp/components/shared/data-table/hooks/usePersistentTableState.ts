@@ -1,7 +1,6 @@
 import type { OnChangeFn } from '@tanstack/react-table';
 import { useState } from 'react';
-import { useDebounceCallback } from 'usehooks-ts';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useDebounceCallback, useLocalStorage } from 'usehooks-ts';
 
 interface TableStateKeys {
   COLUMN_ORDER: string;
@@ -18,11 +17,12 @@ export function usePersistentTableState({
 }) {
   const [columnVisibility, setColumnVisibility] = useLocalStorage<
     Record<string, boolean>
-  >(keys.COLUMN_VISIBILITY, {});
+  >(keys.COLUMN_VISIBILITY, {}, { initializeWithValue: true });
 
   const [columnOrder, setColumnOrder] = useLocalStorage<string[]>(
     keys.COLUMN_ORDER,
     defaultColumnOrder,
+    { initializeWithValue: true },
   );
 
   const { columnSizing, handleColumnSizingChange } = useColumnSizing(keys);
@@ -44,7 +44,7 @@ export function usePersistentTableState({
 function useColumnSizing(keys: TableStateKeys) {
   // Keep localStorage synced sizing, but keep UI updates separate
   const [columnSizingLocalStorage, setColumnSizingLocalStorage]
-    = useLocalStorage<Record<string, number>>(keys.COLUMN_SIZES, {});
+    = useLocalStorage<Record<string, number>>(keys.COLUMN_SIZES, {}, { initializeWithValue: true });
 
   // Local state for immediate UI updates
   const [columnSizing, setColumnSizing] = useState<Record<string, number>>(

@@ -7,7 +7,7 @@ interface WelcomeEmailProps {
   logoSrc?: string;
 }
 
-export function WelcomeEmail({ code, appName = 'BlueLedger', logoSrc = '/static/hand-coins.png' }: WelcomeEmailProps): React.ReactElement {
+function WelcomeEmail({ code, appName = 'BlueLedger', logoSrc = '/static/hand-coins.png' }: WelcomeEmailProps): React.ReactElement {
   return (
     <Html>
       <Head>
@@ -63,9 +63,3 @@ export function WelcomeEmail({ code, appName = 'BlueLedger', logoSrc = '/static/
 }
 
 export default WelcomeEmail;
-// Props for React Email preview server
-export const previewProps: WelcomeEmailProps = {
-  code: '123456',
-  appName: 'BlueLedger',
-  logoSrc: '/static/hand-coins.png',
-};

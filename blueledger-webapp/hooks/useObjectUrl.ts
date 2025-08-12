@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react';
 
-export interface UseObjectUrlOptions {
+interface UseObjectUrlOptions {
   /**
    * When true, the object URL is only exposed after the underlying image finishes loading.
    * This avoids flicker and partially rendered images. Defaults to true.

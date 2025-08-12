@@ -3,7 +3,8 @@
 import { HandCoins } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
+import { useEventListener } from 'usehooks-ts';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { DesktopNotificationBell } from '@/features/notifications/components';
 import { cn } from '@/lib/utils';
@@ -39,14 +40,7 @@ function DesktopNavBar({ links }: DesktopNavBarProps) {
     }
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      renderUnderline();
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  useEventListener('resize', renderUnderline);
 
   useLayoutEffect(() => {
     renderUnderline();
