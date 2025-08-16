@@ -9,6 +9,8 @@ interface IUser {
   imagePublicId: string;
   bio: string;
   emailVerified: Date;
+  emailVerificationCode?: string;
+  emailVerificationCodeExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,6 +47,14 @@ const UserSchema = new Schema<UserDocument>(
       required: false,
     },
     emailVerified: {
+      type: Date,
+      required: false,
+    },
+    emailVerificationCode: {
+      type: String,
+      required: false,
+    },
+    emailVerificationCodeExpires: {
       type: Date,
       required: false,
     },
