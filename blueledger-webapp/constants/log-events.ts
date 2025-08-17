@@ -52,6 +52,7 @@ export const LogEvents = {
 
   ALREADY_AUTHENTICATED: 'already_authenticated',
   UNVERIFIED_EMAIL: 'unverified_email',
+  EMAIL_ALREADY_VERIFIED: 'email_already_verified',
   UNAUTHORIZED_PAGE_ACCESS: 'unauthorized_page_access',
   UNAUTHORIZED_REQUEST: 'unauthorized_request',
 

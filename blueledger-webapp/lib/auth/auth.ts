@@ -5,6 +5,7 @@ import { issueVerificationCodeForUser } from '@/features/auth/data';
 import User from '@/features/users/model';
 import { createLogger } from '@/lib/logger';
 import clientPromise from '../db/mongoDB-client';
+import dbConnect from '../db/mongoose-client';
 import authConfig from './auth.config';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -13,17 +14,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: 'jwt',
   },
+  /*
+   * Callback lifecycle (with session.strategy = 'jwt')
+   *
+   * - jwt callback
+   *   - Runs on sign in with `trigger === 'signIn'` and `user` populated (good place to seed token fields)
+   *   - Runs on client/server session reads (auth/getServerSession/useSession) to load/refresh the JWT
+   *   - Runs on `await update()` called on the client with `trigger === 'update'` and session fields provided
+   *
+   * - session callback
+   *   - Runs after the jwt callback on each session read to shape `session.user` from the token
+   */
   callbacks: {
+    // Seed and refresh JWT. See lifecycle note above.
     async jwt({ token, user, trigger, session }) {
       const logger = createLogger('auth/callbacks');
 
       logger.info(LogEvents.AUTH_JWT, {
         userId: user?.id,
+        tokenSub: token?.sub,
         trigger,
         status: 'ok',
       });
 
       if (user) {
+        await dbConnect();
         const userData = await User.findById(user.id!);
 
         if (userData) {
@@ -38,19 +53,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       }
 
-      // update the token with the updated user data
+      // When update() is called on the client, merge the provided fields into the token
+      // Use session.user only for safe fields (e.g., image, name, bio) and not for emailVerified
       if (trigger === 'update') {
         const updatedUser = session.user;
-        if ('image' in updatedUser)
-          token.image = updatedUser.image;
-        if ('name' in updatedUser)
-          token.name = updatedUser.name;
-        if ('bio' in updatedUser)
-          token.bio = updatedUser.bio;
+        if (updatedUser) {
+          if ('image' in updatedUser)
+            token.image = updatedUser.image;
+          if ('name' in updatedUser)
+            token.name = updatedUser.name;
+          if ('bio' in updatedUser)
+            token.bio = updatedUser.bio;
+        }
+
+        // Update emailVerified from DB
+        const userId = token?.sub;
+        if (userId) {
+          await dbConnect();
+          const userData = await User.findById(userId);
+          if (userData) {
+            token.emailVerified = userData.emailVerified
+              ? userData.emailVerified.toISOString()
+              : null;
+          }
+        }
       }
+
       return token;
     },
 
+    // Shape the session from the JWT. See lifecycle note above.
     async session({ session, token }) {
       const logger = createLogger('auth/callbacks');
 
