@@ -1,7 +1,8 @@
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import NextAuth from 'next-auth';
 import { LogEvents } from '@/constants/log-events';
-import { getUserById } from '@/features/users/data';
+import { issueVerificationCodeForUser } from '@/features/auth/data';
+import User from '@/features/users/model';
 import { createLogger } from '@/lib/logger';
 import clientPromise from '../db/mongoDB-client';
 import authConfig from './auth.config';
@@ -23,7 +24,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       });
 
       if (user) {
-        const userData = await getUserById(user.id!);
+        const userData = await User.findById(user.id!);
 
         if (userData) {
           token.id = userData.id;
@@ -72,14 +73,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   events: {
-    async signIn(message) {
+    async signIn({ account, user }) {
       const logger = createLogger('auth/events');
 
       logger.info(LogEvents.AUTH_SIGN_IN, {
-        provider: (message as any)?.account?.provider,
-        userId: (message as any)?.user?.id,
+        provider: account?.provider,
+        userId: user?.id,
         status: 'ok',
       });
+
+      // If the user signed in with OAuth and has no emailVerified, and no issued code, proactively issue a code
+      // For credentials, this happens at the signUp/register step
+      try {
+        const provider = account?.provider;
+        const userId = user?.id;
+        const emailVerified = user?.emailVerified as Date | null | undefined;
+
+        const userData = await User.findById(userId!);
+        const hasIssuedCode = userData?.emailVerificationCode;
+
+        if (provider && provider !== 'credentials' && userId && !emailVerified && !hasIssuedCode) {
+          await issueVerificationCodeForUser(userId);
+        }
+      }
+      catch {}
     },
     async signOut(message) {
       const logger = createLogger('auth/events');
