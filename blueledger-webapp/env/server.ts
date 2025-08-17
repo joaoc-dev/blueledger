@@ -9,6 +9,7 @@ export const env = createEnv({
     SENTRY_PROJECT: z.string().min(1),
     AUTH_EMAIL_VERIFICATION_FROM: z.string().min(1),
     AUTH_SECRET: z.string().min(1),
+    AUTH_OTP_HASH_SECRET: z.string().min(1),
     AUTH_GITHUB_ID: z.string().min(1),
     AUTH_GITHUB_SECRET: z.string().min(1),
     CLOUDINARY_CLOUD_NAME: z.string().min(1),
