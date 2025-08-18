@@ -5,7 +5,7 @@ const idSchema = z
   .string()
   .refine(Types.ObjectId.isValid, { message: 'Invalid ID' });
 const nameSchema = z.string().min(1, { message: 'Name is required' });
-const emailSchema = z.string().email({ message: 'Invalid email' });
+const emailSchema = z.string().email({ message: 'Invalid email' }).toLowerCase();
 const imageSchema = z.string().optional();
 const imagePublicIdSchema = z.string().optional();
 const bioSchema = z.string().optional();
@@ -22,6 +22,15 @@ export const userProfileFormSchema = z.object({
 });
 
 export type UserProfileFormData = z.infer<typeof userProfileFormSchema>;
+
+const passwordSchema = z.string().min(8).max(72);
+
+export const createUserSchema = z.object({
+  ...baseFields,
+  password: passwordSchema,
+});
+
+export type CreateUserData = z.infer<typeof createUserSchema>;
 
 export const patchUserSchema = z.object({
   id: idSchema,
