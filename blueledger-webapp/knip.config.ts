@@ -26,6 +26,8 @@ const config: KnipConfig = {
   ignoreDependencies: [
     'require-in-the-middle',
     'import-in-the-middle',
+    'prettier',
+    '@react-email/preview-server',
   ],
   compilers: {
     css: (text: string) => [...text.matchAll(/(?<=@)import[^;]+/g)].join('\n'),
