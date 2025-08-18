@@ -16,6 +16,8 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 🔒 Auth.js
   - JWT Strategy
   - GitHub OAuth
+  - Credentials Auth
+  - Automatic Account linking
   - Email verification
   - MongoDB adapter
   - Custom pages supported by NextJS server actions

@@ -170,7 +170,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   events: {
     async signIn({ account, user }) {
-      const logger = createLogger('auth/events');
+      const logger = createLogger('auth/events/signIn');
 
       logger.info(LogEvents.AUTH_SIGN_IN, {
         provider: account?.provider,
@@ -178,8 +178,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         status: 'ok',
       });
 
-      // If the user signed in with OAuth and has no emailVerified, and no issued code, proactively issue a code
-      // For credentials, this happens at the signUp/register step
       try {
         const provider = account?.provider;
         const userId = user?.id;
@@ -188,11 +186,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const userData = await User.findById(userId!);
         const hasIssuedCode = userData?.emailVerificationCode;
 
+        // If the user signed in with OAuth and has no emailVerified, and no issued code, proactively issue a code
+        // For credentials, this happens at the signUp/register step
         if (provider && provider !== 'credentials' && userId && !emailVerified && !hasIssuedCode) {
           await issueVerificationCodeForUser(userId);
         }
       }
-      catch {}
+      catch {
+        logger.error(LogEvents.AUTH_SIGN_IN, {
+          provider: account?.provider,
+          userId: user?.id,
+          status: 'error',
+        });
+      }
     },
     async signOut(message) {
       const logger = createLogger('auth/events');
