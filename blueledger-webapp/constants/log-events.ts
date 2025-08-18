@@ -62,6 +62,10 @@ export const LogEvents = {
   ERROR_SENDING_EMAIL_VERIFICATION: 'error_sending_email_verification',
   EMAIL_VERIFICATION_CONFIRMED: 'email_verification_confirmed',
   ERROR_CONFIRMING_EMAIL_VERIFICATION: 'error_confirming_email_verification',
+  EMAIL_PASSWORD_RESET_SENT: 'email_password_reset_sent',
+  ERROR_SENDING_EMAIL_PASSWORD_RESET: 'error_sending_email_password_reset',
+  EMAIL_PASSWORD_RESET_CONFIRMED: 'email_password_reset_confirmed',
+  ERROR_CONFIRMING_EMAIL_PASSWORD_RESET: 'error_confirming_email_password_reset',
 
   // Cloudinary
   CLOUDINARY_UPLOAD_STARTED: 'cloudinary_upload_started',

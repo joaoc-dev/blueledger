@@ -4,20 +4,20 @@ import { LogEvents } from '@/constants/log-events';
 import User from '@/features/users/model';
 import dbConnect from '@/lib/db/mongoose-client';
 import { createLogger } from '@/lib/logger';
-import { sendVerificationCodeEmail } from '@/lib/resend';
-import { getUserById, updateUser } from '../users/data';
-import { generateSixDigitCode, hashVerificationCode, timingSafeEqualHex } from './utils';
+import { sendPasswordResetCodeEmail, sendVerificationCodeEmail } from '@/lib/resend';
+import { getUserByEmail, getUserById, updateUser } from '../users/data';
+import { PASSWORD_RESET_CODE_LENGTH, VERIFICATION_CODE_LENGTH } from './constants';
+import { generateDigitsCode, hashPasswordResetCode, hashVerificationCode, timingSafeEqualHex } from './utils';
 
 export async function issueVerificationCodeForUser(userId: string, ttlMs: number = ms('60m')) {
-  const logger = createLogger('auth/verification');
+  const logger = createLogger('auth/issue-verification-code');
 
   const user = await getUserById(userId);
   if (!user || !user.email)
     return false;
 
-  const code = generateSixDigitCode();
+  const code = generateDigitsCode(VERIFICATION_CODE_LENGTH);
   const expires = new Date(Date.now() + ttlMs);
-
   const codeHash = hashVerificationCode(code, userId);
 
   await updateUser({
@@ -72,6 +72,50 @@ export async function confirmVerificationCodeForUser(userId: string, code: strin
   user.emailVerificationCode = undefined;
   user.emailVerificationCodeExpires = undefined;
   await user.save();
+
+  return true;
+}
+
+export async function issuePasswordResetCodeForUser(email: string, ttlMs: number = ms('60m')) {
+  const logger = createLogger('auth/issue-password-reset-code');
+
+  const user = await getUserByEmail(email);
+  if (!user || !user.email)
+    return false;
+
+  const code = generateDigitsCode(PASSWORD_RESET_CODE_LENGTH);
+  const expires = new Date(Date.now() + ttlMs);
+  const codeHash = hashPasswordResetCode(code, email);
+
+  await updateUser({
+    id: user.id,
+    data: {
+      passwordResetCode: codeHash,
+      passwordResetCodeExpires: expires,
+    },
+  });
+
+  try {
+    await sendPasswordResetCodeEmail(user.email, code);
+  }
+  catch (error) {
+    Sentry.captureException(error);
+
+    logger.error(LogEvents.ERROR_SENDING_EMAIL_PASSWORD_RESET, {
+      email,
+      error: error instanceof Error ? error.message : 'unknown',
+    });
+
+    await updateUser({
+      id: user.id,
+      data: {
+        passwordResetCode: undefined,
+        passwordResetCodeExpires: undefined,
+      },
+    });
+
+    return false;
+  }
 
   return true;
 }

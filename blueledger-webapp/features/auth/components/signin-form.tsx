@@ -52,7 +52,7 @@ function SignInForm({ callbackUrl = '/dashboard' }: SignInFormProps) {
     });
 
     if (res?.error) {
-      toast.error('Invalid email or password', { id: 'signin' });
+      toast.error('Invalid email or password', { id: toastId });
       return;
     }
 
@@ -114,7 +114,7 @@ function SignInForm({ callbackUrl = '/dashboard' }: SignInFormProps) {
                       'Log In'
                     )}
               </Button>
-              <Link href="/auth/reset-password" className="text-xs text-muted-foreground underline-offset-2 underline text-center">
+              <Link href="/auth/forgot" className="text-xs text-muted-foreground underline-offset-2 underline text-center">
                 Forgot your password?
               </Link>
             </form>

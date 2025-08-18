@@ -5,6 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { validateRequest } from '@/app/api/validateRequest';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
@@ -48,37 +49,39 @@ function VerifyEmailForm() {
   }
 
   async function submitCode() {
-    if (confirmCooldownTimer.seconds > 0)
-      return;
+    try {
+      if (confirmCooldownTimer.seconds > 0)
+        return;
 
-    const parsed = validationCodeSchema.safeParse(code);
+      const validationResult = validateRequest(validationCodeSchema, code);
+      if (!validationResult.success) {
+        setErrorText('Please enter a valid code');
+        return;
+      }
 
-    if (!parsed.success) {
-      setErrorText('Enter the 6-digit code');
-      return;
-    }
+      const res = await confirmCodeHook.confirm(validationResult.data);
+      const cooldownTime = res?.success
+        ? 0
+        : res?.retryAfter ?? 0;
 
-    const res = await confirmCodeHook.confirm(parsed.data);
-    const cooldownTime = res?.success
-      ? 0
-      : res?.retryAfter ?? 0;
+      confirmCooldownTimer.start(cooldownTime);
 
-    confirmCooldownTimer.start(cooldownTime);
-
-    if (res.success) {
-      try {
+      if (res.success) {
         // Call update with an empty object otherwise trigger will be undefined
         await update({});
+
+        toast.success('Email verified');
+        router.replace('/dashboard');
       }
-      catch {}
-      toast.success('Email verified');
-      router.replace('/dashboard');
+      else {
+        if (res.status && res.status >= 500)
+          toast.error('Something went wrong. Please try again in a moment.');
+        else
+          setErrorText('Invalid or expired code');
+      }
     }
-    else {
-      if (res.status && res.status >= 500)
-        toast.error('Something went wrong. Please try again in a moment.');
-      else
-        setErrorText('Invalid or expired code');
+    catch {
+      toast.error('Something went wrong. Please try again in a moment.');
     }
   }
 
