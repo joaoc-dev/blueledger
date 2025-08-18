@@ -1,3 +1,4 @@
+import type { ConfirmVerificationCodeResult } from '../client';
 import { useCallback } from 'react';
 import { useBoolean } from 'usehooks-ts';
 import { confirmVerificationCode } from '../client';
@@ -5,7 +6,7 @@ import { confirmVerificationCode } from '../client';
 export function useConfirmVerificationCode() {
   const { value: isSubmitting, setTrue, setFalse } = useBoolean(false);
 
-  const confirm = useCallback(async (code: string) => {
+  const confirm = useCallback(async (code: string): Promise<ConfirmVerificationCodeResult> => {
     setTrue();
 
     const result = await confirmVerificationCode(code);

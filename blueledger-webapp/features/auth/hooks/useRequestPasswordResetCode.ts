@@ -1,11 +1,12 @@
+import type { RequestPasswordResetResult } from '../client';
 import { useCallback } from 'react';
 import { useBoolean } from 'usehooks-ts';
-import { requestPasswordReset } from '../password-reset-client';
+import { requestPasswordReset } from '../client';
 
 export function useRequestPasswordResetCode() {
   const { value: isSending, setTrue, setFalse } = useBoolean(false);
 
-  const send = useCallback(async (email: string) => {
+  const send = useCallback(async (email: string): Promise<RequestPasswordResetResult> => {
     setTrue();
 
     const result = await requestPasswordReset(email);

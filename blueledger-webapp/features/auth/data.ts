@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/nextjs';
-import bcrypt from 'bcryptjs';
 import ms from 'ms';
 import { LogEvents } from '@/constants/log-events';
 import User from '@/features/users/model';

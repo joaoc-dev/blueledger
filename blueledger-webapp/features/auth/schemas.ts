@@ -4,8 +4,8 @@ import { VERIFICATION_CODE_LENGTH } from './constants';
 export const validationCodeSchema = z.string()
   .regex(new RegExp(`^\\d{${VERIFICATION_CODE_LENGTH}}$`));
 
-export const emailSchema = z.string().email({ message: 'Invalid email' });
-export const passwordSchema = z.string().min(8, { message: 'At least 8 characters' }).max(72);
+const emailSchema = z.string().email({ message: 'Invalid email' });
+const passwordSchema = z.string().min(8, { message: 'At least 8 characters' }).max(72);
 
 export const apiValidationCodeSchema = z.object({
   code: validationCodeSchema,

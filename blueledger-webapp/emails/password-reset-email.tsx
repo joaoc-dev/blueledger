@@ -47,7 +47,10 @@ function PasswordResetEmail({ code, appName = 'BlueLedger', logoSrc = '/static/h
             </Section>
 
             <Text className="m-0 mb-2 text-center text-xs leading-5 text-zinc-500">
-              If you didn’t request a password reset for {appName}, you can safely ignore this email.
+              If you didn’t request a password reset for
+              {' '}
+              {appName}
+              , you can safely ignore this email.
             </Text>
             <Text className="m-0 text-center text-xs leading-5 text-zinc-500">For your security, do not share this code.</Text>
           </Container>
@@ -58,5 +61,3 @@ function PasswordResetEmail({ code, appName = 'BlueLedger', logoSrc = '/static/h
 }
 
 export default PasswordResetEmail;
-
-
