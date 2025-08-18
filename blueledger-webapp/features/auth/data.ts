@@ -1,13 +1,26 @@
 import * as Sentry from '@sentry/nextjs';
 import ms from 'ms';
 import { LogEvents } from '@/constants/log-events';
-import User from '@/features/users/model';
-import dbConnect from '@/lib/db/mongoose-client';
+import {
+  getUserAuthRecordByEmail,
+  getUserAuthRecordById,
+  markEmailVerified,
+  setEmailVerificationCode,
+  setPasswordResetCode,
+  updatePasswordAndClearReset,
+  updateUser,
+} from '@/features/users/data';
 import { createLogger } from '@/lib/logger';
 import { sendPasswordResetCodeEmail, sendVerificationCodeEmail } from '@/lib/resend';
-import { getUserByEmail, getUserById, updateUser } from '../users/data';
+import { getUserByEmail, getUserById } from '../users/data';
 import { PASSWORD_RESET_CODE_LENGTH, VERIFICATION_CODE_LENGTH } from './constants';
-import { generateDigitsCode, hashPassword, hashPasswordResetCode, hashVerificationCode, timingSafeEqualHex } from './utils';
+import {
+  generateDigitsCode,
+  hashPassword,
+  hashPasswordResetCode,
+  hashVerificationCode,
+  timingSafeEqualHex,
+} from './utils';
 
 export async function issueVerificationCodeForUser(userId: string, ttlMs: number = ms('60m')) {
   const logger = createLogger('auth/issue-verification-code');
@@ -20,13 +33,7 @@ export async function issueVerificationCodeForUser(userId: string, ttlMs: number
   const expires = new Date(Date.now() + ttlMs);
   const codeHash = hashVerificationCode(code, userId);
 
-  await updateUser({
-    id: userId,
-    data: {
-      emailVerificationCode: codeHash,
-      emailVerificationCodeExpires: expires,
-    },
-  });
+  await setEmailVerificationCode(userId, { codeHash, expires });
 
   try {
     await sendVerificationCodeEmail(user.email, code);
@@ -54,24 +61,18 @@ export async function issueVerificationCodeForUser(userId: string, ttlMs: number
 }
 
 export async function confirmVerificationCodeForUser(userId: string, code: string) {
-  await dbConnect();
-
-  const user = await User.findById(userId);
+  const user = await getUserAuthRecordById(userId);
   if (!user || !user.emailVerificationCode || !user.emailVerificationCodeExpires)
     return false;
 
   const inputHash = hashVerificationCode(code, userId);
-
   if (!timingSafeEqualHex(user.emailVerificationCode, inputHash))
     return false;
 
   if (user.emailVerificationCodeExpires.getTime() < Date.now())
     return false;
 
-  user.emailVerified = new Date();
-  user.emailVerificationCode = undefined;
-  user.emailVerificationCodeExpires = undefined;
-  await user.save();
+  await markEmailVerified(userId);
 
   return true;
 }
@@ -87,13 +88,7 @@ export async function issuePasswordResetCodeForUser(email: string, ttlMs: number
   const expires = new Date(Date.now() + ttlMs);
   const codeHash = hashPasswordResetCode(code, email);
 
-  await updateUser({
-    id: user.id,
-    data: {
-      passwordResetCode: codeHash,
-      passwordResetCodeExpires: expires,
-    },
-  });
+  await setPasswordResetCode(email, { codeHash, expires });
 
   try {
     await sendPasswordResetCodeEmail(user.email, code);
@@ -121,14 +116,11 @@ export async function issuePasswordResetCodeForUser(email: string, ttlMs: number
 }
 
 export async function confirmPasswordResetForUser(email: string, code: string, newPassword: string) {
-  await dbConnect();
-
-  const user = await User.findOne({ email });
+  const user = await getUserAuthRecordByEmail(email);
   if (!user || !user.passwordResetCode || !user.passwordResetCodeExpires)
     return false;
 
   const inputHash = hashPasswordResetCode(code, email);
-
   if (!timingSafeEqualHex(user.passwordResetCode, inputHash))
     return false;
 
@@ -136,10 +128,7 @@ export async function confirmPasswordResetForUser(email: string, code: string, n
     return false;
 
   const passwordHash = await hashPassword(newPassword);
-  user.passwordHash = passwordHash;
-  user.passwordResetCode = undefined;
-  user.passwordResetCodeExpires = undefined;
-  await user.save();
+  await updatePasswordAndClearReset(email, { passwordHash });
 
   return true;
 }

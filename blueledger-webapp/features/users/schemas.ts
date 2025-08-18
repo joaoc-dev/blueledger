@@ -75,3 +75,17 @@ export type UserDisplay = z.infer<typeof userDisplaySchema>;
 export const userApiResponseSchema = userDisplaySchema.extend({});
 
 export type UserApiResponse = z.infer<typeof userApiResponseSchema>;
+
+// Auth-focused user schema for cross-feature use
+export const userAuthRecordSchema = z.object({
+  id: idSchema,
+  email: emailSchema,
+  passwordHash: z.string().optional(),
+  emailVerified: z.date().nullable().optional(),
+  emailVerificationCode: z.string().optional(),
+  emailVerificationCodeExpires: z.date().nullable().optional(),
+  passwordResetCode: z.string().optional(),
+  passwordResetCodeExpires: z.date().nullable().optional(),
+});
+
+export type UserAuthRecord = z.infer<typeof userAuthRecordSchema>;
