@@ -47,6 +47,8 @@ export const LogEvents = {
   AUTH_JWT: 'auth_jwt',
   AUTH_SESSION: 'auth_session',
   AUTH_SIGN_IN: 'auth_sign_in',
+  AUTH_SIGN_UP: 'auth_sign_up',
+  AUTH_SIGN_UP_ERROR: 'auth_sign_up_error',
   AUTH_SIGN_OUT: 'auth_sign_out',
   AUTH_ERROR: 'auth_error',
 

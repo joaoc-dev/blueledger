@@ -1,4 +1,4 @@
-import type { PatchUserData, UserDisplay } from './schemas';
+import type { CreateUserData, PatchUserData, UserDisplay } from './schemas';
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongoose-client';
 import { mapModelToDisplay } from './mapper-server';
@@ -13,6 +13,22 @@ export async function getUserById(id: string): Promise<UserDisplay | null> {
   const user = await User.findById(id);
 
   return user ? mapModelToDisplay(user) : null;
+}
+
+export async function getUserByEmail(email: string): Promise<UserDisplay | null> {
+  await dbConnect();
+
+  const user = await User.findOne({ email });
+
+  return user ? mapModelToDisplay(user) : null;
+}
+
+export async function createUser(userData: CreateUserData) {
+  await dbConnect();
+
+  const user = await User.create(userData);
+
+  return mapModelToDisplay(user);
 }
 
 export async function updateUser(userData: PatchUserData) {

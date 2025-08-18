@@ -48,8 +48,6 @@ function VerifyEmailForm() {
   }
 
   async function submitCode() {
-    // console.warn('SUBMIT CODE');
-    // await update({});
     if (confirmCooldownTimer.seconds > 0)
       return;
 
@@ -69,7 +67,7 @@ function VerifyEmailForm() {
 
     if (res.success) {
       try {
-        // Call up+date with an empty object otherwise trigger will be undefined
+        // Call update with an empty object otherwise trigger will be undefined
         await update({});
       }
       catch {}
