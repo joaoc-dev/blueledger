@@ -49,6 +49,8 @@ export const patchUserSchema = z.object({
       emailVerified: emailVerifiedSchema.optional(),
       emailVerificationCode: z.string().optional(),
       emailVerificationCodeExpires: z.date().optional(),
+      passwordResetCode: z.string().optional(),
+      passwordResetCodeExpires: z.date().optional(),
     })
     .refine(
       data => Object.values(data).some(value => value !== undefined),

@@ -3,6 +3,8 @@ import { calculateRetryAfterMs, ratelimitTokenBucket } from '@/lib/rate-limit';
 import {
   CONFIRM_ATTEMPTS_LIMIT_DAILY,
   CONFIRM_ATTEMPTS_LIMIT_SHORT,
+  PASSWORD_RESET_REQUEST_LIMIT_DAILY,
+  PASSWORD_RESET_REQUEST_LIMIT_SHORT,
   SEND_LIMIT_DAILY,
   SEND_LIMIT_SHORT,
 } from './constants';
@@ -20,6 +22,14 @@ export async function validateConfirmVerificationCodeRateLimits(userId: string) 
     `verify-confirm:${userId}`,
     CONFIRM_ATTEMPTS_LIMIT_SHORT,
     CONFIRM_ATTEMPTS_LIMIT_DAILY,
+  );
+}
+
+export async function validatePasswordResetRequestRateLimits(email: string) {
+  return validateRateLimit(
+    `pwd-reset-req:email:${email}`,
+    PASSWORD_RESET_REQUEST_LIMIT_SHORT,
+    PASSWORD_RESET_REQUEST_LIMIT_DAILY,
   );
 }
 
