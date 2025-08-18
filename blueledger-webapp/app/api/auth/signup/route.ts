@@ -6,7 +6,7 @@ import { LogEvents } from '@/constants/log-events';
 import { VERIFICATION_CODE_TTL_MS } from '@/features/auth/constants';
 import { issueVerificationCodeForUser } from '@/features/auth/data';
 import { createUser, getUserByEmail } from '@/features/users/data';
-import { createUserSchema } from '@/features/users/schemas';
+import { createUserInputSchema, createUserSchema } from '@/features/users/schemas';
 import { createLogger, logRequest } from '@/lib/logger';
 import { validateRequest } from '../../validateRequest';
 
@@ -19,34 +19,42 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     ({ requestId } = logRequest(logger, request));
 
-    const validationResult = validateRequest(createUserSchema, body);
-    if (!validationResult.success) {
+    const inputValidationResult = validateRequest(createUserInputSchema, body);
+    if (!inputValidationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
         requestId,
-        details: validationResult.error.details,
+        details: inputValidationResult.error.details,
         status: 400,
         durationMs: Date.now() - startTime,
       });
 
-      return NextResponse.json(validationResult.error, { status: 400 });
+      return NextResponse.json(inputValidationResult.error, { status: 400 });
     }
 
-    const name = validationResult.data.name;
-    const email = validationResult.data.email.toLowerCase();
-    const password = validationResult.data.password;
-
-    const existingUser = await getUserByEmail(email);
+    const userInput = inputValidationResult.data;
+    const existingUser = await getUserByEmail(userInput.email);
     if (existingUser)
       return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
 
     const saltRounds = 12;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
+    const passwordHash = await bcrypt.hash(userInput.password, saltRounds);
 
-    const user = await createUser({
-      name,
-      email,
-      password: passwordHash,
+    const newUserValidationResult = validateRequest(createUserSchema, {
+      ...userInput,
+      passwordHash,
     });
+
+    if (!newUserValidationResult.success) {
+      logger.warn(LogEvents.VALIDATION_FAILED, {
+        requestId,
+        details: newUserValidationResult.error.details,
+        status: 400,
+        durationMs: Date.now() - startTime,
+      });
+
+      return NextResponse.json('New user validation failed', { status: 400 });
+    }
+    const user = await createUser(newUserValidationResult.data);
 
     // Issue email verification code
     await issueVerificationCodeForUser(user.id, VERIFICATION_CODE_TTL_MS);

@@ -25,9 +25,15 @@ export type UserProfileFormData = z.infer<typeof userProfileFormSchema>;
 
 const passwordSchema = z.string().min(8).max(72);
 
-export const createUserSchema = z.object({
+export const createUserInputSchema = z.object({
   ...baseFields,
   password: passwordSchema,
+});
+
+export type CreateUserInput = z.infer<typeof createUserInputSchema>;
+
+export const createUserSchema = createUserInputSchema.extend({
+  passwordHash: z.string(),
 });
 
 export type CreateUserData = z.infer<typeof createUserSchema>;
