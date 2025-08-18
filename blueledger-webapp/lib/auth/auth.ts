@@ -1,7 +1,11 @@
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
+import bcrypt from 'bcryptjs';
 import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import { validateRequest } from '@/app/api/validateRequest';
 import { LogEvents } from '@/constants/log-events';
 import { issueVerificationCodeForUser } from '@/features/auth/data';
+import { signInSchema } from '@/features/auth/schemas';
 import User from '@/features/users/model';
 import { createLogger } from '@/lib/logger';
 import clientPromise from '../db/mongoDB-client';
@@ -10,7 +14,53 @@ import authConfig from './auth.config';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: MongoDBAdapter(clientPromise),
+  // Merge edge-safe config, then add Node-only providers (like Credentials)
   ...authConfig,
+  providers: [
+    ...(authConfig.providers ?? []),
+    Credentials({
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      authorize: async (credentials) => {
+        const logger = createLogger('auth/callbacks/authorize');
+        const requestId = globalThis.crypto?.randomUUID?.();
+        const startTime = Date.now();
+
+        console.warn('credentials', credentials);
+        const validationResult = validateRequest(signInSchema, credentials);
+        if (!validationResult.success) {
+          logger.warn(LogEvents.VALIDATION_FAILED, {
+            requestId,
+            details: validationResult.error.details,
+            status: 400,
+            durationMs: Date.now() - startTime,
+          });
+
+          return null;
+        }
+
+        const { email, password } = validationResult.data;
+
+        await dbConnect();
+        const user = await User.findOne({ email }).lean();
+        if (!user || !user.passwordHash)
+          return null;
+
+        const ok = await bcrypt.compare(password, user.passwordHash);
+        if (!ok)
+          return null;
+
+        return {
+          id: String(user._id),
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        } as any;
+      },
+    }),
+  ],
   session: {
     strategy: 'jwt',
   },
@@ -101,6 +151,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           ? new Date(token.emailVerified as string)
           : null,
       };
+
+      // If password was reset after token iat, invalidate session
+      try {
+        await dbConnect();
+        const userDoc = await User.findById(token.id as string);
+        const invalidAfter = userDoc?.sessionInvalidAfter?.getTime();
+        const tokenIat = (token as any)?.iat ? Number((token as any).iat) * 1000 : undefined;
+        if (invalidAfter && tokenIat && tokenIat < invalidAfter) {
+          // Returning null session signals invalid session to callers
+          return null as any;
+        }
+      }
+      catch {}
+
       return session;
     },
   },
