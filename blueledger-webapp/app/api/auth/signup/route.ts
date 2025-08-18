@@ -1,10 +1,10 @@
 import type { NextRequest } from 'next/server';
 import * as Sentry from '@sentry/nextjs';
-import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 import { LogEvents } from '@/constants/log-events';
 import { VERIFICATION_CODE_TTL_MS } from '@/features/auth/constants';
 import { issueVerificationCodeForUser } from '@/features/auth/data';
+import { hashPassword } from '@/features/auth/utils';
 import { createUser, getUserByEmail } from '@/features/users/data';
 import { createUserInputSchema, createUserSchema } from '@/features/users/schemas';
 import { createLogger, logRequest } from '@/lib/logger';
@@ -36,8 +36,7 @@ export async function POST(request: NextRequest) {
     if (existingUser)
       return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
 
-    const saltRounds = 12;
-    const passwordHash = await bcrypt.hash(userInput.password, saltRounds);
+    const passwordHash = await hashPassword(userInput.password);
 
     const newUserValidationResult = validateRequest(createUserSchema, {
       ...userInput,

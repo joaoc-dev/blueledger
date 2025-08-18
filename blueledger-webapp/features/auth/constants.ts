@@ -11,3 +11,6 @@ export const CONFIRM_ATTEMPTS_LIMIT_DAILY = { max: 30, windowSec: 86400 };
 
 export const PASSWORD_RESET_REQUEST_LIMIT_SHORT = { max: 1, windowSec: 60 };
 export const PASSWORD_RESET_REQUEST_LIMIT_DAILY = { max: 10, windowSec: 86400 };
+
+export const PASSWORD_RESET_CONFIRM_LIMIT_SHORT = { max: 1, windowSec: 10 };
+export const PASSWORD_RESET_CONFIRM_LIMIT_DAILY = { max: 10, windowSec: 86400 };

@@ -3,14 +3,13 @@ import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { validateRequest } from '@/app/api/validateRequest';
 import { LogEvents } from '@/constants/log-events';
-import { PASSWORD_RESET_CODE_TTL_MS } from '@/features/auth/constants';
-import { issuePasswordResetCodeForUser } from '@/features/auth/data';
-import { validatePasswordResetRequestRateLimits } from '@/features/auth/rate-limit';
-import { emailPasswordResetSchema } from '@/features/auth/schemas';
+import { confirmPasswordResetForUser } from '@/features/auth/data';
+import { validateConfirmPasswordResetRateLimits } from '@/features/auth/rate-limit';
+import { passwordResetConfirmSchema } from '@/features/auth/schemas';
 import { createLogger, logRequest } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
-  const logger = createLogger('api/auth/password-reset/request');
+  const logger = createLogger('api/auth/password-reset/confirm');
   const startTime = Date.now();
   let requestId: string | undefined;
 
@@ -18,7 +17,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     ({ requestId } = logRequest(logger, request));
 
-    const validationResult = validateRequest(emailPasswordResetSchema, body);
+    const validationResult = validateRequest(passwordResetConfirmSchema, body);
     if (!validationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
         requestId,
@@ -29,9 +28,10 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json(validationResult.error, { status: 400 });
     }
+
     const email = validationResult.data.email.toLowerCase();
 
-    const validateRateLimits = await validatePasswordResetRequestRateLimits(email);
+    const validateRateLimits = await validateConfirmPasswordResetRateLimits(email);
     if (!validateRateLimits.success) {
       logger.info(LogEvents.RATE_LIMIT_EXCEEDED, {
         requestId,
@@ -49,14 +49,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const success = await issuePasswordResetCodeForUser(email, PASSWORD_RESET_CODE_TTL_MS);
-    if (!success)
-      return NextResponse.json({ error: 'Failed to send verification code' }, { status: 500 });
+    const code = validationResult.data.code;
+    const newPassword = validationResult.data.newPassword;
 
-    logger.info(LogEvents.EMAIL_PASSWORD_RESET_SENT, {
+    const success = await confirmPasswordResetForUser(email, code, newPassword);
+    if (!success) {
+      return NextResponse.json({ error: 'Failed to confirm password reset' }, { status: 400 });
+    }
+
+    logger.info(LogEvents.EMAIL_PASSWORD_RESET_CONFIRMED, {
       requestId,
       email,
-      status: 200,
       durationMs: Date.now() - startTime,
     });
 
@@ -65,7 +68,7 @@ export async function POST(request: NextRequest) {
   catch (error) {
     Sentry.captureException(error);
 
-    logger.error(LogEvents.ERROR_SENDING_EMAIL_PASSWORD_RESET, {
+    logger.error(LogEvents.ERROR_CONFIRMING_EMAIL_PASSWORD_RESET, {
       requestId,
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,

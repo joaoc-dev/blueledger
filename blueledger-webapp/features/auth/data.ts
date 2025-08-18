@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
+import bcrypt from 'bcryptjs';
 import ms from 'ms';
 import { LogEvents } from '@/constants/log-events';
 import User from '@/features/users/model';
@@ -7,7 +8,7 @@ import { createLogger } from '@/lib/logger';
 import { sendPasswordResetCodeEmail, sendVerificationCodeEmail } from '@/lib/resend';
 import { getUserByEmail, getUserById, updateUser } from '../users/data';
 import { PASSWORD_RESET_CODE_LENGTH, VERIFICATION_CODE_LENGTH } from './constants';
-import { generateDigitsCode, hashPasswordResetCode, hashVerificationCode, timingSafeEqualHex } from './utils';
+import { generateDigitsCode, hashPassword, hashPasswordResetCode, hashVerificationCode, timingSafeEqualHex } from './utils';
 
 export async function issueVerificationCodeForUser(userId: string, ttlMs: number = ms('60m')) {
   const logger = createLogger('auth/issue-verification-code');
@@ -116,6 +117,30 @@ export async function issuePasswordResetCodeForUser(email: string, ttlMs: number
 
     return false;
   }
+
+  return true;
+}
+
+export async function confirmPasswordResetForUser(email: string, code: string, newPassword: string) {
+  await dbConnect();
+
+  const user = await User.findOne({ email });
+  if (!user || !user.passwordResetCode || !user.passwordResetCodeExpires)
+    return false;
+
+  const inputHash = hashPasswordResetCode(code, email);
+
+  if (!timingSafeEqualHex(user.passwordResetCode, inputHash))
+    return false;
+
+  if (user.passwordResetCodeExpires.getTime() < Date.now())
+    return false;
+
+  const passwordHash = await hashPassword(newPassword);
+  user.passwordHash = passwordHash;
+  user.passwordResetCode = undefined;
+  user.passwordResetCodeExpires = undefined;
+  await user.save();
 
   return true;
 }
