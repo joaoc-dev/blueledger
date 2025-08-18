@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { LogEvents } from '@/constants/log-events';
+import SignUpForm from '@/features/auth/components/signup-form';
 import { auth } from '@/lib/auth/auth';
 import { createLogger } from '@/lib/logger';
 
@@ -22,7 +23,9 @@ async function SignUpPage() {
   }
 
   return (
-    <div>Sign up</div>
+    <div className="w-full max-w-sm md:max-w-3xl">
+      <SignUpForm />
+    </div>
   );
 }
 

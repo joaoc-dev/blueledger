@@ -1,3 +1,4 @@
+import type { SignupFormData } from './schemas';
 import type { ApiError } from '@/lib/api-client';
 import { apiPost } from '@/lib/api-client';
 
@@ -41,4 +42,8 @@ export async function confirmVerificationCode(code: string): Promise<ConfirmVeri
       status: err.status,
     };
   }
+}
+
+export async function signup(data: SignupFormData): Promise<void> {
+  await apiPost('/auth/signup', data);
 }

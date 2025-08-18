@@ -18,7 +18,7 @@ export async function getUserById(id: string): Promise<UserDisplay | null> {
 export async function getUserByEmail(email: string): Promise<UserDisplay | null> {
   await dbConnect();
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email.toLowerCase() });
 
   return user ? mapModelToDisplay(user) : null;
 }
