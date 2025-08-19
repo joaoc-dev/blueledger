@@ -51,7 +51,7 @@ function DesktopNavBar({ links }: DesktopNavBarProps) {
       <div>
         <Link href="/" className="nav__brand nav__item hover:text-foreground">
           <HandCoins />
-          <span className="text-2xl">Blue Ledger</span>
+          <span className="text-2xl">BlueLedger</span>
         </Link>
       </div>
       <ul
