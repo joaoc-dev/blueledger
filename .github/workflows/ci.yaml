@@ -26,3 +26,18 @@ jobs:
 
       - name: Check dependencies
         run: pnpm check:deps
+      
+      - name: Run tests
+        run: npm run test:coverage-report
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: joaoc-dev/blueledger
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
