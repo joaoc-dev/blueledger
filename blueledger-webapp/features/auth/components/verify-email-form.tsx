@@ -3,6 +3,7 @@
 import { Mail } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { validateRequest } from '@/app/api/validateRequest';
@@ -10,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Separator } from '@/components/ui/separator';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useCooldown } from '@/hooks/useCooldown';
 import { SEND_LIMIT_SHORT, VERIFICATION_CODE_LENGTH } from '../constants';
 import { useConfirmVerificationCode } from '../hooks/useConfirmVerificationCode';
@@ -30,6 +32,7 @@ function VerifyEmailForm() {
   const [code, setCode] = useState('');
 
   async function sendCode() {
+    posthog.capture(AnalyticsEvents.VERIFICATION_CODE_SEND_CLICKED);
     const res = await sendHook.send();
 
     const cooldownTime = (res && !res.success ? res.retryAfter : undefined)
@@ -42,10 +45,15 @@ function VerifyEmailForm() {
         toast.error(`Please wait before requesting another code. (${res.retryAfter}s)`);
       else
         toast.error('Something went wrong. Please try again in a moment.');
+      posthog.capture(AnalyticsEvents.VERIFICATION_CODE_SEND_ERROR, {
+        status: res.status,
+        retryAfter: res.retryAfter,
+      });
       return;
     }
 
     toast.success('Verification code sent');
+    posthog.capture(AnalyticsEvents.VERIFICATION_CODE_SEND_SUCCESS);
   }
 
   async function submitCode() {
@@ -59,6 +67,7 @@ function VerifyEmailForm() {
         return;
       }
 
+      posthog.capture(AnalyticsEvents.VERIFICATION_CODE_CONFIRM_SUBMIT);
       const res = await confirmCodeHook.confirm(validationResult.data);
       const cooldownTime = res?.success
         ? 0
@@ -71,6 +80,7 @@ function VerifyEmailForm() {
         await update({});
 
         toast.success('Email verified');
+        posthog.capture(AnalyticsEvents.VERIFICATION_CODE_CONFIRM_SUCCESS);
         router.replace('/dashboard');
       }
       else {
@@ -78,10 +88,12 @@ function VerifyEmailForm() {
           toast.error('Something went wrong. Please try again in a moment.');
         else
           setErrorText('Invalid or expired code');
+        posthog.capture(AnalyticsEvents.VERIFICATION_CODE_CONFIRM_ERROR, { status: res.status });
       }
     }
     catch {
       toast.error('Something went wrong. Please try again in a moment.');
+      posthog.capture(AnalyticsEvents.VERIFICATION_CODE_CONFIRM_ERROR);
     }
   }
 

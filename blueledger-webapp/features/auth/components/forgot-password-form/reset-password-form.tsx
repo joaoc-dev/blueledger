@@ -1,5 +1,6 @@
 import type { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import posthog from 'posthog-js';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -8,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useCooldown } from '@/hooks/useCooldown';
 import { VERIFICATION_CODE_LENGTH } from '../../constants';
 import { useConfirmPasswordReset } from '../../hooks/useConfirmPasswordReset';
@@ -39,7 +41,7 @@ function ResetPasswordForm({ email, onSuccess }: ResetPasswordFormProps) {
   const onSubmit = async (data: FormData) => {
     const toastId = uuidv4();
     toast.loading('Resetting password…', { id: toastId });
-
+    posthog.capture(AnalyticsEvents.PASSWORD_RESET_CONFIRM_SUBMIT);
     const res = await confirm({ email: data.email, code: data.code, newPassword: data.newPassword });
     const cooldownTime = res?.success
       ? 0
@@ -48,6 +50,7 @@ function ResetPasswordForm({ email, onSuccess }: ResetPasswordFormProps) {
     cooldownTimer.start(cooldownTime);
     if (res.success) {
       toast.success('Password reset. You can now sign in.', { id: toastId });
+      posthog.capture(AnalyticsEvents.PASSWORD_RESET_CONFIRM_SUCCESS);
       onSuccess();
     }
     else {
@@ -55,6 +58,7 @@ function ResetPasswordForm({ email, onSuccess }: ResetPasswordFormProps) {
         toast.error('Something went wrong. Please try again in a moment.', { id: toastId });
       else
         toast.error('Invalid or expired code', { id: toastId });
+      posthog.capture(AnalyticsEvents.PASSWORD_RESET_CONFIRM_ERROR, { status: res.status });
     }
   };
 

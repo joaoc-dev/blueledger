@@ -1,12 +1,14 @@
 import type { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import posthog from 'posthog-js';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useCooldown } from '@/hooks/useCooldown';
 import { PASSWORD_RESET_REQUEST_LIMIT_SHORT } from '../../constants';
 import { useRequestPasswordResetCode } from '../../hooks/useRequestPasswordResetCode';
@@ -28,6 +30,7 @@ function ResetEmailForm({ onCodeSent }: ResetEmailFormProps) {
   const { isSending, send } = useRequestPasswordResetCode();
 
   const onSubmit = async (data: FormData) => {
+    posthog.capture(AnalyticsEvents.PASSWORD_RESET_REQUEST_SUBMIT);
     if (cooldownTimer.seconds > 0)
       return;
 
@@ -40,10 +43,15 @@ function ResetEmailForm({ onCodeSent }: ResetEmailFormProps) {
 
     if (!res.success) {
       toast.error('Something went wrong. Please try again in a moment.');
+      posthog.capture(AnalyticsEvents.PASSWORD_RESET_REQUEST_ERROR, {
+        status: res.status,
+        retryAfter: res.retryAfter,
+      });
       return;
     }
 
     toast.success('Reset code sent');
+    posthog.capture(AnalyticsEvents.PASSWORD_RESET_REQUEST_SUCCESS);
     onCodeSent(data.email);
   };
 

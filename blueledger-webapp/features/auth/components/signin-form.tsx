@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { signInGithub } from '@/features/auth/actions';
 import { signInSchema } from '@/features/auth/schemas';
 
@@ -43,7 +44,7 @@ function SignInForm({ callbackUrl = '/dashboard' }: SignInFormProps) {
     const toastId = uuidv4();
     toast.loading('Signing in…', { id: toastId });
 
-    posthog.capture('sign_in_submit', { method: 'credentials' });
+    posthog.capture(AnalyticsEvents.SIGN_IN_SUBMIT, { method: 'credentials' });
 
     const res = await signIn('credentials', {
       email: data.email,
@@ -53,10 +54,12 @@ function SignInForm({ callbackUrl = '/dashboard' }: SignInFormProps) {
 
     if (res?.error) {
       toast.error('Invalid email or password', { id: toastId });
+      posthog.capture(AnalyticsEvents.SIGN_IN_ERROR, { method: 'credentials' });
       return;
     }
 
     toast.success('Signed in', { id: toastId });
+    posthog.capture(AnalyticsEvents.SIGN_IN_SUCCESS, { method: 'credentials' });
     router.replace(callbackUrl);
   };
 
@@ -121,7 +124,11 @@ function SignInForm({ callbackUrl = '/dashboard' }: SignInFormProps) {
 
             <Separator className="my-6" />
 
-            <form action={signInGithubWithCallbackUrl} className="mt-6">
+            <form
+              action={signInGithubWithCallbackUrl}
+              className="mt-6"
+              onSubmit={() => posthog.capture(AnalyticsEvents.GITHUB_AUTH_CLICKED)}
+            >
               <Button variant="outline" className="w-full" type="submit" aria-label="Sign in with GitHub">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path

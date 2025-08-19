@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { signInGithub } from '@/features/auth/actions';
 import { signup } from '@/features/auth/client';
 import { signupFormSchema } from '@/features/auth/schemas';
@@ -44,7 +45,7 @@ function SignUpForm() {
     toast.loading('Creating account…', { id: toastId });
 
     try {
-      posthog.capture('sign_up_submit', { method: 'credentials' });
+      posthog.capture(AnalyticsEvents.SIGN_UP_SUBMIT, { method: 'credentials' });
 
       await signup(data);
 
@@ -56,10 +57,12 @@ function SignUpForm() {
 
       if (result?.error) {
         toast.error('Sign in failed after signup', { id: toastId });
+        posthog.capture(AnalyticsEvents.SIGN_UP_ERROR, { step: 'post_signup_signin' });
         return;
       }
 
       toast.success('Account created', { id: toastId });
+      posthog.capture(AnalyticsEvents.SIGN_UP_SUCCESS, { method: 'credentials' });
       router.replace('/auth/verify-email');
     }
     catch (e) {
@@ -68,6 +71,7 @@ function SignUpForm() {
         toast.error('Email already in use', { id: toastId });
       else
         toast.error('Unexpected error, please try again', { id: toastId });
+      posthog.capture(AnalyticsEvents.SIGN_UP_ERROR, { status: err.status });
     }
   };
 
@@ -155,7 +159,11 @@ function SignUpForm() {
 
             <Separator className="my-6" />
 
-            <form action={signInGithubNoCallback} className="mt-6">
+            <form
+              action={signInGithubNoCallback}
+              className="mt-6"
+              onSubmit={() => posthog.capture(AnalyticsEvents.GITHUB_AUTH_CLICKED)}
+            >
               <Button type="submit" variant="outline" className="w-full">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
