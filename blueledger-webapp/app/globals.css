@@ -285,13 +285,27 @@
     z-index: 0;
   }
 
+  .landing__hero {
+    background-image: var(--landing-hero-gradient);
+    background-repeat: no-repeat;
+  }
+
   /* Section container: anchor offset and stacking isolation */
   .landing__section {
     @apply scroll-mt-16 relative isolate min-h-[calc(100svh-4rem)];
   }
 
-  .landing__hero {
-    background-image: var(--landing-hero-gradient);
-    background-repeat: no-repeat;
+  .landing__section--grid {
+    @apply grid grid-rows-[auto_auto_1fr];
+  }
+
+  /* Landing content container with 2xl borders */
+  .landing__container {
+    @apply max-w-screen-2xl w-full mx-auto 2xl:border-l 2xl:border-r;
+  }
+
+  /* Full-width horizontal separator */
+  .landing__splitter {
+    @apply w-full border-t;
   }
 }
