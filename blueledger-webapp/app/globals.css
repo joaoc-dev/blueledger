@@ -251,4 +251,13 @@
   .notifications__scroll-area {
     @apply h-90 w-full mt-2;
   }
+
+  /* Landing page specific component classes */
+  .landing__nav {
+    @apply fixed backdrop-blur top-0 left-0 right-0 z-50 supports-[backdrop-filter]:bg-background/70 bg-background/90 border-b;
+  }
+
+  .landing__text-link {
+    @apply text-muted-foreground hover:text-foreground transition-colors;
+  }
 }
