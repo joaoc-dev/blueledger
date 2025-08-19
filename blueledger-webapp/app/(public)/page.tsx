@@ -4,6 +4,7 @@ import { Features } from './sections/features/features';
 import { Footer } from './sections/footer';
 import { Hero } from './sections/hero';
 import { Pricing } from './sections/pricing/pricing';
+import { Testimonials } from './sections/testimonials/testimonials';
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <main className="mt-16">
         <Features />
         <Pricing />
+        <Testimonials />
         <Faq />
       </main>
       <div className="landing__splitter" />

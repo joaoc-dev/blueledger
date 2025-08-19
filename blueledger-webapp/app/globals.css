@@ -320,4 +320,8 @@
   .landing__splitter {
     @apply w-full border-t;
   }
+
+  .landing__testimonial {
+    @apply flex flex-col gap-4 p-6 border bg-card/1 shadow-md select-none h-90 max-w-full overflow-hidden;
+  }
 }

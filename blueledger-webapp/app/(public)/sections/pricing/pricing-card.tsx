@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-export interface PricingPlan {
+interface PricingPlan {
   name: string;
   price: string;
   features: string[];
