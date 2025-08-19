@@ -1,9 +1,3 @@
-// @ts-nocheck
-/**
- * DO NOT IMPORT THIS FILE DIRECTLY.
- * This is the original upstream Button kept for reference/diffing only.
- * Use "@/components/ui/button" everywhere, which is aliased to the modified version in tsconfig paths.
- */
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -16,15 +10,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+          "bg-primary text-primary-foreground shadow-xs hover:bg-[var(--primary-hover)]",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-white shadow-xs hover:bg-[var(--destructive-hover)] focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border bg-background shadow-xs hover:bg-[var(--accent-hover)] hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground shadow-xs hover:bg-[var(--secondary-hover)]",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+          "hover:bg-[var(--accent-hover)] hover:text-accent-foreground dark:hover:bg-[var(--accent-hover)]",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -62,5 +56,4 @@ function Button({
   )
 }
 
-// Intentionally removed exports to prevent accidental usage.
-// Use "@/components/ui-modified/button" instead.
+export { Button, buttonVariants }

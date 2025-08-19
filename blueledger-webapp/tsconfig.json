@@ -8,7 +8,8 @@
 
     "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/components/ui/button": ["./components/ui-modified/button"]
     },
     "resolveJsonModule": true,
     "allowJs": true,

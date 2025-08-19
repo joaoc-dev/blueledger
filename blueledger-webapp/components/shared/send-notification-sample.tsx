@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
+import { Button } from '@/components/ui/button';
 import { apiPost } from '@/lib/api-client';
-import { Button } from '../ui/button';
 
 function SendNotificationSample() {
   // all of the following should be rate limited
