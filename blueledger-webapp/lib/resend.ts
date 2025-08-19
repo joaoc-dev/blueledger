@@ -2,6 +2,7 @@ import { createElement } from 'react';
 import { Resend } from 'resend';
 import PasswordResetEmail from '@/emails/password-reset-email';
 import WelcomeEmail from '@/emails/welcome-email';
+import { env as clientEnv } from '@/env/client';
 import { env } from '@/env/server';
 
 const resend = new Resend(env.RESEND_API_KEY);
@@ -11,7 +12,7 @@ export async function sendVerificationCodeEmail(to: string, code: string) {
     from: env.AUTH_EMAIL_VERIFICATION_FROM,
     to,
     subject: 'Welcome to Blue Ledger',
-    react: createElement(WelcomeEmail, { code }),
+    react: createElement(WelcomeEmail, { code, logoSrc: clientEnv.NEXT_PUBLIC_SITE_URL }),
   });
 }
 
@@ -20,6 +21,6 @@ export async function sendPasswordResetCodeEmail(to: string, code: string) {
     from: env.AUTH_EMAIL_PASSWORD_RESET_FROM,
     to,
     subject: 'Reset password code',
-    react: createElement(PasswordResetEmail, { code }),
+    react: createElement(PasswordResetEmail, { code, logoSrc: clientEnv.NEXT_PUBLIC_SITE_URL }),
   });
 }
