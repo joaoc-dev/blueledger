@@ -110,11 +110,24 @@ export async function setEmailVerificationCode(userId: string, params: { codeHas
   });
 }
 
+export async function removeEmailVerificationCode(userId: string): Promise<void> {
+  await dbConnect();
+  await User.findByIdAndUpdate(userId, {
+    $unset: {
+      emailVerificationCode: 1,
+      emailVerificationCodeExpires: 1,
+    },
+  });
+}
+
 export async function markEmailVerified(userId: string): Promise<void> {
   await dbConnect();
   await User.findByIdAndUpdate(userId, {
     $set: { emailVerified: new Date() },
-    $unset: { emailVerificationCode: 1, emailVerificationCodeExpires: 1 },
+    $unset: {
+      emailVerificationCode: 1,
+      emailVerificationCodeExpires: 1,
+    },
   });
 }
 
@@ -131,13 +144,27 @@ export async function setPasswordResetCode(email: string, params: { codeHash: st
   );
 }
 
+export async function removePasswordResetCode(email: string): Promise<void> {
+  await dbConnect();
+  await User.findOneAndUpdate(
+    { email: email.toLowerCase() },
+    { $unset: {
+      passwordResetCode: 1,
+      passwordResetCodeExpires: 1,
+    } },
+  );
+}
+
 export async function updatePasswordAndClearReset(email: string, params: { passwordHash: string }): Promise<void> {
   await dbConnect();
   await User.findOneAndUpdate(
     { email: email.toLowerCase() },
     {
       $set: { passwordHash: params.passwordHash },
-      $unset: { passwordResetCode: 1, passwordResetCodeExpires: 1 },
+      $unset: {
+        passwordResetCode: 1,
+        passwordResetCodeExpires: 1,
+      },
     },
   );
 }

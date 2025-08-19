@@ -46,11 +46,6 @@ export const patchUserSchema = z.object({
       image: imageSchema.optional(),
       imagePublicId: imagePublicIdSchema.optional(),
       bio: bioSchema.optional(),
-      emailVerified: emailVerifiedSchema.optional(),
-      emailVerificationCode: z.string().optional(),
-      emailVerificationCodeExpires: z.date().optional(),
-      passwordResetCode: z.string().optional(),
-      passwordResetCodeExpires: z.date().optional(),
     })
     .refine(
       data => Object.values(data).some(value => value !== undefined),
@@ -65,9 +60,9 @@ export type PatchUserData = z.infer<typeof patchUserSchema>;
 const userDisplaySchema = z.object({
   ...baseFields,
   id: idSchema,
-  image: z.string().optional(),
-  imagePublicId: z.string().optional(),
-  emailVerified: z.date().optional(),
+  image: imageSchema,
+  imagePublicId: imagePublicIdSchema,
+  emailVerified: emailVerifiedSchema,
 });
 
 export type UserDisplay = z.infer<typeof userDisplaySchema>;
@@ -80,9 +75,9 @@ export type UserApiResponse = z.infer<typeof userApiResponseSchema>;
 export const userAuthRecordSchema = z.object({
   id: idSchema,
   email: emailSchema,
-  name: z.string().optional(),
-  image: z.string().optional(),
-  bio: z.string().optional(),
+  name: nameSchema.optional(),
+  image: imageSchema,
+  bio: bioSchema,
   passwordHash: z.string().optional(),
   emailVerified: z.date().nullable().optional(),
   emailVerificationCode: z.string().optional(),

@@ -5,10 +5,11 @@ import {
   getUserAuthRecordByEmail,
   getUserAuthRecordById,
   markEmailVerified,
+  removeEmailVerificationCode,
+  removePasswordResetCode,
   setEmailVerificationCode,
   setPasswordResetCode,
   updatePasswordAndClearReset,
-  updateUser,
 } from '@/features/users/data';
 import { createLogger } from '@/lib/logger';
 import { sendPasswordResetCodeEmail, sendVerificationCodeEmail } from '@/lib/resend';
@@ -46,13 +47,7 @@ export async function issueVerificationCodeForUser(userId: string, ttlMs: number
       error: error instanceof Error ? error.message : 'unknown',
     });
 
-    await updateUser({
-      id: userId,
-      data: {
-        emailVerificationCode: undefined,
-        emailVerificationCodeExpires: undefined,
-      },
-    });
+    await removeEmailVerificationCode(userId);
 
     return false;
   }
@@ -101,13 +96,7 @@ export async function issuePasswordResetCodeForUser(email: string, ttlMs: number
       error: error instanceof Error ? error.message : 'unknown',
     });
 
-    await updateUser({
-      id: user.id,
-      data: {
-        passwordResetCode: undefined,
-        passwordResetCodeExpires: undefined,
-      },
-    });
+    await removePasswordResetCode(email);
 
     return false;
   }
