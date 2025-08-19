@@ -1,7 +1,7 @@
 import type { NotificationDisplay } from '../../schemas';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
-import { ScrollArea } from '@/components/ui-modified/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import NotificationItem from './notification-item';
 
 function NotificationListVirtualized({

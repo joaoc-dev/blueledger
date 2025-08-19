@@ -1,3 +1,9 @@
+// @ts-nocheck
+/**
+ * DO NOT IMPORT THIS FILE DIRECTLY.
+ * This is the original upstream ScrollArea kept for reference/diffing only.
+ * Use "@/components/ui/scroll-area" everywhere, which is aliased to the modified version in tsconfig paths.
+ */
 "use client"
 
 import * as React from "react"
@@ -55,4 +61,5 @@ function ScrollBar({
   )
 }
 
-export { ScrollArea, ScrollBar }
+// Intentionally removed exports to prevent accidental usage.
+// Use "@/components/ui-modified/scroll-area" instead.

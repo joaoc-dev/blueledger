@@ -9,7 +9,8 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./*"],
-      "@/components/ui/button": ["./components/ui-modified/button"]
+      "@/components/ui/button": ["./components/ui-modified/button"],
+      "@/components/ui/scroll-area": ["./components/ui-modified/scroll-area"]
     },
     "resolveJsonModule": true,
     "allowJs": true,
