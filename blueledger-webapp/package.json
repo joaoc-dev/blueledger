@@ -2,6 +2,7 @@
   "name": "blueledger",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.0.0",
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:spotlight": "pnpx @spotlightjs/spotlight@latest",
