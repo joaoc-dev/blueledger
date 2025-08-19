@@ -3,16 +3,17 @@
 import SectionHeader from './section-header';
 
 interface SectionProps {
+  id: string;
   title: string;
   description: string;
   children: React.ReactNode;
 }
 
-export function Section({ title, description, children }: SectionProps) {
+export function Section({ id, title, description, children }: SectionProps) {
   return (
     <>
       <div className="landing__splitter" />
-      <section id="features" className="landing__section landing__section--grid">
+      <section id={id} className="landing__section landing__section--grid">
 
         <div className="landing__container">
           <SectionHeader

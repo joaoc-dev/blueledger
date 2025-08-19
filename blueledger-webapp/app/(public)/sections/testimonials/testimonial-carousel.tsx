@@ -38,7 +38,7 @@ export function TestimonialCarousel() {
   }, [api]);
 
   // Hooks to apply tweening effects
-  useCarouselOpacity({ emblaApiNullable: api });
+  useCarouselOpacity({ emblaApiNullable: api, options: { selector: '.landing__testimonial' } });
   useCarouselScale({ emblaApiNullable: api, options: { selector: '.landing__testimonial', offsetFactor: 0.7 } });
   useCarouselBlur({ emblaApiNullable: api, options: { selector: '.landing__testimonial', blurPx: 6 } });
 

@@ -11,6 +11,7 @@ export function Pricing() {
 
   return (
     <Section
+      id="pricing"
       title="Pricing"
       description="Choose the plan that's right for you."
     >

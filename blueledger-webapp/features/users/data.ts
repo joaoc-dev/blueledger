@@ -57,8 +57,10 @@ export async function removeImageFromUser(
 
 // Auth-facing repository methods (return validated plain objects and explicit writes)
 export async function getUserAuthRecordById(userId: string): Promise<UserAuthRecord | null> {
-  await dbConnect();
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    return null;
 
+  await dbConnect();
   const user = await User.findById(userId);
   if (!user)
     return null;
@@ -105,7 +107,13 @@ export async function getUserAuthRecordByEmail(email: string): Promise<UserAuthR
   return record;
 }
 
-export async function setEmailVerificationCode(userId: string, params: { codeHash: string; expires: Date }): Promise<void> {
+export async function setEmailVerificationCode(userId: string, params: {
+  codeHash: string;
+  expires: Date;
+}): Promise<void> {
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    return;
+
   await dbConnect();
   await User.findByIdAndUpdate(userId, {
     $set: {
@@ -116,6 +124,9 @@ export async function setEmailVerificationCode(userId: string, params: { codeHas
 }
 
 export async function removeEmailVerificationCode(userId: string): Promise<void> {
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    return;
+
   await dbConnect();
   await User.findByIdAndUpdate(userId, {
     $unset: {
@@ -126,6 +137,9 @@ export async function removeEmailVerificationCode(userId: string): Promise<void>
 }
 
 export async function markEmailVerified(userId: string): Promise<void> {
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    return;
+
   await dbConnect();
   await User.findByIdAndUpdate(userId, {
     $set: { emailVerified: new Date() },

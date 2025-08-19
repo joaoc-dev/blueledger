@@ -17,16 +17,29 @@ interface UseCarouselOpacityProps {
   options?: UseCarouselOpacityOptions;
 }
 
-export function useCarouselOpacity({ emblaApiNullable }: UseCarouselOpacityProps): void {
+export function useCarouselOpacity({ emblaApiNullable, options }: UseCarouselOpacityProps): void {
   useEffect((): (() => void) | void => {
     if (!emblaApiNullable)
       return;
 
     const emblaApi = emblaApiNullable as NonNullable<CarouselApi>;
+    const selector = options?.selector;
+    const factor = options?.factor ?? TWEEN_FACTOR_BASE;
     let tweenFactor = 0;
 
+    const getNodes = (): (HTMLElement | null)[] => {
+      const slides: Element[] = ((emblaApi as any).slideNodes() as Element[]) ?? [];
+      return slides.map((slide) => {
+        if (selector) {
+          return (slide as HTMLElement).querySelector(selector) as HTMLElement | null;
+        }
+        return slide as HTMLElement;
+      });
+    };
+    let nodes: (HTMLElement | null)[] = getNodes();
+
     const setTweenFactor = (): void => {
-      tweenFactor = TWEEN_FACTOR_BASE * emblaApi.scrollSnapList().length;
+      tweenFactor = factor * emblaApi.scrollSnapList().length;
     };
 
     const tweenOpacity = (): void => {
@@ -61,28 +74,32 @@ export function useCarouselOpacity({ emblaApiNullable }: UseCarouselOpacityProps
 
           const tweenValue = 1 - Math.abs(diffToTarget * tweenFactor);
           const opacity = numberWithinRange(tweenValue, 0, 1).toString();
-          ((emblaApi as any).slideNodes()[slideIndex] as HTMLElement).style.opacity = opacity;
+          const node = nodes[slideIndex];
+          if (!node)
+            return;
+          node.style.opacity = opacity;
         });
       });
     };
 
     // Initial setup
-    setTweenFactor();
-    tweenOpacity();
+    const handleReInit = (): void => {
+      nodes = getNodes();
+      setTweenFactor();
+      tweenOpacity();
+    };
+    handleReInit();
 
     // Event listeners
     emblaApi
-      .on('reInit', setTweenFactor)
-      .on('reInit', tweenOpacity)
+      .on('reInit', handleReInit)
       .on('scroll', tweenOpacity)
       .on('slideFocus', tweenOpacity);
 
     const cleanup = (): void => {
-      const slideNodes = ((emblaApi as any).slideNodes() as HTMLElement[]) ?? [];
-      slideNodes.forEach((slide: HTMLElement) => slide.removeAttribute('style'));
+      nodes.forEach(n => n?.style?.removeProperty('opacity'));
       // Remove listeners
-      (emblaApi as any).off?.('reInit', setTweenFactor);
-      (emblaApi as any).off?.('reInit', tweenOpacity);
+      (emblaApi as any).off?.('reInit', handleReInit);
       (emblaApi as any).off?.('scroll', tweenOpacity);
       (emblaApi as any).off?.('slideFocus', tweenOpacity);
     };
@@ -94,5 +111,5 @@ export function useCarouselOpacity({ emblaApiNullable }: UseCarouselOpacityProps
       cleanup();
       (emblaApi as any).off?.('destroy', cleanup);
     };
-  }, [emblaApiNullable]);
+  }, [emblaApiNullable, options?.selector, options?.factor]);
 }

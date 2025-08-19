@@ -110,7 +110,7 @@ export function useCarouselScale({ emblaApiNullable, options }: UseCarouselScale
       .on('slideFocus', tweenScale);
 
     const cleanup = (): void => {
-      tweenNodes.forEach(slide => slide?.style && slide.removeAttribute('style'));
+      tweenNodes.forEach(slide => slide?.style?.removeProperty('transform'));
       (emblaApi as any).off?.('reInit', handleReInit);
       (emblaApi as any).off?.('scroll', tweenScale);
       (emblaApi as any).off?.('slideFocus', tweenScale);

@@ -13,6 +13,7 @@ interface FaqItem {
 export function Faq() {
   return (
     <Section
+      id="faq"
       title="Frequently Asked Questions"
       description="Everything you need to know about this demo."
     >
@@ -47,7 +48,10 @@ function AccordionFaqItem({ question, children }: { question: string; children: 
       <AccordionTrigger className="px-4 hover:no-underline hover:bg-background [&>svg]:hidden group">
         <div className="flex flex-1 items-center justify-between py-2 font-medium">
           {question}
-          <Plus className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 group-[[data-state=open]]:rotate-45" />
+          <Plus
+            aria-hidden="true"
+            className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 group-[[data-state=open]]:rotate-45"
+          />
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-5 pb-5 text-sm text-muted-foreground">

@@ -6,6 +6,7 @@ import { TestimonialCarousel } from './testimonial-carousel';
 export function Testimonials() {
   return (
     <Section
+      id="testimonials"
       title="Trusted Worldwide"
       description="What are people saying about us?"
     >

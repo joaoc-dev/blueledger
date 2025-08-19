@@ -1,10 +1,12 @@
+'use client';
+
 import { motion } from 'motion/react';
 import Image from 'next/image';
 
 interface FeatureItem {
   title: string;
   desc: string;
-  imageSrc?: string;
+  imageSrc: string;
 }
 
 function Feature({ item, isEven }: { item: FeatureItem; isEven: boolean }) {
@@ -17,7 +19,7 @@ function Feature({ item, isEven }: { item: FeatureItem; isEven: boolean }) {
         transition={{ duration: 0.45, ease: 'easeOut', delay: 0.05 }}
         className={`${isEven ? 'md:order-2' : 'md:order-1'}`}
       >
-        <FeatureHeader title={item!.title} desc={item!.desc} />
+        <FeatureHeader title={item.title} desc={item.desc} />
       </motion.div>
 
       <motion.div
@@ -27,7 +29,7 @@ function Feature({ item, isEven }: { item: FeatureItem; isEven: boolean }) {
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className={`${isEven ? 'md:order-1' : 'md:order-2'} relative w-full h-44 xl:h-40 overflow-hidden`}
       >
-        <Image src={item!.imageSrc!} alt={item!.title} fill className="object-contain" />
+        <Image src={item.imageSrc} alt={item.title} fill className="object-contain" />
       </motion.div>
     </div>
   );

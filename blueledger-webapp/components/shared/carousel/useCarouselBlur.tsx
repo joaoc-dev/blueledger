@@ -98,7 +98,7 @@ export function useCarouselBlur({ emblaApiNullable, options }: UseCarouselBlurPr
       .on('slideFocus', tweenBlur);
 
     const cleanup = (): void => {
-      nodes.forEach(n => n?.style && n.removeAttribute('style'));
+      nodes.forEach(n => n?.style?.removeProperty('filter'));
       (emblaApi as any).off?.('reInit', handleReInit);
       (emblaApi as any).off?.('scroll', tweenBlur);
       (emblaApi as any).off?.('slideFocus', tweenBlur);

@@ -7,6 +7,7 @@ import Feature from './feature';
 export function Features() {
   return (
     <Section
+      id="features"
       title="Smarter tools"
       description="A focused look at our core features."
     >
