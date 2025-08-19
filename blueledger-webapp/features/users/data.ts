@@ -44,6 +44,8 @@ export async function updateUser(userData: PatchUserData) {
 export async function removeImageFromUser(
   userId: string,
 ): Promise<UserDisplay | null> {
+  await dbConnect();
+
   return await updateUser({
     id: userId,
     data: {
@@ -55,6 +57,8 @@ export async function removeImageFromUser(
 
 // Auth-facing repository methods (return validated plain objects and explicit writes)
 export async function getUserAuthRecordById(userId: string): Promise<UserAuthRecord | null> {
+  await dbConnect();
+
   const user = await User.findById(userId);
   if (!user)
     return null;
@@ -78,6 +82,7 @@ export async function getUserAuthRecordById(userId: string): Promise<UserAuthRec
 }
 
 export async function getUserAuthRecordByEmail(email: string): Promise<UserAuthRecord | null> {
+  await dbConnect();
   const user = await User.findOne({ email: email.toLowerCase() });
   if (!user)
     return null;
