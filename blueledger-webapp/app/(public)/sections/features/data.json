@@ -1,0 +1,24 @@
+{
+  "data": [
+    {
+      "title": "AI Assistant",
+      "desc": "Insights, suggestions, and budgeting tips tailored to your habits.",
+      "imageSrc": "illustrations/ai-assistant.svg"
+    },
+    {
+      "title": "Receipt Scan",
+      "desc": "Snap and parse receipts instantly. OCR with smart category detection.",
+      "imageSrc": "illustrations/receipt-scan.svg"
+    },
+    {
+      "title": "Smart Splits",
+      "desc": "Fair share, percentage, shares, or custom rules. Debt simplification included.",
+      "imageSrc": "illustrations/smart-splits.svg"
+    },
+    {
+      "title": "Insights & Reports",
+      "desc": "Spending patterns, trends, and exportable summaries for better decisions.",
+      "imageSrc": "illustrations/insights-reports.svg"
+    }
+  ]
+}
