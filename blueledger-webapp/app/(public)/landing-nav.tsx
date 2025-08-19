@@ -20,10 +20,10 @@ export function LandingNav() {
         </div>
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost" className="border bg-foreground/3">
-            <Link href="/signin">Sign in</Link>
+            <Link href="/auth/signin">Sign in</Link>
           </Button>
           <Button asChild>
-            <Link href="/register">Get Started</Link>
+            <Link href="/auth/signup">Get Started</Link>
           </Button>
         </div>
       </nav>
