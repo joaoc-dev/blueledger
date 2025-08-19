@@ -9,6 +9,7 @@ import ButtonLink from '@/components/shared/button-link';
 import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useExpenses } from '@/features/expenses/hooks';
 
 interface ItemOptionsProps {
@@ -30,7 +31,7 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
 
   const handleDelete = async () => {
     try {
-      posthog.capture('expense_delete_clicked', { id });
+      posthog.capture(AnalyticsEvents.EXPENSE_DELETE_CLICKED, { id });
       toast.loading('Deleting expense...', {
         id,
       });
