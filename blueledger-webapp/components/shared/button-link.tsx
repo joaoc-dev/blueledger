@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
+import { Button } from '@/components/ui-modified/button';
 import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
 
 interface ButtonLinkProps {
   href: string;

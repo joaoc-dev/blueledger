@@ -123,6 +123,17 @@
 
   --nav-underline-x: 0px;
   --nav-underline-w: 0.1;
+
+  /* Landing page */
+  --landing-hero-gradient:
+    radial-gradient(1200px 600px at 20% 0%, hsl(211 100% 84% / 0.25), transparent 60%),
+    radial-gradient(1000px 500px at 80% 20%, hsl(215 35% 94% / 0.35), transparent 60%);
+
+  /* Hover tokens tuned for clearer contrast */
+  --primary-hover: hsl(211 100% 74%);
+  --secondary-hover: hsl(215 28% 88%);
+  --accent-hover: hsl(215 35% 88%);
+  --destructive-hover: hsl(14 80% 46%);
 }
 
 .dark {
@@ -185,6 +196,12 @@
   --shadow-lg: 0 20px 44px -10px hsl(220 80% 2% / 0.6);
   --shadow-xl: 0 28px 60px -12px hsl(220 80% 2% / 0.62);
   --shadow-2xl: 0 40px 80px -16px hsl(220 80% 2% / 0.65);
+
+  /* Hover tokens tuned for clearer contrast */
+  --primary-hover: hsl(211 100% 66%);
+  --secondary-hover: hsl(215 14% 24%);
+  --accent-hover: hsl(215 16% 28%);
+  --destructive-hover: hsl(14 85% 54%);
 }
 
 :focus-visible {
@@ -250,5 +267,61 @@
 
   .notifications__scroll-area {
     @apply h-90 w-full mt-2;
+  }
+
+  /* Landing page specific component classes */
+  .landing__nav {
+    @apply fixed backdrop-blur top-0 left-0 right-0 z-50 supports-[backdrop-filter]:bg-background/70 bg-background/90 border-b;
+  }
+
+  .landing__text-link {
+    @apply text-muted-foreground hover:text-foreground transition-colors;
+  }
+
+  /* Landing grid background container */
+  .landing__grid {
+    @apply relative z-0;
+  }
+
+  /* Grid overlay pseudo-element */
+  .landing__grid::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(70% 70% at 50% 30%, black 40%, transparent 70%);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .landing__hero {
+    background-image: var(--landing-hero-gradient);
+    background-repeat: no-repeat;
+  }
+
+  /* Section container: anchor offset and stacking isolation */
+  .landing__section {
+    @apply scroll-mt-16 relative isolate min-h-[calc(100svh-4rem)];
+  }
+
+  .landing__section--grid {
+    @apply grid grid-rows-[auto_auto_1fr];
+  }
+
+  /* Landing content container with 2xl borders */
+  .landing__container {
+    @apply max-w-screen-2xl w-full mx-auto 2xl:border-l 2xl:border-r;
+  }
+
+  /* Full-width horizontal separator */
+  .landing__splitter {
+    @apply w-full border-t;
+  }
+
+  .landing__testimonial {
+    @apply flex flex-col gap-4 p-6 border bg-card/1 shadow-md select-none h-90 max-w-full overflow-hidden;
   }
 }

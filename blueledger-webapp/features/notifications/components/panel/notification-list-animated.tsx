@@ -1,6 +1,6 @@
 import type { NotificationDisplay } from '../../schemas';
 import { AnimatePresence, motion } from 'motion/react';
-import { ScrollArea } from '@/components/ui-modified/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import NotificationItem from './notification-item';
 
 function NotificationListAnimated({

@@ -1,0 +1,24 @@
+{
+  "data": [
+    {
+      "question": "What is BlueLedger?",
+      "answer": "BlueLedger is an open-source showcase application. It is not a real product."
+    },
+    {
+      "question": "Is my data safe/private?",
+      "answer": "This is a demo environment, data can and will be wiped without notice. Please avoid uploading sensitive information."
+    },
+    {
+      "question": "Are there any limitations?",
+      "answer": "Due to operational costs, some features like AI interactions will be very limited and may become unavailable without notice."
+    },
+    {
+      "question": "Do you have all of the mentioned features?",
+      "answer": "No, but we are working on it."
+    },
+    {
+      "question": "How do I report a bug or suggest a feature?",
+      "answer": "Open an issue in the repository with steps to reproduce or details about your request."
+    }
+  ]
+}
