@@ -2,6 +2,7 @@ export const LogEvents = {
   // Generic
   REQUEST_RECEIVED: 'request_received',
   VALIDATION_FAILED: 'validation_failed',
+  RATE_LIMIT_EXCEEDED: 'rate_limit_exceeded',
 
   // Expenses
   EXPENSE_CREATED: 'expense_created',
@@ -46,10 +47,25 @@ export const LogEvents = {
   AUTH_JWT: 'auth_jwt',
   AUTH_SESSION: 'auth_session',
   AUTH_SIGN_IN: 'auth_sign_in',
+  AUTH_SIGN_UP: 'auth_sign_up',
+  AUTH_SIGN_UP_ERROR: 'auth_sign_up_error',
   AUTH_SIGN_OUT: 'auth_sign_out',
   AUTH_ERROR: 'auth_error',
+
+  ALREADY_AUTHENTICATED: 'already_authenticated',
+  UNVERIFIED_EMAIL: 'unverified_email',
+  EMAIL_ALREADY_VERIFIED: 'email_already_verified',
   UNAUTHORIZED_PAGE_ACCESS: 'unauthorized_page_access',
   UNAUTHORIZED_REQUEST: 'unauthorized_request',
+
+  EMAIL_VERIFICATION_SENT: 'email_verification_sent',
+  ERROR_SENDING_EMAIL_VERIFICATION: 'error_sending_email_verification',
+  EMAIL_VERIFICATION_CONFIRMED: 'email_verification_confirmed',
+  ERROR_CONFIRMING_EMAIL_VERIFICATION: 'error_confirming_email_verification',
+  EMAIL_PASSWORD_RESET_SENT: 'email_password_reset_sent',
+  ERROR_SENDING_EMAIL_PASSWORD_RESET: 'error_sending_email_password_reset',
+  EMAIL_PASSWORD_RESET_CONFIRMED: 'email_password_reset_confirmed',
+  ERROR_CONFIRMING_EMAIL_PASSWORD_RESET: 'error_confirming_email_password_reset',
 
   // Cloudinary
   CLOUDINARY_UPLOAD_STARTED: 'cloudinary_upload_started',

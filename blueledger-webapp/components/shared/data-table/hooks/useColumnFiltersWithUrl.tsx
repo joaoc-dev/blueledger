@@ -1,15 +1,20 @@
 'use client';
 
 import type { ColumnFiltersState } from '@tanstack/react-table';
-import debounce from 'lodash.debounce';
 import { usePathname, useSearchParams } from 'next/navigation';
 import posthog from 'posthog-js';
 import { useCallback, useMemo } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 import { AnalyticsEvents } from '@/constants/analytics-events';
 
 export function useColumnFiltersWithUrl() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const capture = useDebounceCallback(
+    (id: string) =>
+      posthog.capture(AnalyticsEvents.TABLE_FILTER_CHANGED, { id }),
+    400,
+  );
 
   const filters: ColumnFiltersState = useMemo(() => {
     const filters: ColumnFiltersState = [];
@@ -113,7 +118,6 @@ export function useColumnFiltersWithUrl() {
       // Clear all known filter params
       filterKeys.forEach(key => params.delete(key));
 
-      const capture = debounce((id: string) => posthog.capture(AnalyticsEvents.TABLE_FILTER_CHANGED, { id }), 400);
       for (const filter of currentFilters) {
         if (filter.id === 'description') {
           params.set('description', filter.value as string);
@@ -164,7 +168,7 @@ export function useColumnFiltersWithUrl() {
 
       window.history.replaceState(null, '', `${pathname}?${params.toString()}`);
     },
-    [filters, pathname, searchParams],
+    [filters, pathname, searchParams, capture],
   );
 
   return [filters, setFilters] as const;

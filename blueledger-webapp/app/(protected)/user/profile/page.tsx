@@ -11,7 +11,7 @@ import { UserAvatarEdit, UserProfileForm } from '@/features/users/components';
 
 async function UserProfilePage() {
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="rounded-lg w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle>Profile</CardTitle>
       </CardHeader>

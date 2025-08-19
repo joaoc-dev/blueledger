@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 export const env = createEnv({
   client: {
+    NEXT_PUBLIC_SITE_URL: z.string().url().min(1),
     NEXT_PUBLIC_PUSHER_KEY: z.string().min(1),
     NEXT_PUBLIC_PUSHER_CLUSTER: z.string().min(1),
     NEXT_PUBLIC_AXIOM_DATASET: z.string().min(1),
@@ -12,6 +13,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SENTRY_DSN: z.string().min(1),
   },
   runtimeEnv: {
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_PUSHER_KEY: process.env.NEXT_PUBLIC_PUSHER_KEY,
     NEXT_PUBLIC_PUSHER_CLUSTER: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     NEXT_PUBLIC_AXIOM_DATASET: process.env.NEXT_PUBLIC_AXIOM_DATASET,

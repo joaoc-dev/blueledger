@@ -22,6 +22,7 @@ export function withAuth<P = undefined>(handler: Handler<P>) {
         path: request.nextUrl.pathname,
         userAgent: request.headers.get('user-agent') ?? undefined,
       });
+
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

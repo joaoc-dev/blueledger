@@ -1,4 +1,30 @@
 export const AnalyticsEvents = {
+  // Auth
+  SIGN_IN_SUBMIT: 'sign_in_submit',
+  SIGN_IN_SUCCESS: 'sign_in_success',
+  SIGN_IN_ERROR: 'sign_in_error',
+
+  SIGN_UP_SUBMIT: 'sign_up_submit',
+  SIGN_UP_SUCCESS: 'sign_up_success',
+  SIGN_UP_ERROR: 'sign_up_error',
+
+  GITHUB_AUTH_CLICKED: 'github_auth_clicked',
+
+  VERIFICATION_CODE_SEND_CLICKED: 'verification_code_send_clicked',
+  VERIFICATION_CODE_SEND_SUCCESS: 'verification_code_send_success',
+  VERIFICATION_CODE_SEND_ERROR: 'verification_code_send_error',
+
+  VERIFICATION_CODE_CONFIRM_SUBMIT: 'verification_code_confirm_submit',
+  VERIFICATION_CODE_CONFIRM_SUCCESS: 'verification_code_confirm_success',
+  VERIFICATION_CODE_CONFIRM_ERROR: 'verification_code_confirm_error',
+
+  PASSWORD_RESET_REQUEST_SUBMIT: 'password_reset_request_submit',
+  PASSWORD_RESET_REQUEST_SUCCESS: 'password_reset_request_success',
+  PASSWORD_RESET_REQUEST_ERROR: 'password_reset_request_error',
+
+  PASSWORD_RESET_CONFIRM_SUBMIT: 'password_reset_confirm_submit',
+  PASSWORD_RESET_CONFIRM_SUCCESS: 'password_reset_confirm_success',
+  PASSWORD_RESET_CONFIRM_ERROR: 'password_reset_confirm_error',
   // Auth / session
   UNAUTHORIZED_PAGE_REDIRECT: 'unauthorized_page_redirect',
 

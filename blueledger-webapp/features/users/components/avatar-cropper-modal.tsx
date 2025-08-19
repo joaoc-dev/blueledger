@@ -1,12 +1,12 @@
 'use client';
 
 import type { Area } from 'react-easy-crop';
-import debounce from 'lodash.debounce';
 import { useSession } from 'next-auth/react';
 import posthog from 'posthog-js';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import { toast } from 'sonner';
+import { useDebounceCallback } from 'usehooks-ts';
 import GenericDropzone from '@/components/shared/generic-dropzone';
 import { Button } from '@/components/ui/button';
 import {
@@ -38,25 +38,20 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
 
   const setImage = useUserStore(state => state.setImage);
 
-  const debouncedCrop = useRef(
-    debounce(async (imageSrc: string, croppedAreaPixels: Area) => {
+  const createCroppedImage = useCallback(
+    async (imageSrc: string, croppedAreaPixels: Area) => {
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels);
       setCroppedImage(blob);
-    }, 100),
+    },
+    [],
   );
 
-  useEffect(() => {
-    const debounced = debouncedCrop.current;
-    return () => {
-      debounced.cancel();
-    };
-  }, []);
+  const debouncedCreateCroppedImage = useDebounceCallback(createCroppedImage, 250);
 
-  const handleCropComplete = async (_: Area, croppedAreaPixels: Area) => {
+  const handleCropComplete = async (_: Area, croppedPixels: Area) => {
     if (!imageSrc)
       return;
-
-    debouncedCrop.current(imageSrc, croppedAreaPixels);
+    debouncedCreateCroppedImage(imageSrc, croppedPixels);
   };
 
   const handleDrop = (files: File[]) => {
@@ -160,9 +155,7 @@ export default function AvatarCropperModal({ open, onClose }: Props) {
                       onValueChange={value => setZoom(value[0] ?? 1)}
                     />
                     <div className="flex items-center justify-center gap-12 w-full">
-                      {croppedImage && (
-                        <AvatarPreviewPanel croppedImage={croppedImage} />
-                      )}
+                      <AvatarPreviewPanel croppedImage={croppedImage ?? undefined} />
                     </div>
                     <Separator />
                     <Button onClick={handleUpload} disabled={isUploading}>

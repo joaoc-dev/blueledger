@@ -5,10 +5,16 @@ import mongoose, { Schema } from 'mongoose';
 interface IUser {
   name: string;
   email: string;
+  passwordHash?: string;
   image: string;
   imagePublicId: string;
   bio: string;
   emailVerified: Date;
+  emailVerificationCode?: string;
+  emailVerificationCodeExpires?: Date;
+  passwordResetCode?: string;
+  passwordResetCodeExpires?: Date;
+  sessionInvalidAfter?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,7 +36,14 @@ const UserSchema = new Schema<UserDocument>(
     email: {
       type: String,
       unique: true,
+      index: true,
       required: [true, 'Email is required'],
+      lowercase: true,
+      trim: true,
+    },
+    passwordHash: {
+      type: String,
+      required: false,
     },
     image: {
       type: String,
@@ -45,6 +58,26 @@ const UserSchema = new Schema<UserDocument>(
       required: false,
     },
     emailVerified: {
+      type: Date,
+      required: false,
+    },
+    emailVerificationCode: {
+      type: String,
+      required: false,
+    },
+    emailVerificationCodeExpires: {
+      type: Date,
+      required: false,
+    },
+    passwordResetCode: {
+      type: String,
+      required: false,
+    },
+    passwordResetCodeExpires: {
+      type: Date,
+      required: false,
+    },
+    sessionInvalidAfter: {
       type: Date,
       required: false,
     },

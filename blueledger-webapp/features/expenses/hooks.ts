@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import posthog from 'posthog-js';
 import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { expenseKeys } from '@/constants/query-keys';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { createExpense, deleteExpense, updateExpense } from './client';
@@ -107,7 +108,7 @@ export function useExpenses() {
         mutationResult,
         context.optimisticExpense.optimisticId!,
       );
-      posthog.capture('expense_submit_success', {
+      posthog.capture(AnalyticsEvents.EXPENSE_SUBMIT_SUCCESS, {
         action: 'create',
         category: mutationResult.category,
       });
@@ -116,7 +117,7 @@ export function useExpenses() {
     onError: (error, newExpense, context) => {
       console.error('Failed to add expense: ', error, newExpense);
       rollbackMutation(context?.previousExpenses);
-      posthog.capture('expense_submit_error', { action: 'create' });
+      posthog.capture(AnalyticsEvents.EXPENSE_SUBMIT_ERROR, { action: 'create' });
     },
   });
 
@@ -156,7 +157,7 @@ export function useExpenses() {
         mutationResult,
         context.optimisticExpense.optimisticId!,
       );
-      posthog.capture('expense_submit_success', {
+      posthog.capture(AnalyticsEvents.EXPENSE_SUBMIT_SUCCESS, {
         action: 'update',
         category: mutationResult.category,
       });
@@ -165,7 +166,7 @@ export function useExpenses() {
     onError: (error, updatedExpense, context) => {
       console.error('Failed to update expense: ', error, updatedExpense);
       rollbackMutation(context?.previousExpenses);
-      posthog.capture('expense_submit_error', { action: 'update' });
+      posthog.capture(AnalyticsEvents.EXPENSE_SUBMIT_ERROR, { action: 'update' });
     },
   });
 
@@ -187,10 +188,10 @@ export function useExpenses() {
     onError: (error, id, context) => {
       console.error('Failed to delete expense: ', error, id);
       rollbackMutation(context?.previousExpenses);
-      posthog.capture('expense_delete_error', { id });
+      posthog.capture(AnalyticsEvents.EXPENSE_DELETE_ERROR, { id });
     },
     onSuccess: () => {
-      posthog.capture('expense_delete_success');
+      posthog.capture(AnalyticsEvents.EXPENSE_DELETE_SUCCESS);
     },
   });
 

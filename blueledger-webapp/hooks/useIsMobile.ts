@@ -1,18 +1,7 @@
-import { useLayoutEffect, useState } from 'react';
+import { useIsClient, useMediaQuery } from 'usehooks-ts';
 
 export function useIsMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
-
-  useLayoutEffect(() => {
-    const check = () => {
-      const isCurrentlyMobile = window.innerWidth < breakpoint;
-      setIsMobile(prev => (prev !== isCurrentlyMobile ? isCurrentlyMobile : prev));
-    };
-
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, [breakpoint]);
-
-  return isMobile;
+  const isClient = useIsClient();
+  const matches = useMediaQuery(`(max-width: ${breakpoint}px)`);
+  return isClient ? matches : undefined;
 }

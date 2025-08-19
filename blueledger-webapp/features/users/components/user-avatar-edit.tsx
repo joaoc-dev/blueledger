@@ -66,7 +66,7 @@ export default function UserAvatarEdit() {
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="shadow-md flex items-center gap-1 rounded-xl"
+              className="shadow-md flex items-center gap-1 rounded-lg"
             >
               <Pencil className="h-4 w-4" />
               Edit

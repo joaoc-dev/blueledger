@@ -7,7 +7,10 @@ export const env = createEnv({
     SENTRY_AUTH_TOKEN: z.string().min(1),
     SENTRY_ORG: z.string().min(1),
     SENTRY_PROJECT: z.string().min(1),
+    AUTH_EMAIL_VERIFICATION_FROM: z.string().min(1),
+    AUTH_EMAIL_PASSWORD_RESET_FROM: z.string().min(1),
     AUTH_SECRET: z.string().min(1),
+    AUTH_OTP_HASH_SECRET: z.string().min(1),
     AUTH_GITHUB_ID: z.string().min(1),
     AUTH_GITHUB_SECRET: z.string().min(1),
     CLOUDINARY_CLOUD_NAME: z.string().min(1),
@@ -16,6 +19,9 @@ export const env = createEnv({
     CLOUDINARY_API_SECRET: z.string().min(1),
     PUSHER_APP_ID: z.string().min(1),
     PUSHER_SECRET: z.string().min(1),
+    RESEND_API_KEY: z.string().min(1),
+    UPSTASH_REDIS_REST_URL: z.string().min(1),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
   },
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   // runtimeEnv: {

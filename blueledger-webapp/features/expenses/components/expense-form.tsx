@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useExpenseForm, useExpenses } from '../hooks';
 import { ExpenseCategorySelect } from './expense-category-select';
 
@@ -38,7 +39,7 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
     });
 
     try {
-      posthog.capture('expense_submit', {
+      posthog.capture(AnalyticsEvents.EXPENSE_SUBMIT, {
         action: isUpdate ? 'update' : 'create',
         category: data.category,
       });
@@ -59,9 +60,7 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
 
       router.back();
     }
-    catch (error) {
-      console.error('Error submitting expense', error);
-
+    catch {
       toast.error(`Failed to ${isUpdate ? 'update' : 'add'} expense`, {
         id: toastId,
       });
