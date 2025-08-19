@@ -61,13 +61,17 @@ export async function getUserAuthRecordById(userId: string): Promise<UserAuthRec
 
   const record: UserAuthRecord = {
     id: String(user._id),
+    name: user.name,
+    image: user.image,
     email: user.email,
+    bio: user.bio,
     passwordHash: user.passwordHash,
     emailVerified: user.emailVerified ?? null,
     emailVerificationCode: user.emailVerificationCode,
     emailVerificationCodeExpires: user.emailVerificationCodeExpires ?? null,
     passwordResetCode: user.passwordResetCode,
     passwordResetCodeExpires: user.passwordResetCodeExpires ?? null,
+    sessionInvalidAfter: user.sessionInvalidAfter ?? null,
   };
 
   return record;
@@ -80,13 +84,17 @@ export async function getUserAuthRecordByEmail(email: string): Promise<UserAuthR
 
   const record: UserAuthRecord = {
     id: String(user._id),
+    name: user.name,
+    image: user.image,
     email: user.email,
+    bio: user.bio,
     passwordHash: user.passwordHash,
     emailVerified: user.emailVerified ?? null,
     emailVerificationCode: user.emailVerificationCode,
     emailVerificationCodeExpires: user.emailVerificationCodeExpires ?? null,
     passwordResetCode: user.passwordResetCode,
     passwordResetCodeExpires: user.passwordResetCodeExpires ?? null,
+    sessionInvalidAfter: user.sessionInvalidAfter ?? null,
   };
 
   return record;

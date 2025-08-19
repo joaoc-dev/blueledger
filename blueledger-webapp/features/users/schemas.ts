@@ -80,12 +80,16 @@ export type UserApiResponse = z.infer<typeof userApiResponseSchema>;
 export const userAuthRecordSchema = z.object({
   id: idSchema,
   email: emailSchema,
+  name: z.string().optional(),
+  image: z.string().optional(),
+  bio: z.string().optional(),
   passwordHash: z.string().optional(),
   emailVerified: z.date().nullable().optional(),
   emailVerificationCode: z.string().optional(),
   emailVerificationCodeExpires: z.date().nullable().optional(),
   passwordResetCode: z.string().optional(),
   passwordResetCodeExpires: z.date().nullable().optional(),
+  sessionInvalidAfter: z.date().nullable().optional(),
 });
 
 export type UserAuthRecord = z.infer<typeof userAuthRecordSchema>;

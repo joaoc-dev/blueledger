@@ -3,5 +3,8 @@
 import { signIn } from '@/lib/auth/auth';
 
 export async function signInGithub(callbackUrl?: string) {
-  await signIn('github', callbackUrl ? { redirectTo: callbackUrl } : undefined);
+  const redirectTo = callbackUrl?.startsWith('/') && !callbackUrl.startsWith('//')
+    ? callbackUrl
+    : undefined;
+  await signIn('github', redirectTo ? { redirectTo } : undefined);
 }

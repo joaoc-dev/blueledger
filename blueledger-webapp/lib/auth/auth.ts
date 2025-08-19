@@ -6,10 +6,9 @@ import { validateRequest } from '@/app/api/validateRequest';
 import { LogEvents } from '@/constants/log-events';
 import { issueVerificationCodeForUser } from '@/features/auth/data';
 import { signInSchema } from '@/features/auth/schemas';
-import User from '@/features/users/model';
+import { getUserAuthRecordByEmail, getUserAuthRecordById } from '@/features/users/data';
 import { createLogger } from '@/lib/logger';
 import clientPromise from '../db/mongoDB-client';
-import dbConnect from '../db/mongoose-client';
 import authConfig from './auth.config';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -28,7 +27,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const requestId = globalThis.crypto?.randomUUID?.();
         const startTime = Date.now();
 
-        console.warn('credentials', credentials);
         const validationResult = validateRequest(signInSchema, credentials);
         if (!validationResult.success) {
           logger.warn(LogEvents.VALIDATION_FAILED, {
@@ -43,8 +41,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const { email, password } = validationResult.data;
 
-        await dbConnect();
-        const user = await User.findOne({ email }).lean();
+        const user = await getUserAuthRecordByEmail(email);
         if (!user || !user.passwordHash)
           return null;
 
@@ -53,7 +50,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
 
         return {
-          id: String(user._id),
+          id: user.id,
           name: user.name,
           email: user.email,
           image: user.image,
@@ -88,8 +85,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       });
 
       if (user) {
-        await dbConnect();
-        const userData = await User.findById(user.id!);
+        const userData = await getUserAuthRecordById(user.id!);
 
         if (userData) {
           token.id = userData.id;
@@ -119,8 +115,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Update emailVerified from DB
         const userId = token?.sub;
         if (userId) {
-          await dbConnect();
-          const userData = await User.findById(userId);
+          const userData = await getUserAuthRecordById(userId);
           if (userData) {
             token.emailVerified = userData.emailVerified
               ? userData.emailVerified.toISOString()
@@ -154,8 +149,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       // If password was reset after token iat, invalidate session
       try {
-        await dbConnect();
-        const userDoc = await User.findById(token.id as string);
+        const userDoc = await getUserAuthRecordById(token.id as string);
         const invalidAfter = userDoc?.sessionInvalidAfter?.getTime();
         const tokenIat = (token as any)?.iat ? Number((token as any).iat) * 1000 : undefined;
         if (invalidAfter && tokenIat && tokenIat < invalidAfter) {
@@ -183,7 +177,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const userId = user?.id;
         const emailVerified = user?.emailVerified as Date | null | undefined;
 
-        const userData = await User.findById(userId!);
+        const userData = await getUserAuthRecordById(userId!);
         const hasIssuedCode = userData?.emailVerificationCode;
 
         // If the user signed in with OAuth and has no emailVerified, and no issued code, proactively issue a code
