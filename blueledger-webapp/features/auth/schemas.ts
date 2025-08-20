@@ -27,11 +27,15 @@ export const passwordResetFormSchema = z
     path: ['confirmPassword'],
   });
 
+export type PasswordResetFormData = z.infer<typeof passwordResetFormSchema>;
+
 export const passwordResetConfirmSchema = z.object({
   email: emailSchema,
   code: validationCodeSchema,
   newPassword: passwordSchema,
 });
+
+export type PasswordResetConfirmData = z.infer<typeof passwordResetConfirmSchema>;
 
 export const signInSchema = z.object({
   email: emailSchema,
