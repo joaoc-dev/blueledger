@@ -27,8 +27,11 @@ jobs:
       - name: Check dependencies
         run: pnpm check:deps
       
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
       - name: Run tests
-        run: npm run test:coverage-report
+        run: pnpm run test:coverage-report
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
