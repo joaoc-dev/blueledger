@@ -35,6 +35,8 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 📝 Form handling by React Hook Form
 - ✅ Schema Validations by Zod
 - 🌱 Type-safe environment variables by T3 Env
+- 🧪 Testing with Vitest/Browser mode
+- ☂️ Code coverage with Codecov
 - 📝 Logging with next-axiom and Axiom
 - 🐗 Product analytics powered by PostHog
 - 🔍 Local error detection and debugging by Sentry Spotlight
@@ -45,6 +47,10 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 🤖 Automated dependency updates by Dependabot
 - 🚀 Automated versioning and changelog generation by semantic-release
 - 🐰 AI Code Reviews by CodeRabbit
+- ⚙️ Continuous Integration powered by GitHub Actions
+  - Type-checking, linting, dependency checks
+  - Test execution with coverage reports uploaded to Codecov
+  - Release automation via semantic-release
 
 ## ai-service
 

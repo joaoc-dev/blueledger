@@ -28,6 +28,7 @@ const config: KnipConfig = {
     'import-in-the-middle',
     'prettier',
     '@react-email/preview-server',
+    'playwright',
   ],
   compilers: {
     css: (text: string) => [...text.matchAll(/(?<=@)import[^;]+/g)].join('\n'),
