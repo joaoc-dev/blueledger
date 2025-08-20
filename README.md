@@ -4,6 +4,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 
 [![CI - main](https://img.shields.io/github/actions/workflow/status/joaoc-dev/blueledger/ci.yaml?branch=main&label=CI%20%7C%20main)](https://github.com/joaoc-dev/blueledger/actions/workflows/ci.yaml)
 [![CI - dev](https://img.shields.io/github/actions/workflow/status/joaoc-dev/blueledger/ci.yaml?branch=dev&label=CI%20%7C%20dev)](https://github.com/joaoc-dev/blueledger/actions/workflows/ci.yaml)
+[![codecov](https://codecov.io/gh/joaoc-dev/blueledger/graph/badge.svg?token=RIY2M5BVU1)](https://codecov.io/gh/joaoc-dev/blueledger)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 ### Built with:
@@ -36,6 +37,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - ✅ Schema Validations by Zod
 - 🌱 Type-safe environment variables by T3 Env
 - 🧪 Testing with Vitest/Browser mode
+- 📡 API mocking by mswjs
 - ☂️ Code coverage with Codecov
 - 📝 Logging with next-axiom and Axiom
 - 🐗 Product analytics powered by PostHog
