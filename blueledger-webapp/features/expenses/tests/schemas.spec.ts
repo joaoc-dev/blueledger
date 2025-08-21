@@ -7,7 +7,6 @@ import { EXPENSE_CATEGORIES } from '../constants';
 import {
   createExpenseSchema,
   deleteExpenseSchema,
-  expenseFormSchema,
   patchExpenseSchema,
 } from '../schemas';
 
