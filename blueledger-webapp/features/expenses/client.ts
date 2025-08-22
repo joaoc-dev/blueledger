@@ -13,11 +13,6 @@ export async function getExpenses(): Promise<ExpenseDisplay[]> {
   return mapApiResponseListToDisplay(response);
 }
 
-export async function getExpenseById(id: string): Promise<ExpenseDisplay> {
-  const response = await apiGet<ExpenseApiResponse>(`${endpoint}/${id}`);
-  return mapApiResponseToDisplay(response);
-}
-
 export async function createExpense(
   data: ExpenseFormData,
 ): Promise<ExpenseDisplay> {
