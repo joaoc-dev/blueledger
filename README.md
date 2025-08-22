@@ -36,8 +36,9 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 📝 Form handling by React Hook Form
 - ✅ Schema Validations by Zod
 - 🌱 Type-safe environment variables by T3 Env
-- 🧪 Testing with Vitest/Browser mode
-- 📡 API mocking by mswjs
+- 🧪 Unit and Integration Tests with Vitest/Vitest Browser Mode
+  - MongoDB Memory Server
+  - API mocking by mswjs
 - ☂️ Code coverage with Codecov
 - 📝 Logging with next-axiom and Axiom
 - 🐗 Product analytics powered by PostHog
@@ -63,6 +64,22 @@ Responsible for interacting with Azure in order to provide the web-app with adva
 ## web-app
 
 ### Features
+
+### Testing
+
+**Unit vs. Storybook**
+
+- Keep Vitest focused on pure logic (mappers, schemas, data-table utils); use Storybook for complex UI behavior.
+
+Example:
+
+- High‑interaction table UX.
+- **Variants**: default, filtered, sorted, empty, error.
+- **Data mocking**: use `msw` in Storybook to provide realistic data, errors, and artificial delays.
+- **Interactions**: write `play()` tests with `@storybook/test`:
+  - toolbar actions (search, filters, view options, reset, export)
+  - pagination and sorting (headers, next/prev, page size)
+  - column drag/reorder/resize and pin/unpin
 
 ### File naming
 
