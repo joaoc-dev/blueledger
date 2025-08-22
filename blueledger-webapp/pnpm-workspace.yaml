@@ -1,9 +1,0 @@
-packages:
-  - ./
-
-onlyBuiltDependencies:
-  - '@sentry/cli'
-  - '@tailwindcss/oxide'
-  - esbuild
-  - sharp
-  - unrs-resolver
