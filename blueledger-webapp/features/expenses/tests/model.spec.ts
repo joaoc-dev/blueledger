@@ -14,68 +14,68 @@ describe('expense model validation', () => {
     user: new mongoose.Types.ObjectId(),
   });
 
-  it('should validate a correct document', () => {
+  it('should validate a correct document', async () => {
     const doc = new Expense(validData());
-    expect(doc.validate()).resolves.toBeUndefined();
+    await expect(doc.validate()).resolves.toBeUndefined();
   });
 
-  it('should require description', () => {
+  it('should require description', async () => {
     const doc = new Expense({ ...validData(), description: '' });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should fail if description is too long', () => {
+  it('should fail if description is too long', async () => {
     const doc = new Expense({ ...validData(), description: 'a'.repeat(201) });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require price', () => {
+  it('should require price', async () => {
     const doc = new Expense({ ...validData(), price: undefined });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require positive price', () => {
+  it('should require positive price', async () => {
     const doc = new Expense({ ...validData(), price: -1 });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require quantity', () => {
+  it('should require quantity', async () => {
     const doc = new Expense({ ...validData(), quantity: undefined });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require positive quantity', () => {
+  it('should require positive quantity', async () => {
     const doc = new Expense({ ...validData(), quantity: -1 });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require totalPrice', () => {
+  it('should require totalPrice', async () => {
     const doc = new Expense({ ...validData(), totalPrice: undefined });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require a category', () => {
+  it('should require a category', async () => {
     const doc = new Expense({ ...validData(), category: undefined });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require a valid category', () => {
+  it('should require a valid category', async () => {
     const doc = new Expense({ ...validData(), category: 'Wrong' });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require a valid date', () => {
+  it('should require a valid date', async () => {
     const doc = new Expense({ ...validData(), date: 'bad' });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require a user', () => {
+  it('should require a user', async () => {
     const doc = new Expense({ ...validData(), user: undefined });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 
-  it('should require a valid user', () => {
+  it('should require a valid user', async () => {
     const doc = new Expense({ ...validData(), user: 'bad' });
-    expect(doc.validate()).rejects.toThrow();
+    await expect(doc.validate()).rejects.toThrow();
   });
 });
