@@ -88,7 +88,7 @@ describe('users schemas', () => {
         bio: 'Hello',
         image: undefined,
         imagePublicId: undefined,
-        emailVerified: new Date(),
+        emailVerified: new Date().toISOString(),
       };
       expect(() => userApiResponseSchema.parse(data)).not.toThrow();
     });
