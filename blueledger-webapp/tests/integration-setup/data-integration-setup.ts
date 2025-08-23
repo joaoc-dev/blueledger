@@ -2,6 +2,11 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { vi } from 'vitest';
 
+// Import models to register them
+import '@/features/users/model';
+import '@/features/notifications/model';
+import '@/features/expenses/model';
+
 vi.mock('@/lib/db/mongoose-client', () => ({
   default: vi.fn().mockResolvedValue(undefined),
 }));
@@ -37,9 +42,26 @@ export async function teardownMongoMemoryServer() {
   await mongoServer.stop();
 }
 
+/**
+ * Helper function to register all Mongoose models needed for integration tests.
+ * This ensures that models are available for queries that use .populate()
+ */
+export async function registerModels(): Promise<void> {
+  // Models are automatically registered when imported
+  // This function ensures they're available for tests
+  const models = ['User', 'Notification', 'Expense'];
+
+  for (const modelName of models) {
+    if (!mongoose.models[modelName]) {
+      throw new Error(`Model ${modelName} was not registered properly`);
+    }
+  }
+}
+
 export const dataIntegrationTestHooks = {
   beforeAll: async () => {
     await setupMongoMemoryServer();
+    await registerModels(); // Ensure models are registered
   },
 
   beforeEach: async () => {
