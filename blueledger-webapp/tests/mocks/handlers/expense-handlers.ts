@@ -73,9 +73,6 @@ const updateExpenseHandler = http.patch('/api/expenses/:id', async ({ params, re
     },
   });
 
-  if (!updated)
-    return HttpResponse.json({ error: 'Expense not found' }, { status: 404 });
-
   return HttpResponse.json(updated);
 });
 
