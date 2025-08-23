@@ -33,6 +33,7 @@ export async function updateExpense(
   return mapApiResponseToDisplay(response);
 }
 
-export async function deleteExpense(id: string): Promise<void> {
-  await apiDelete(`${endpoint}/${id}`);
+export async function deleteExpense(id: string): Promise<ExpenseDisplay> {
+  const response = await apiDelete<ExpenseApiResponse>(`${endpoint}/${id}`);
+  return mapApiResponseToDisplay(response);
 }
