@@ -3,19 +3,19 @@ import { describe, expect, it } from 'vitest';
 import { EXPENSE_CATEGORIES } from '../constants';
 import { mapModelToDisplay } from '../mapper-server';
 
-const modelId = new mongoose.Types.ObjectId().toString();
-const userId = new mongoose.Types.ObjectId().toString();
+const modelId = new mongoose.Types.ObjectId();
+const userId = new mongoose.Types.ObjectId();
 
 describe('mapper-server', () => {
   const model: any = {
-    _id: { toString: () => modelId },
+    _id: modelId,
     description: 'Dinner',
     price: 15,
     quantity: 1,
     totalPrice: 15,
     category: EXPENSE_CATEGORIES.FOOD,
     date: new Date('2025-01-05T00:00:00.000Z'),
-    user: { toString: () => userId },
+    user: userId,
     createdAt: new Date('2025-01-06T00:00:00.000Z'),
     updatedAt: new Date('2025-01-07T00:00:00.000Z'),
     toObject() { return this; },
@@ -24,12 +24,12 @@ describe('mapper-server', () => {
   describe('mapModelToDisplay', () => {
     it('converts _id to string id', () => {
       const display = mapModelToDisplay(model);
-      expect(display.id).toBe(modelId);
+      expect(display.id).toBe(modelId.toString());
     });
 
     it('maps user ObjectId to { id: string }', () => {
       const display = mapModelToDisplay(model);
-      expect(display.user).toEqual({ id: userId });
+      expect(display.user).toEqual({ id: userId.toString() });
     });
 
     it('copies over fields correctly', () => {
