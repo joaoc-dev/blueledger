@@ -2,7 +2,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
 // Prefer explicit constructors when algorithm matters
-export function ratelimitTokenBucket(requests: number, seconds: number, capacity: number = requests) {
+function ratelimitTokenBucket(requests: number, seconds: number, capacity: number = requests) {
   return new Ratelimit({
     redis: Redis.fromEnv(),
     limiter: Ratelimit.tokenBucket(requests, `${seconds} s`, capacity),
@@ -15,7 +15,7 @@ export function ratelimitTokenBucket(requests: number, seconds: number, capacity
   });
 }
 
-export interface RateLimitWindow {
+interface RateLimitWindow {
   success: boolean;
   reset: number; // epoch ms when the window resets
   remaining: number;

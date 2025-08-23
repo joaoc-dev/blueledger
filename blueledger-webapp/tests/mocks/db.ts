@@ -37,4 +37,16 @@ export const db = factory({
     createdAt: () => new Date().toISOString(),
     updatedAt: () => new Date().toISOString(),
   },
+  user: {
+    id: primaryKey(() => new mongoose.Types.ObjectId().toString()),
+    name: () => faker.person.fullName(),
+    email: () => faker.internet.email().toLowerCase(),
+    image: () => faker.image.avatar(),
+    imagePublicId: () => faker.string.uuid(),
+    bio: () => faker.lorem.sentence(),
+    emailVerified: () => new Date(),
+    passwordHash: () => faker.internet.password(),
+    createdAt: () => new Date().toISOString(),
+    updatedAt: () => new Date().toISOString(),
+  },
 });

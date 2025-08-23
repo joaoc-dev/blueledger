@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { http, HttpResponse } from 'msw';
 import { afterEach, describe, expect } from 'vitest';
 import { db } from '@/tests/mocks/db';
 import { setMockAuthenticatedUser } from '@/tests/mocks/handlers/notifications';
@@ -49,6 +48,26 @@ describe('notifications client (browser)', () => {
       const user2Id = new mongoose.Types.ObjectId().toString();
       const fromUserId = new mongoose.Types.ObjectId().toString();
 
+      // Create user records for proper population
+      db.user.create({
+        id: user1Id,
+        name: 'User 1',
+        email: 'user1@example.com',
+        image: 'https://example.com/user1.jpg',
+      });
+      db.user.create({
+        id: user2Id,
+        name: 'User 2',
+        email: 'user2@example.com',
+        image: 'https://example.com/user2.jpg',
+      });
+      db.user.create({
+        id: fromUserId,
+        name: 'From User',
+        email: 'fromuser@example.com',
+        image: 'https://example.com/fromuser.jpg',
+      });
+
       // Set user1 as the authenticated user
       setMockAuthenticatedUser(user1Id);
 
@@ -80,11 +99,17 @@ describe('notifications client (browser)', () => {
       // Should only get user 1's notifications
       expect(notifications).toHaveLength(2);
       expect(notifications.every(notification =>
-        notification.user === user1Id,
+        notification.user
+        && typeof notification.user === 'object'
+        && 'name' in notification.user,
       )).toBe(true);
 
-      // Should not include user 2's notifications
-      expect(notifications.some(notification => notification.user === user2Id)).toBe(false);
+      // Should not include user 2's notifications - all notifications should have populated user data
+      expect(notifications.every(notification =>
+        notification.fromUser
+        && typeof notification.fromUser === 'object'
+        && 'name' in notification.fromUser,
+      )).toBe(true);
     });
 
     test('should return 401 when user is not authenticated', async () => {

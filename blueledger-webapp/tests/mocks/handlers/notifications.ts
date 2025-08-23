@@ -22,7 +22,28 @@ const getNotificationsHandler = http.get('/api/notifications', () => {
     where: { user: { equals: mockAuthenticatedUserId } },
   });
 
-  return HttpResponse.json(userNotifications);
+  // Sort by createdAt desc to mirror server behavior
+  const sorted = [...userNotifications].sort(
+    (a: any, b: any) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+
+  // Project nested user/fromUser without ids (populate-like)
+  const present = sorted.map((n: any) => {
+    const populatedUser = db.user.findFirst({ where: { id: { equals: n.user } } });
+    const populatedFromUser = db.user.findFirst({ where: { id: { equals: n.fromUser } } });
+    return {
+      ...n,
+      user: populatedUser
+        ? { name: populatedUser.name, image: populatedUser.image }
+        : null,
+      fromUser: populatedFromUser
+        ? { name: populatedFromUser.name, image: populatedFromUser.image }
+        : null,
+    };
+  });
+
+  return HttpResponse.json(present);
 });
 
 const markAllNotificationsAsReadHandler = http.patch('/api/notifications/mark-all-read', () => {
@@ -61,9 +82,24 @@ const updateNotificationHandler = http.patch('/api/notifications/:id', ({ params
     return HttpResponse.json({ error: 'Notification not found' }, { status: 404 });
   }
 
-  const updated = db.notification.update({ where: { id: { equals: id } }, data: { isRead: true } });
+  const updated = db.notification.update({
+    where: { id: { equals: id } },
+    data: { isRead: true, updatedAt: new Date().toISOString() },
+  });
 
-  return HttpResponse.json(updated);
+  const populatedUser = db.user.findFirst({ where: { id: { equals: updated?.user } } });
+  const populatedFromUser = db.user.findFirst({ where: { id: { equals: updated?.fromUser } } });
+  const present = {
+    ...updated,
+    user: populatedUser
+      ? { name: populatedUser.name, image: populatedUser.image }
+      : null,
+    fromUser: populatedFromUser
+      ? { name: populatedFromUser.name, image: populatedFromUser.image }
+      : null,
+  };
+
+  return HttpResponse.json(present);
 });
 
 const customNotificationHandlers = [

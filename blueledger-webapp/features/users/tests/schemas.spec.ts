@@ -67,7 +67,9 @@ describe('users schemas', () => {
       };
 
       expect(() => createUserSchema.parse(data)).not.toThrow();
-      expect(() => createUserSchema.parse({ ...data, passwordHash: undefined })).toThrow();
+      const missingHash: any = { ...data };
+      delete missingHash.passwordHash;
+      expect(() => createUserSchema.parse(missingHash)).toThrow();
     });
   });
 

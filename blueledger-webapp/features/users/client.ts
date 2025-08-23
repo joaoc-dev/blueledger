@@ -25,6 +25,9 @@ export async function updateUserImage(
   if (image) {
     formData.append('image', image);
   }
+  else {
+    formData.append('image', new Blob([], { type: 'application/octet-stream' }));
+  }
   const response = await apiPost<UserApiResponse>(`/users/image`, formData);
   return mapApiResponseToDisplay(response);
 }

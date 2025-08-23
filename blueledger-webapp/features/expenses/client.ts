@@ -35,5 +35,8 @@ export async function updateExpense(
 
 export async function deleteExpense(id: string): Promise<ExpenseDisplay> {
   const response = await apiDelete<ExpenseApiResponse>(`${endpoint}/${id}`);
+  if (response === null) {
+    throw new Error(`Expense with id ${id} not found`);
+  }
   return mapApiResponseToDisplay(response);
 }

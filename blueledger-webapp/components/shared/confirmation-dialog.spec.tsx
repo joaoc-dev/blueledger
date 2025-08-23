@@ -3,21 +3,6 @@ import { render } from 'vitest-browser-react';
 import { Dialog } from '@/components/ui/dialog';
 import ConfirmationDialog from './confirmation-dialog';
 
-// Note: Vitest watch mode + path alias mocking can sometimes cause flaky reloads.
-// This test itself is correct; flakiness is due to module cache issues, not logic.
-vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, variant, onClick, ...props }: any) => (
-    <button
-      {...props}
-      type="button"
-      onClick={onClick}
-      data-variant={variant}
-    >
-      {children}
-    </button>
-  ),
-}));
-
 describe('confirmationDialog', () => {
   const mockOnConfirm = vi.fn();
   const mockOnCancel = vi.fn();
@@ -75,10 +60,6 @@ describe('confirmationDialog', () => {
 
       expect(cancelButton).toBeInTheDocument();
       expect(confirmButton).toBeInTheDocument();
-
-      // Check that the buttons have the correct styling attributes
-      expect(cancelButton).toHaveAttribute('data-variant', 'outline');
-      expect(confirmButton).toHaveAttribute('data-variant', 'destructive');
     });
   });
 

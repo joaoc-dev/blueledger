@@ -63,21 +63,3 @@ vi.mock('@/lib/cloudinary', () => ({
   }),
   deleteImage: vi.fn().mockResolvedValue({ result: 'ok' }),
 }));
-
-/**
- * Optional: Setup function to initialize application-level mocks
- * Call this in beforeAll if you need to configure mocks differently
- */
-export function setupAppIntegrationMocks() {
-  // Any additional setup logic can go here
-  // For example, configuring mock responses or spy behaviors
-}
-
-/**
- * Optional: Teardown function to clean up application-level mocks
- * Call this in afterAll if needed
- */
-export function teardownAppIntegrationMocks() {
-  // Any cleanup logic can go here
-  vi.clearAllMocks();
-}

@@ -13,7 +13,7 @@ vi.mock('@/lib/db/mongoose-client', () => ({
 
 let mongoServer: MongoMemoryServer;
 
-export async function setupMongoMemoryServer() {
+async function setupMongoMemoryServer() {
   // Start in-memory MongoDB server
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
@@ -29,14 +29,14 @@ export async function setupMongoMemoryServer() {
   return mongoServer;
 }
 
-export async function clearDatabase() {
+async function clearDatabase() {
   const collections = mongoose.connection.collections;
   for (const key in collections) {
     await collections[key]?.deleteMany({});
   }
 }
 
-export async function teardownMongoMemoryServer() {
+async function teardownMongoMemoryServer() {
   // Clean up connections
   await mongoose.disconnect();
   await mongoServer.stop();
@@ -46,7 +46,7 @@ export async function teardownMongoMemoryServer() {
  * Helper function to register all Mongoose models needed for integration tests.
  * This ensures that models are available for queries that use .populate()
  */
-export async function registerModels(): Promise<void> {
+async function registerModels(): Promise<void> {
   // Models are automatically registered when imported
   // This function ensures they're available for tests
   const models = ['User', 'Notification', 'Expense'];

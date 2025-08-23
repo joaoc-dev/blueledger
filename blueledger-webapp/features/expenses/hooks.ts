@@ -171,7 +171,7 @@ export function useExpenses() {
   });
 
   const deleteExpenseMutation = useMutation<
-    void,
+    ExpenseDisplay,
     Error,
     string,
     ExpensesContext
