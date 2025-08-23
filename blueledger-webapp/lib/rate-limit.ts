@@ -31,3 +31,36 @@ export function calculateRetryAfterMs(...windows: RateLimitWindow[]): number {
   const reset = Math.max(...resetTimes) - Date.now();
   return Math.max(0, reset);
 }
+
+interface Limiter { limit: (key: string) => Promise<RateLimitWindow> }
+interface CreateLimiter { (requests: number, seconds: number, capacity?: number): Limiter }
+
+export async function validateRateLimit(
+  keyPrefix: string,
+  shortLimitConfig: { max: number; windowSec: number },
+  dailyLimitConfig: { max: number; windowSec: number },
+  createLimiter: CreateLimiter = ratelimitTokenBucket,
+) {
+  const shortKey = `${keyPrefix}:short`;
+  const dailyKey = `${keyPrefix}:day`;
+
+  const shortLimit = await createLimiter(
+    shortLimitConfig.max,
+    shortLimitConfig.windowSec,
+    shortLimitConfig.max,
+  ).limit(shortKey) as RateLimitWindow;
+
+  const dailyLimit = await createLimiter(
+    dailyLimitConfig.max,
+    dailyLimitConfig.windowSec,
+    dailyLimitConfig.max,
+  ).limit(dailyKey) as RateLimitWindow;
+
+  if (!shortLimit.success || !dailyLimit.success) {
+    const retryAfterMs = calculateRetryAfterMs(shortLimit, dailyLimit);
+    const retryAfterSeconds = Math.ceil(retryAfterMs / 1000);
+    return { success: false as const, retryAfterSeconds };
+  }
+
+  return { success: true as const, retryAfterSeconds: 0 };
+}
