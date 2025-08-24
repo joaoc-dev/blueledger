@@ -216,11 +216,14 @@
   body {
     @apply bg-background text-foreground;
   }
+  button {
+    @apply cursor-pointer;
+  }
 }
 
 @layer components {
   .icon-button {
-    @apply relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-250;
+    @apply relative flex items-center justify-center w-10 h-10 rounded-md transition-colors duration-250 cursor-pointer;
   }
 
   .icon-button:hover {

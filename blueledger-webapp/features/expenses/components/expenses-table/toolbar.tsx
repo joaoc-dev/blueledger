@@ -53,8 +53,8 @@ export function Toolbar({ table, isFetching, isLoading }: ToolbarProps) {
         <ViewOptions table={table} disabled={isLoading} />
 
         <ButtonLink
-          size="sm"
           href={fullHref}
+          className="border-1"
           disabled={isLoading}
           onClick={() => posthog.capture(AnalyticsEvents.EXPENSE_ADD_CLICKED)}
         >
@@ -63,7 +63,6 @@ export function Toolbar({ table, isFetching, isLoading }: ToolbarProps) {
         </ButtonLink>
 
         <Button
-          className="h-8"
           variant="outline"
           data-variant="blue-outline"
           onClick={refreshData}

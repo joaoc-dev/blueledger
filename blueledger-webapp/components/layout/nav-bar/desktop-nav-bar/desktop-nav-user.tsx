@@ -28,7 +28,7 @@ export function DesktopNavUser() {
   return (
     <DropdownMenu onOpenChange={handleDropdownOpenChange}>
       <DropdownMenuTrigger asChild>
-        <UserAvatar className="h-8 w-8" />
+        <UserAvatar className="h-8 w-8 cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-(--radix-dropdown-menu-trigger-width) min-w-56"
@@ -47,24 +47,24 @@ export function DesktopNavUser() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
             <Sparkles />
             Upgrade to Pro(soon)
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild className="cursor-pointer">
             <Link href="/user/profile">
               <BadgeCheck />
               Profile
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
             <CreditCard />
             Billing(soon)
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild className="cursor-pointer">
             <Link href="/user/notifications">
               <Bell />
               Notifications
@@ -72,7 +72,10 @@ export function DesktopNavUser() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
+        <DropdownMenuItem
+          onClick={() => signOut({ callbackUrl: '/' })}
+          className="cursor-pointer"
+        >
           <LogOut />
           Log out
         </DropdownMenuItem>

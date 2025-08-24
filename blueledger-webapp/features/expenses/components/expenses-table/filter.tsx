@@ -29,7 +29,6 @@ function Filter({ table, isDisabled }: FilterProps) {
 
   const filterCount = table.getState().columnFilters.length;
   return (
-    // <div className="bg-red-500 md:w-full flex items-center">a</div>
     <div className="md:w-full flex items-center gap-2">
       <div className="relative hidden md:block w-full max-w-xl">
         <SearchInput table={table} isDisabled={isDisabled} />
@@ -39,7 +38,6 @@ function Filter({ table, isDisabled }: FilterProps) {
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            size="icon"
             disabled={isDisabled}
             className="relative flex items-center justify-center"
           >
@@ -60,6 +58,7 @@ function Filter({ table, isDisabled }: FilterProps) {
             <Button
               variant="ghost"
               size="sm"
+              className="cursor-pointer"
               onClick={() => table.resetColumnFilters()}
             >
               <X />
