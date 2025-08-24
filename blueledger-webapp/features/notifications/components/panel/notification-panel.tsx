@@ -18,7 +18,7 @@ function NotificationPanel() {
   ];
 
   return (
-    <div className="h-full">
+    <div className="flex flex-col h-full">
       <div className="flex items-center justify-between">
         <span className="text-lg px-2">Notifications</span>
         <Button
@@ -39,7 +39,7 @@ function NotificationPanel() {
         defaultValue={tabs[0]?.value}
         className="flex h-full w-full flex-col py-2"
       >
-        <TabsList className="w-full">
+        <TabsList className="w-full p-0">
           {tabs.map(tab => (
             <TabsTrigger key={tab.value} value={tab.value}>
               <span className="text-sm">{tab.name}</span>
