@@ -1,0 +1,17 @@
+export const FRIENDSHIP_STATUS = {
+  PENDING: 'pending',
+  ACCEPTED: 'accepted',
+  DECLINED: 'declined',
+  CANCELED: 'canceled',
+  NONE: 'none',
+} as const;
+
+export const FRIENDSHIP_STATUS_VALUES = [
+  FRIENDSHIP_STATUS.PENDING,
+  FRIENDSHIP_STATUS.ACCEPTED,
+  FRIENDSHIP_STATUS.DECLINED,
+  FRIENDSHIP_STATUS.CANCELED,
+  FRIENDSHIP_STATUS.NONE,
+] as const;
+
+export type FriendshipStatus = (typeof FRIENDSHIP_STATUS_VALUES)[number];
