@@ -1,11 +1,12 @@
 import { Types } from 'mongoose';
 import { z } from 'zod';
+import { friendshipStatusSchema } from '../friendship/schemas';
 
 const idSchema = z
   .string()
   .refine(Types.ObjectId.isValid, { message: 'Invalid ID' });
 const nameSchema = z.string().min(1, { message: 'Name is required' });
-const emailSchema = z.string().email({ message: 'Invalid email' }).toLowerCase();
+export const emailSchema = z.string().email({ message: 'Invalid email' }).toLowerCase();
 const imageSchema = z.string().optional();
 const imagePublicIdSchema = z.string().optional();
 const bioSchema = z.string().optional();
@@ -63,6 +64,8 @@ const userDisplaySchema = z.object({
   image: imageSchema,
   imagePublicId: imagePublicIdSchema,
   emailVerified: emailVerifiedSchema,
+  isSelf: z.boolean().optional(),
+  friendshipStatus: friendshipStatusSchema,
 });
 
 export type UserDisplay = z.infer<typeof userDisplaySchema>;
