@@ -1,13 +1,13 @@
 import type { NextRequest } from 'next/server';
 import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
-import { validateRequest } from '@/app/api/validateRequest';
 import { LogEvents } from '@/constants/log-events';
 import { PASSWORD_RESET_CODE_TTL_MS } from '@/features/auth/constants';
 import { issuePasswordResetCodeForUser } from '@/features/auth/data';
 import { validatePasswordResetRequestRateLimits } from '@/features/auth/rate-limit';
 import { emailPasswordResetSchema } from '@/features/auth/schemas';
 import { createLogger, logRequest } from '@/lib/logger';
+import { validateSchema } from '@/lib/validate-schema';
 
 export async function POST(request: NextRequest) {
   const logger = createLogger('api/auth/password-reset/request');
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     ({ requestId } = logRequest(logger, request));
 
-    const validationResult = validateRequest(emailPasswordResetSchema, body);
+    const validationResult = validateSchema(emailPasswordResetSchema, body);
     if (!validationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
         requestId,

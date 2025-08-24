@@ -1,13 +1,13 @@
 import type { NextAuthRequest } from 'next-auth';
 import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
-import { validateRequest } from '@/app/api/validateRequest';
 import { LogEvents } from '@/constants/log-events';
 import { confirmVerificationCodeForUser } from '@/features/auth/data';
 import { validateConfirmVerificationCodeRateLimits } from '@/features/auth/rate-limit';
 import { apiValidationCodeSchema } from '@/features/auth/schemas';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger, logRequest } from '@/lib/logger';
+import { validateSchema } from '@/lib/validate-schema';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/auth/verification-code/confirm');
@@ -18,7 +18,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     const body = await request.json();
     ({ requestId } = logRequest(logger, request));
 
-    const validationResult = validateRequest(apiValidationCodeSchema, body);
+    const validationResult = validateSchema(apiValidationCodeSchema, body);
 
     if (!validationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {

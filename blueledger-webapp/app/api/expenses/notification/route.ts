@@ -2,7 +2,6 @@ import type { NextAuthRequest } from 'next-auth';
 import type { PusherEvent } from '@/constants/pusher-events';
 import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
-import { validateRequest } from '@/app/api/validateRequest';
 import { LogEvents } from '@/constants/log-events';
 import { PusherEvents } from '@/constants/pusher-events';
 import { NOTIFICATION_TYPES } from '@/features/notifications/constants';
@@ -11,6 +10,7 @@ import { createNotificationSchema } from '@/features/notifications/schemas';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger, logRequest } from '@/lib/logger';
 import { sendToPusher } from '@/lib/pusher/pusher-server';
+import { validateSchema } from '@/lib/validate-schema';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/expenses/notification');
@@ -23,7 +23,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     // const userId = request.auth!.user!.id;
     // fromUser = userId;
 
-    const validationResult = validateRequest(createNotificationSchema, {
+    const validationResult = validateSchema(createNotificationSchema, {
       user: body.targetUserId,
       fromUser: '6861b5b421c376f9e0ceaedb',
       type: NOTIFICATION_TYPES.ADDED_TO_EXPENSE,

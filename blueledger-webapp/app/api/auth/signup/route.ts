@@ -8,7 +8,7 @@ import { hashPassword } from '@/features/auth/utils';
 import { createUser, getUserByEmail } from '@/features/users/data';
 import { createUserInputSchema, createUserSchema } from '@/features/users/schemas';
 import { createLogger, logRequest } from '@/lib/logger';
-import { validateRequest } from '../../validateRequest';
+import { validateSchema } from '@/lib/validate-schema';
 
 export async function POST(request: NextRequest) {
   const logger = createLogger('api/auth/signup');
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     ({ requestId } = logRequest(logger, request));
 
-    const inputValidationResult = validateRequest(createUserInputSchema, body);
+    const inputValidationResult = validateSchema(createUserInputSchema, body);
     if (!inputValidationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
         requestId,
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     const passwordHash = await hashPassword(userInput.password);
 
-    const newUserValidationResult = validateRequest(createUserSchema, {
+    const newUserValidationResult = validateSchema(createUserSchema, {
       ...userInput,
       passwordHash,
     });

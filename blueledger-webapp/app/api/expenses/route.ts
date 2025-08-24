@@ -6,7 +6,7 @@ import { createExpense, getExpenses } from '@/features/expenses/data';
 import { createExpenseSchema } from '@/features/expenses/schemas';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger, logRequest } from '@/lib/logger';
-import { validateRequest } from '../validateRequest';
+import { validateSchema } from '@/lib/validate-schema';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/expenses/create');
@@ -19,7 +19,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
 
     const userId = request.auth!.user!.id;
 
-    const validationResult = validateRequest(createExpenseSchema, {
+    const validationResult = validateSchema(createExpenseSchema, {
       data: {
         ...body,
         user: userId,

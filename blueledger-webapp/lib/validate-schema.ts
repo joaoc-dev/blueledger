@@ -8,7 +8,7 @@ type ValidationResult<T extends z.ZodTypeAny>
       details: { field: string; message: string }[];
     }; };
 
-export function validateRequest<T extends z.ZodTypeAny>(
+export function validateSchema<T extends z.ZodTypeAny>(
   schema: T,
   data: unknown,
 ): ValidationResult<T> {

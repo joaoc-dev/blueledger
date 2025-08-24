@@ -37,7 +37,8 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
 
     const originalImagePublicId = user.imagePublicId;
 
-    if (image) {
+    // Check if image is provided and not empty (handle empty string for removal)
+    if (image && (typeof image === 'string' ? (image as string).trim() !== '' : image.size > 0)) {
       const updatedUser = await handleImageUploadAndUserUpdate(userId!, image);
       publicId = updatedUser.imagePublicId;
       imageUrl = updatedUser.image;

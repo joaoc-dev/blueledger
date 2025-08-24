@@ -59,8 +59,8 @@ const uploadUserImageHandler = http.post('/api/users/image', async ({ request })
     return HttpResponse.json({ error: 'User not found' }, { status: 404 });
   }
 
-  // Check if this is actually an image removal (empty blob)
-  const isImageRemoval = !image || image.size === 0;
+  // Check if this is actually an image removal (no image, empty string, or empty blob)
+  const isImageRemoval = !image || (typeof image === 'string' ? (image as string).trim() === '' : image.size === 0);
 
   // Simulate image upload behavior - update user with new image data
   if (!isImageRemoval) {

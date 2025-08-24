@@ -1,12 +1,12 @@
 import type { NextAuthRequest } from 'next-auth';
 import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
-import { validateRequest } from '@/app/api/validateRequest';
 import { LogEvents } from '@/constants/log-events';
 import { getUserById, updateUser } from '@/features/users/data';
 import { patchUserSchema } from '@/features/users/schemas';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger, logRequest } from '@/lib/logger';
+import { validateSchema } from '@/lib/validate-schema';
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/users/me/get');
@@ -64,7 +64,7 @@ export const PATCH = withAuth(async (request: NextAuthRequest) => {
     const userId = request.auth?.user?.id;
     const body = await request.json();
 
-    const validationResult = validateRequest(patchUserSchema, {
+    const validationResult = validateSchema(patchUserSchema, {
       id: userId,
       data: body,
     });

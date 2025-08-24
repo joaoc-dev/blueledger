@@ -6,7 +6,7 @@ import { updateNotification } from '@/features/notifications/data';
 import { patchNotificationSchema } from '@/features/notifications/schemas';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger, logRequest } from '@/lib/logger';
-import { validateRequest } from '../../validateRequest';
+import { validateSchema } from '@/lib/validate-schema';
 
 export const PATCH = withAuth(async (
   request: NextAuthRequest,
@@ -21,7 +21,7 @@ export const PATCH = withAuth(async (
     const body = await request.json();
     ({ requestId } = logRequest(logger, request));
 
-    const validationResult = validateRequest(patchNotificationSchema, {
+    const validationResult = validateSchema(patchNotificationSchema, {
       id,
       data: body,
     });
