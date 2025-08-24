@@ -5,7 +5,7 @@ import { ExpenseForm } from '@/features/expenses/components';
 
 function NewExpensePageModal() {
   return (
-    <Modal title="New Expense" open={true}>
+    <Modal title="New Expense" open={true} goBackOnClose={true}>
       <ExpenseForm />
     </Modal>
   );

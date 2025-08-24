@@ -20,13 +20,7 @@ export async function markNotificationAsRead(
 }
 
 export async function markAllNotificationsAsRead(): Promise<void> {
-  const response = await apiPatch<{ success: boolean }>(
-    `${endpoint}/mark-all-read`,
-  );
-
-  if (!response.success) {
-    throw new Error('Failed to mark all notifications as read');
-  }
+  return await apiPatch<void>(`${endpoint}/mark-all-read`);
 }
 
 export async function getNotifications(): Promise<NotificationDisplay[]> {
