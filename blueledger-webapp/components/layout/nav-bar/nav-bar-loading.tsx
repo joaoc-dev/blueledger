@@ -6,9 +6,9 @@ function NavBarLoading() {
   return (
     <>
       {/* mobile nav bar */}
-      <div className="sticky top-0 z-50 border-b supports-[backdrop-filter]:bg-background/70 bg-background/90 mb-16">
+      <div className="sticky top-0 z-50 border-b supports-[backdrop-filter]:bg-background/70 bg-background/90 mb-16 md:hidden">
         <div className="max-w-screen-xl mx-auto">
-          <div className="nav md:hidden">
+          <div className="nav">
             <Skeleton className="ml-2 h-6 w-6" />
 
             <Link
@@ -26,9 +26,9 @@ function NavBarLoading() {
       {/* desktop nav bar */}
       <div className="nav hidden md:flex">
         <div>
-          <Link href="/" className="nav__brand nav__item hover:text-foreground">
+          <Link href="/" className="nav__brand nav__item text-foreground">
             <HandCoins />
-            <span className="text-2xl">Blue Ledger</span>
+            <span className="text-xl">BlueLedger</span>
           </Link>
         </div>
         <Skeleton className="h-6 w-30" />
