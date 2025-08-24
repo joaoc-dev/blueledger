@@ -77,6 +77,7 @@
     "react-dropzone": "^14.3.8",
     "react-easy-crop": "^5.4.2",
     "react-hook-form": "^7.56.3",
+    "recharts": "2.15.4",
     "require-in-the-middle": "^7.5.2",
     "resend": "^6.0.1",
     "sonner": "^2.0.3",
@@ -137,5 +138,8 @@
       "msw",
       "oxc-resolver"
     ]
+  },
+  "overrides": {
+    "react-is": "^19.0.0"
   }
 }
