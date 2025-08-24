@@ -67,7 +67,9 @@ const userDisplaySchema = z.object({
 
 export type UserDisplay = z.infer<typeof userDisplaySchema>;
 
-export const userApiResponseSchema = userDisplaySchema.extend({});
+export const userApiResponseSchema = userDisplaySchema.extend({
+  emailVerified: z.string().optional(),
+});
 
 export type UserApiResponse = z.infer<typeof userApiResponseSchema>;
 

@@ -13,8 +13,9 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
 
   try {
     ({ requestId } = logRequest(logger, request));
+    const userId = request.auth!.user!.id!;
 
-    const notifications = await getNotifications();
+    const notifications = await getNotifications(userId);
 
     logger.info(LogEvents.NOTIFICATIONS_FETCHED, {
       requestId,

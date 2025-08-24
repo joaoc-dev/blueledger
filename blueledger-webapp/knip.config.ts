@@ -22,6 +22,7 @@ const config: KnipConfig = {
     'features/notifications/schemas.ts',
     'features/expenses/schemas.ts',
     'features/users/schemas.ts',
+    'tests/utils.ts',
   ],
   ignoreDependencies: [
     'require-in-the-middle',

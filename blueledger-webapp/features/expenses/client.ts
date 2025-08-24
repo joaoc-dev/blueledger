@@ -13,11 +13,6 @@ export async function getExpenses(): Promise<ExpenseDisplay[]> {
   return mapApiResponseListToDisplay(response);
 }
 
-export async function getExpenseById(id: string): Promise<ExpenseDisplay> {
-  const response = await apiGet<ExpenseApiResponse>(`${endpoint}/${id}`);
-  return mapApiResponseToDisplay(response);
-}
-
 export async function createExpense(
   data: ExpenseFormData,
 ): Promise<ExpenseDisplay> {
@@ -38,6 +33,10 @@ export async function updateExpense(
   return mapApiResponseToDisplay(response);
 }
 
-export async function deleteExpense(id: string): Promise<void> {
-  await apiDelete(`${endpoint}/${id}`);
+export async function deleteExpense(id: string): Promise<ExpenseDisplay> {
+  const response = await apiDelete<ExpenseApiResponse>(`${endpoint}/${id}`);
+  if (response === null) {
+    throw new Error(`Expense with id ${id} not found`);
+  }
+  return mapApiResponseToDisplay(response);
 }

@@ -4,6 +4,7 @@ import type {
   NotificationDisplay,
   PatchNotificationData,
 } from './schemas';
+import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongoose-client';
 import { mapModelToDisplay } from './mapper-server';
 import Notification from './model';
@@ -22,10 +23,10 @@ export async function createNotification(
   return mapModelToDisplay(newNotification);
 }
 
-export async function getNotifications(): Promise<NotificationDisplay[]> {
+export async function getNotifications(userId: string): Promise<NotificationDisplay[]> {
   await dbConnect();
 
-  const notifications = await Notification.find()
+  const notifications = await Notification.find({ user: userId })
     .sort({ createdAt: -1 })
     .populate({ path: 'fromUser', select: 'name image' })
     .populate({ path: 'user', select: 'name image' })
@@ -37,6 +38,9 @@ export async function getNotifications(): Promise<NotificationDisplay[]> {
 export async function getNotificationById(
   id: string,
 ): Promise<NotificationDisplay | null> {
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return null;
+
   await dbConnect();
 
   const notification = await Notification.findById(id)

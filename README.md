@@ -4,6 +4,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 
 [![CI - main](https://img.shields.io/github/actions/workflow/status/joaoc-dev/blueledger/ci.yaml?branch=main&label=CI%20%7C%20main)](https://github.com/joaoc-dev/blueledger/actions/workflows/ci.yaml)
 [![CI - dev](https://img.shields.io/github/actions/workflow/status/joaoc-dev/blueledger/ci.yaml?branch=dev&label=CI%20%7C%20dev)](https://github.com/joaoc-dev/blueledger/actions/workflows/ci.yaml)
+[![codecov](https://codecov.io/gh/joaoc-dev/blueledger/graph/badge.svg?token=RIY2M5BVU1)](https://codecov.io/gh/joaoc-dev/blueledger)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 ### Built with:
@@ -35,7 +36,9 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 📝 Form handling by React Hook Form
 - ✅ Schema Validations by Zod
 - 🌱 Type-safe environment variables by T3 Env
-- 🧪 Testing with Vitest/Browser mode
+- 🧪 Unit and Integration Tests with Vitest/Vitest Browser Mode
+  - MongoDB Memory Server
+  - API mocking by mswjs
 - ☂️ Code coverage with Codecov
 - 📝 Logging with next-axiom and Axiom
 - 🐗 Product analytics powered by PostHog
@@ -61,6 +64,22 @@ Responsible for interacting with Azure in order to provide the web-app with adva
 ## web-app
 
 ### Features
+
+### Testing
+
+**Unit vs. Storybook**
+
+- Keep Vitest focused on pure logic (mappers, schemas, data-table utils); use Storybook for complex UI behavior.
+
+Example:
+
+- High‑interaction table UX.
+- **Variants**: default, filtered, sorted, empty, error.
+- **Data mocking**: use `msw` in Storybook to provide realistic data, errors, and artificial delays.
+- **Interactions**: write `play()` tests with `@storybook/test`:
+  - toolbar actions (search, filters, view options, reset, export)
+  - pagination and sorting (headers, next/prev, page size)
+  - column drag/reorder/resize and pin/unpin
 
 ### File naming
 

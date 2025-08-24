@@ -1,10 +1,40 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
+
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+
+  plugins: [
+    react(),
+    tsconfigPaths({
+      root: rootDir,
+      projects: [fileURLToPath(new URL('./tsconfig.json', import.meta.url))],
+    }),
+  ],
+  resolve: {
+    alias: {
+      '@': rootDir,
+      '@/components/ui/button': path.resolve(
+        rootDir,
+        './components/ui-modified/button',
+      ),
+      '@/components/ui/scroll-area': path.resolve(
+        rootDir,
+        './components/ui-modified/scroll-area',
+      ),
+    },
+  },
+
   test: {
+    cache: false, // Disable caching
+    clearMocks: true,
+    restoreMocks: true,
+    setupFiles: ['./tests/setup.tsx'],
+
     coverage: {
       include: [
         'vitest-example/**/*.tsx',
@@ -14,8 +44,18 @@ export default defineConfig({
         'features/**/*.tsx',
         'components/layout/**/*.tsx',
         'components/shared/**/*.tsx',
-        'app/**/*.tsx',
-        'app/**/*.ts',
+        'app/api/**/*.ts',
+      ],
+      exclude: [
+        'lib/db/**',
+        'lib/pusher/**',
+        'lib/auth/**',
+        'lib/cloudinary.ts',
+        'lib/resend.ts',
+        'lib/react-query/**',
+        'lib/data/**',
+        'lib/api/withAuth.ts',
+        'lib/logger.ts',
       ],
       provider: 'v8',
       reporter: ['text', 'json'],
@@ -39,14 +79,14 @@ export default defineConfig({
         test: {
           name: 'browser',
           include: [
-            'vitest-example/**/*{test,spec}.tsx',
             'hooks/**/*{test,spec}.ts',
+            'hooks/**/*{test,spec}.tsx',
+            'lib/**/*{test,spec}.tsx',
             'features/**/*{test,spec}.tsx',
             'components/layout/**/*{test,spec}.tsx',
             'components/shared/**/*{test,spec}.tsx',
-            'app/**/*{test,spec}.tsx',
-            'app/**/*{test,spec}.ts',
           ],
+
           browser: {
             enabled: true,
             provider: 'playwright',

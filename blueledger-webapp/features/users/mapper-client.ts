@@ -5,6 +5,7 @@ export function mapApiResponseToDisplay(
 ): UserDisplay {
   return {
     ...apiResponse,
+    emailVerified: apiResponse.emailVerified ? new Date(apiResponse.emailVerified) : undefined,
   };
 }
 

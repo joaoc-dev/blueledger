@@ -2,7 +2,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
 // Prefer explicit constructors when algorithm matters
-export function ratelimitTokenBucket(requests: number, seconds: number, capacity: number = requests) {
+function ratelimitTokenBucket(requests: number, seconds: number, capacity: number = requests) {
   return new Ratelimit({
     redis: Redis.fromEnv(),
     limiter: Ratelimit.tokenBucket(requests, `${seconds} s`, capacity),
@@ -15,7 +15,7 @@ export function ratelimitTokenBucket(requests: number, seconds: number, capacity
   });
 }
 
-export interface RateLimitWindow {
+interface RateLimitWindow {
   success: boolean;
   reset: number; // epoch ms when the window resets
   remaining: number;
@@ -30,4 +30,37 @@ export function calculateRetryAfterMs(...windows: RateLimitWindow[]): number {
   const resetTimes = windows.filter(window => !window.success).map(window => window.reset);
   const reset = Math.max(...resetTimes) - Date.now();
   return Math.max(0, reset);
+}
+
+interface Limiter { limit: (key: string) => Promise<RateLimitWindow> }
+interface CreateLimiter { (requests: number, seconds: number, capacity?: number): Limiter }
+
+export async function validateRateLimit(
+  keyPrefix: string,
+  shortLimitConfig: { max: number; windowSec: number },
+  dailyLimitConfig: { max: number; windowSec: number },
+  createLimiter: CreateLimiter = ratelimitTokenBucket,
+) {
+  const shortKey = `${keyPrefix}:short`;
+  const dailyKey = `${keyPrefix}:day`;
+
+  const shortLimit = await createLimiter(
+    shortLimitConfig.max,
+    shortLimitConfig.windowSec,
+    shortLimitConfig.max,
+  ).limit(shortKey) as RateLimitWindow;
+
+  const dailyLimit = await createLimiter(
+    dailyLimitConfig.max,
+    dailyLimitConfig.windowSec,
+    dailyLimitConfig.max,
+  ).limit(dailyKey) as RateLimitWindow;
+
+  if (!shortLimit.success || !dailyLimit.success) {
+    const retryAfterMs = calculateRetryAfterMs(shortLimit, dailyLimit);
+    const retryAfterSeconds = Math.ceil(retryAfterMs / 1000);
+    return { success: false as const, retryAfterSeconds };
+  }
+
+  return { success: true as const, retryAfterSeconds: 0 };
 }
