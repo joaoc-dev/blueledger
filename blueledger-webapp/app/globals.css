@@ -232,15 +232,11 @@
   }
 
   .nav {
-    @apply flex items-center justify-between px-4 h-16 fixed backdrop-blur top-0 left-0 right-0 z-50 supports-[backdrop-filter]:bg-background/70 bg-background/90 border-b;
-  }
-
-  .nav--mobile {
-    @apply bg-background relative z-50;
+    @apply flex items-center justify-between px-4 h-16 fixed top-0 left-0 right-0 z-50 bg-background border-b;
   }
 
   .nav__sheet {
-    @apply absolute top-full left-0 w-full max-h-screen overflow-y-auto border-t border-b bg-background transform transition-transform duration-300 ease-in-out z-40;
+    @apply absolute top-16 left-0 w-full max-h-screen overflow-y-auto border-t border-b bg-background transform transition-transform duration-300 ease-in-out z-40;
   }
 
   .nav__sheet--links {
