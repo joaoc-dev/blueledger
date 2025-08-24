@@ -30,7 +30,7 @@ function Filter({ table, isDisabled }: FilterProps) {
   const filterCount = table.getState().columnFilters.length;
   return (
     // <div className="bg-red-500 md:w-full flex items-center">a</div>
-    <div className="md:w-full flex items-center py-4 gap-2">
+    <div className="md:w-full flex items-center gap-2">
       <div className="relative hidden md:block w-full max-w-xl">
         <SearchInput table={table} isDisabled={isDisabled} />
       </div>

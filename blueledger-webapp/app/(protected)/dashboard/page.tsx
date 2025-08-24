@@ -1,5 +1,11 @@
+import { ExampleChart } from '@/features/dashboard/charts/example-chart';
+
 function DashboardPage() {
-  return <div className="text-center">Dashboard</div>;
+  return (
+    <div>
+      <ExampleChart />
+    </div>
+  );
 }
 
 export default DashboardPage;

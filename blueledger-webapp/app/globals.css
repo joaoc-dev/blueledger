@@ -232,7 +232,7 @@
   }
 
   .nav {
-    @apply flex items-center justify-between p-4 h-20;
+    @apply flex items-center justify-between px-4 h-16 fixed backdrop-blur top-0 left-0 right-0 z-50 supports-[backdrop-filter]:bg-background/70 bg-background/90 border-b;
   }
 
   .nav--mobile {
@@ -252,13 +252,13 @@
   }
 
   .nav__list--desktop::after {
-    @apply absolute content-[''] w-full h-0.5 bg-foreground bottom-0 left-0 top-8 origin-left transform;
+    @apply absolute content-[''] w-full h-0.5 bg-foreground bottom-0 left-0 top-6.5 origin-left transform;
     transform: translate(var(--nav-underline-x), 0) scaleX(var(--nav-underline-w));
     transition: transform 0.3s;
   }
 
   .nav__brand {
-    @apply flex items-center gap-3;
+    @apply flex items-center gap-3 font-semibold;
   }
 
   .nav__item {
