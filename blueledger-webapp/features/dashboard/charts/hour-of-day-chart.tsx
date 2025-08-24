@@ -14,7 +14,7 @@ function HourOfDayChart() {
     },
   } satisfies ChartConfig;
   return (
-    <ChartCardContainer title="Hour-of-Day">
+    <ChartCardContainer title="Hour-of-Day Average">
       <ChartContainer config={chartConfig} className="h-64 w-full">
         <BarChart
           accessibilityLayer

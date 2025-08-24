@@ -24,7 +24,7 @@ function DayOfWeekChart() {
   } satisfies ChartConfig;
 
   return (
-    <ChartCardContainer title="Day-of-Week">
+    <ChartCardContainer title="Day-of-Week Average">
       <ChartContainer config={chartConfig} className="h-64 w-full">
         <BarChart
           accessibilityLayer
