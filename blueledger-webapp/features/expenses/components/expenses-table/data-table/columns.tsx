@@ -120,5 +120,6 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     enableHiding: false,
     enableResizing: false,
     enablePinning: true,
+    enableSorting: false,
   },
 ];

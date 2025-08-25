@@ -15,9 +15,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { useColumnFiltersWithUrl } from '@/components/shared/data-table/hooks/useColumnFiltersWithUrl';
 import Spinner from '@/components/shared/spinner';
 import { columns } from '../data-table/columns';
+import { useColumnFiltersWithUrl } from '../hooks/useColumnFiltersWithUrl';
 import { Toolbar } from '../toolbar';
 import { ListCard } from './list-card';
 
