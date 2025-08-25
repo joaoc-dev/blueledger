@@ -55,7 +55,12 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
     <>
       {isCompact
         ? (
-            <ButtonLink variant="ghost" href={fullHref} disabled={disabled}>
+            <ButtonLink
+              variant="ghost"
+              href={fullHref}
+              disabled={disabled}
+              className="!hover:bg-red-500 border-1"
+            >
               <SquarePen />
             </ButtonLink>
           )
@@ -75,7 +80,7 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
           {isCompact
             ? (
                 <Button
-                  className="cursor-pointer"
+                  className="cursor-pointer border-1"
                   variant="ghost"
                   disabled={disabled}
                 >

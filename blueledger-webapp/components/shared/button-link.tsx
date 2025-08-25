@@ -22,7 +22,8 @@ function ButtonLink({
   disabled,
   onClick,
 }: ButtonLinkProps) {
-  const buttonClass = 'cursor-pointer hover:bg-primary/90 dark:hover:bg-primary/85 hover:shadow-sm focus-visible:ring-ring/40';
+  const buttonClass = 'cursor-pointer hover:shadow-sm focus-visible:ring-ring/40';
+  const hoverClass = className?.includes('hover:bg-') ? '' : 'hover:bg-primary/90 dark:hover:bg-primary/85';
   return (
     <>
       {disabled
@@ -42,7 +43,7 @@ function ButtonLink({
               asChild
               variant={variant}
               size={size}
-              className={cn(buttonClass, className)}
+              className={cn(buttonClass, hoverClass, className)}
               onClick={onClick}
             >
               <Link href={href}>{children}</Link>
