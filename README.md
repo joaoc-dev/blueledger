@@ -14,6 +14,7 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 - 🧩 Composable utility classes by Tailwind
 - 🎨 Customized Shadcn UI components
 - 🍃 MongoDB + 📦 Mongoose ODM
+- 🐳 Dockerized MongoDB for local development (DX)
 - 🔒 Auth.js
   - JWT Strategy
   - GitHub OAuth
@@ -55,6 +56,24 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
   - Test execution with coverage reports uploaded to Codecov
   - Release automation via semantic-release
 
+## 🚀 Getting Started (Development)
+
+We use **Docker** to run a local MongoDB replica set in development to enable support for [transactions](https://www.mongodb.com/docs/manual/core/transactions/).
+
+1. Start MongoDB in Docker:
+   ```bash
+   docker-compose up -d
+   ```
+
+2. Initialize the replica set (only required the first time):
+   ```bash
+   docker exec blueledger-mongo-dev-rs mongosh --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'host.docker.internal:27030' }]})"
+   ```
+
+3. Start the dev server
+   ```bash
+   pnpm dev
+   ```
 ## ai-service
 
 Responsible for interacting with Azure in order to provide the web-app with advanced AI-features.
