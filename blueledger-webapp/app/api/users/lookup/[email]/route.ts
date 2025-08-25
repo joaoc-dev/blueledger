@@ -9,39 +9,31 @@ import { getFriendshipStatus } from '@/features/friendship/data';
 import { getUserByEmail } from '@/features/users/data';
 import { emailSchema } from '@/features/users/schemas';
 import { withAuth } from '@/lib/api/withAuth';
-import { createLogger, logRequest } from '@/lib/logger';
+import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
 export const GET = withAuth(async (
   request: NextAuthRequest,
   { params }: { params: Promise<{ email: string }> },
 ) => {
-  const logger = createLogger('api/users/lookup/[email]');
-  const startTime = Date.now();
-  let requestId: string | undefined;
+  const logger = createLogger('api/users/lookup/[email]', request);
 
   try {
     const { email } = await params;
-    ({ requestId } = logRequest(logger, request));
 
     const validationResult = validateSchema(emailSchema, email);
     if (!validationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
-        requestId,
         details: { email: 'Invalid email' },
         status: 400,
-        durationMs: Date.now() - startTime,
       });
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
     }
 
     const userLookup = await getUserByEmail(validationResult.data);
     if (!userLookup) {
-      logger.info(LogEvents.USER_NOT_FOUND, {
-        requestId,
-        status: 404,
-        durationMs: Date.now() - startTime,
-      });
+      logger.info(LogEvents.USER_NOT_FOUND, { status: 404 });
+
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
@@ -58,21 +50,18 @@ export const GET = withAuth(async (
       friendshipStatus,
     };
 
-    logger.info(LogEvents.USER_FETCHED, {
-      requestId,
-      status: 200,
-      durationMs: Date.now() - startTime,
-    });
+    logger.info(LogEvents.USER_FETCHED, { status: 200 });
+
     return NextResponse.json(user, { status: 200 });
   }
   catch (error) {
     Sentry.captureException(error);
+
     logger.error(LogEvents.ERROR_GETTING_USER, {
-      requestId,
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
-      durationMs: Date.now() - startTime,
     });
+
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 },

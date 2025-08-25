@@ -8,18 +8,15 @@ import { NOTIFICATION_TYPES } from '@/features/notifications/constants';
 import { createNotification } from '@/features/notifications/data';
 import { createNotificationSchema } from '@/features/notifications/schemas';
 import { withAuth } from '@/lib/api/withAuth';
-import { createLogger, logRequest } from '@/lib/logger';
+import { createLogger } from '@/lib/logger';
 import { sendToPusher } from '@/lib/pusher/pusher-server';
 import { validateSchema } from '@/lib/validate-schema';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/friends/request');
-  const startTime = Date.now();
-  let requestId: string | undefined;
+  const logger = createLogger('api/friends/request', request);
 
   try {
     const body = await request.json();
-    ({ requestId } = logRequest(logger, request));
     // const userId = request.auth!.user!.id;
     // fromUser = userId;
 
@@ -32,10 +29,8 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
 
     if (!validationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
-        requestId,
         details: validationResult.error.details,
         status: 400,
-        durationMs: Date.now() - startTime,
       });
       return NextResponse.json(validationResult.error, { status: 400 });
     }
@@ -45,32 +40,22 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     const privateChannel = `private-user-${validationResult.data!.user}`;
     sendToPusher(privateChannel, PusherEvents.NOTIFICATION as PusherEvent, '');
 
-    logger.info(LogEvents.FRIEND_REQUEST_SENT, {
-      requestId,
+    logger.info(LogEvents.NOTIFICATION_UPDATED, {
       fromUser: validationResult.data!.fromUser,
       targetUserId: validationResult.data!.user,
       status: 201,
-      durationMs: Date.now() - startTime,
     });
 
-    return NextResponse.json(
-      { message: 'Friend request sent' },
-      { status: 201 },
-    );
+    return NextResponse.json({ message: 'Friend request sent' }, { status: 201 });
   }
   catch (error) {
     Sentry.captureException(error);
 
     logger.error(LogEvents.ERROR_SENDING_FRIEND_REQUEST, {
-      requestId,
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
-      durationMs: Date.now() - startTime,
     });
 
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

@@ -5,33 +5,23 @@ import { LogEvents } from '@/constants/log-events';
 import { createExpense, getExpenses } from '@/features/expenses/data';
 import { createExpenseSchema } from '@/features/expenses/schemas';
 import { withAuth } from '@/lib/api/withAuth';
-import { createLogger, logRequest } from '@/lib/logger';
+import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/expenses/create');
-  const startTime = Date.now();
-  let requestId: string | undefined;
+  const logger = createLogger('api/expenses/create', request);
 
   try {
     const body = await request.json();
-    ({ requestId } = logRequest(logger, request));
-
     const userId = request.auth!.user!.id;
 
-    const validationResult = validateSchema(createExpenseSchema, {
-      data: {
-        ...body,
-        user: userId,
-      },
-    });
+    const data = { ...body, user: userId };
+    const validationResult = validateSchema(createExpenseSchema, { data });
 
     if (!validationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
-        requestId,
         details: validationResult.error.details,
         status: 400,
-        durationMs: Date.now() - startTime,
       });
 
       return NextResponse.json(validationResult.error, { status: 400 });
@@ -39,10 +29,8 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
 
     const expense = await createExpense(validationResult.data!);
     logger.info(LogEvents.EXPENSE_CREATED, {
-      requestId,
       expenseId: expense.id,
       status: 201,
-      durationMs: Date.now() - startTime,
     });
 
     return NextResponse.json(expense, { status: 201 });
@@ -51,36 +39,24 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     Sentry.captureException(error);
 
     logger.error(LogEvents.ERROR_CREATING_EXPENSE, {
-      requestId,
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
-      durationMs: Date.now() - startTime,
     });
 
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/expenses/get');
-  const startTime = Date.now();
-  let requestId: string | undefined;
+  const logger = createLogger('api/expenses/get', request);
 
   try {
-    ({ requestId } = logRequest(logger, request));
-
     const userId = request.auth!.user!.id;
 
     const expenses = await getExpenses(userId);
-
     logger.info(LogEvents.EXPENSES_FETCHED, {
-      requestId,
       returnedCount: expenses.length,
       status: 200,
-      durationMs: Date.now() - startTime,
     });
 
     return NextResponse.json(expenses);
@@ -89,15 +65,10 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
     Sentry.captureException(error);
 
     logger.error(LogEvents.ERROR_GETTING_EXPENSES, {
-      requestId,
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
-      durationMs: Date.now() - startTime,
     });
 
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });
