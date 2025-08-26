@@ -4,9 +4,19 @@ import { withAxiom } from 'next-axiom';
 import './env/server';
 import './env/client';
 
+/**
+ * WORKAROUND: React Compiler + TanStack Table Issue
+ *
+ * Due to the incompatibility between react compiler and tanstack table,
+ * we use it in annotation mode so we can opt-in by "use memo";
+ *
+ * @see https://github.com/TanStack/table/issues/5567
+ */
 const nextConfig: NextConfig = {
   experimental: {
-    reactCompiler: true,
+    reactCompiler: {
+      compilationMode: 'annotation',
+    },
   },
   typescript: {
     ignoreBuildErrors: true,
