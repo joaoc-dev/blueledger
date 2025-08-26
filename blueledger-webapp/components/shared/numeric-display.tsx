@@ -10,6 +10,7 @@ interface NumericDisplayProps {
   currency?: string;
   locale?: string;
   className?: string;
+  maximumFractionDigits?: number;
 }
 
 function NumericDisplay({
@@ -18,6 +19,7 @@ function NumericDisplay({
   currency = 'EUR',
   locale = 'en-US',
   className = '',
+  maximumFractionDigits,
 }: NumericDisplayProps) {
   const formatter = new Intl.NumberFormat(locale, {
     style:
@@ -28,7 +30,7 @@ function NumericDisplay({
           : 'decimal',
     currency: format === 'currency' ? currency : undefined,
     notation: format === 'compact' ? 'compact' : undefined,
-    maximumFractionDigits: format === 'percent' ? 2 : 0,
+    maximumFractionDigits: maximumFractionDigits ?? (format === 'percent' ? 2 : 2),
   });
 
   return (

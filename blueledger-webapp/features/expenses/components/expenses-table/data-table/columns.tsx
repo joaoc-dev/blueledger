@@ -65,7 +65,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     size: 100,
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('quantity'));
-      return <NumericDisplay value={amount} />;
+      return <NumericDisplay value={amount} maximumFractionDigits={2} />;
     },
   },
   {
@@ -75,7 +75,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     size: 100,
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('price'));
-      return <NumericDisplay value={amount} format="currency" />;
+      return <NumericDisplay value={amount} format="currency" maximumFractionDigits={2} />;
     },
   },
   {
@@ -85,7 +85,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     size: 120,
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('totalPrice'));
-      return <NumericDisplay value={amount} format="currency" />;
+      return <NumericDisplay value={amount} format="currency" maximumFractionDigits={2} />;
     },
   },
   {
