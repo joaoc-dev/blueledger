@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { LogEvents } from '@/constants/log-events';
 import { PusherEvents } from '@/constants/pusher-events';
-import { getFriendshipByUsers } from '@/features/friendship/data';
+import { getFriendshipById, getFriendshipByUsers } from '@/features/friendship/data';
 import { sendFriendRequestSchema } from '@/features/friendship/schemas';
 import { sendFriendRequestWithNotification } from '@/features/friendship/service';
 import { getUserByEmail } from '@/features/users/data';
@@ -77,7 +77,10 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       status: 201,
     });
 
-    return NextResponse.json(friendship, { status: 201 });
+    // result of sending a friend request does not populate user fields
+    const populatedFriendship = await getFriendshipById(friendship.id, fromUser);
+    console.warn(populatedFriendship);
+    return NextResponse.json(populatedFriendship, { status: 201 });
   }
   catch (error) {
     Sentry.captureException(error);

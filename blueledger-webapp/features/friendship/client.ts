@@ -9,8 +9,8 @@ export async function getFriendships(): Promise<FriendshipDisplay[]> {
   return mapApiResponseListToDisplay(response);
 }
 
-export async function sendFriendshipInvite(email: string): Promise<void> {
-  return await apiPost<void>(`${endpoint}/invite`, { email });
+export async function sendFriendshipInvite(email: string): Promise<FriendshipDisplay> {
+  return await apiPost<FriendshipDisplay>(`${endpoint}/invite`, { email });
 }
 
 export async function acceptFriendshipInvite(friendshipId: string): Promise<void> {

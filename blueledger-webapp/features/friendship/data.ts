@@ -21,9 +21,12 @@ export async function getFriendshipById(
   const friendship = await Friendship.findOne({
     _id: id,
     $or: [{ requester: userId }, { recipient: userId }],
-  });
+  })
+    .populate({ path: 'requester', select: 'name email image' })
+    .populate({ path: 'recipient', select: 'name email image' })
+    .lean();
 
-  return friendship ? mapModelToDisplay(friendship) : null;
+  return friendship ? mapModelToDisplay(friendship, userId) : null;
 }
 
 export async function getFriendshipByUsers(
@@ -45,7 +48,7 @@ export async function getFriendshipByUsers(
     ],
   });
 
-  return friendship ? mapModelToDisplay(friendship) : null;
+  return friendship ? mapModelToDisplay(friendship, userId) : null;
 }
 
 export async function getFriendshipStatus(
