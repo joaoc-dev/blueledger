@@ -1,3 +1,5 @@
+'use client';
+
 import type { Header, Table } from '@tanstack/react-table';
 import type { CSSProperties } from 'react';
 import { useSortable } from '@dnd-kit/sortable';

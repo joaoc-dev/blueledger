@@ -1,5 +1,6 @@
-import type { ExpenseCategory } from '@/features/expenses/constants';
+'use client';
 
+import type { ExpenseCategory } from '@/features/expenses/constants';
 import type { ExpenseDisplay } from '@/features/expenses/schemas';
 import { format } from 'date-fns';
 import { CircleEllipsis, Dot } from 'lucide-react';
@@ -38,9 +39,9 @@ export function ListCard({ expense }: CardProps) {
         <CardContent className="flex flex-col gap-2 justify-center">
           <div className="flex items-center gap-2 text-muted-foreground justify-between">
             <div className="text-sm flex items-center max-w-[clamp(7rem,30vw,18rem)]">
-              <NumericDisplay value={expense.price} format="currency" />
+              <NumericDisplay value={expense.price} format="currency" maximumFractionDigits={2} />
               <Dot className="text-primary/60" />
-              <NumericDisplay value={expense.quantity} format="number" />
+              <NumericDisplay value={expense.quantity} format="number" maximumFractionDigits={2} />
             </div>
             <div className="flex gap-2 items-center">
               <span className="text-sm text-primary/60 group-hover:text-primary">Total</span>
@@ -48,6 +49,7 @@ export function ListCard({ expense }: CardProps) {
                 className="text-lg max-w-[clamp(8rem,30vw,20rem)]"
                 value={expense.totalPrice}
                 format="currency"
+                maximumFractionDigits={2}
               />
             </div>
           </div>

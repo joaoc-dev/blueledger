@@ -1,3 +1,5 @@
+'use client';
+
 import type { DraggableAttributes } from '@dnd-kit/core';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import type { Header, Table } from '@tanstack/react-table';
