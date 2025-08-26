@@ -9,7 +9,8 @@ A modern, performant expense-tracking web app with advanced UI/UX and AI integra
 
 ### Built with:
 
-- ⚛️ Next.js 15.4.5 (App Router)
+- ⏭️ Next.js 15.4.5 (App Router)
+- ⚛️ App optimization with [React Compiler](https://react.dev/learn/react-compiler)
 - 🌐 RESTful API via Next.js App Router (`app/api`) — consumed with an Axios client wrapper
 - 🧩 Composable utility classes by Tailwind
 - 🎨 Customized Shadcn UI components
