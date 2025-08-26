@@ -99,11 +99,12 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
               )}
         </DialogTrigger>
         <ConfirmationDialog
-          title="Are you sure you want to delete this expense?"
+          title="Delete expense?"
           description="This operation is irreversible."
           onConfirm={handleDelete}
           confirmButtonText="Delete"
           cancelButtonText="Cancel"
+          variant="destructive"
         />
       </Dialog>
     </>
