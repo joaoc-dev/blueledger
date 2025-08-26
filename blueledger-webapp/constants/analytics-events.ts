@@ -38,6 +38,7 @@ export const AnalyticsEvents = {
   EXPENSE_DELETE_ERROR: 'expense_delete_error',
 
   // Friendships
+  FRIENDSHIP_ADD_CLICKED: 'friendship_add_clicked',
   FRIENDSHIP_INVITE_SUBMIT: 'friendship_invite_submit',
   FRIENDSHIP_INVITE_SUCCESS: 'friendship_invite_success',
   FRIENDSHIP_INVITE_ERROR: 'friendship_invite_error',

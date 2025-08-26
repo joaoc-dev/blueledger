@@ -14,11 +14,6 @@ export async function sendFriendRequestWithNotification(
   const session = await mongoose.startSession();
 
   try {
-    // Check if transactions are supported
-    if (!session.supports.causalConsistency) {
-      console.warn('Warning: MongoDB transactions may not be supported. Check your MongoDB setup.');
-    }
-
     return await session.withTransaction(async () => {
       // Create the friendship request
       const friendship = await Friendship.create([{

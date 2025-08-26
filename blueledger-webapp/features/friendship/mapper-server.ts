@@ -2,10 +2,11 @@ import type { FriendshipDocument } from './model';
 import type { FriendshipDisplay } from './schemas';
 
 export function mapModelToDisplay(
-  friendship: FriendshipDocument,
+  friendship: FriendshipDocument | any,
   currentUserId?: string,
 ): FriendshipDisplay {
-  const obj = friendship.toObject();
+  // Handle both Mongoose documents and plain objects (from .lean() queries)
+  const obj = friendship.toObject ? friendship.toObject() : friendship;
   const userIsRequester = currentUserId ? obj.requester._id.toString() === currentUserId : undefined;
   const userIsRecipient = currentUserId ? obj.recipient._id.toString() === currentUserId : undefined;
 
