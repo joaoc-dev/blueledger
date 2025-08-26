@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { LogEvents } from '@/constants/log-events';
 import { PusherEvents } from '@/constants/pusher-events';
+import { FRIENDSHIP_STATUS } from '@/features/friendship/constants';
 import { getFriendshipById, getFriendshipByUsers } from '@/features/friendship/data';
 import { sendFriendRequestSchema } from '@/features/friendship/schemas';
 import { sendFriendRequestWithNotification } from '@/features/friendship/service';
@@ -53,7 +54,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     }
 
     const existingFriendship = await getFriendshipByUsers(request.auth!.user!.id, recipientUser.id);
-    if (existingFriendship) {
+    if (existingFriendship && existingFriendship.status === FRIENDSHIP_STATUS.PENDING) {
       logger.info(LogEvents.FRIENDSHIP_INVITE_ALREADY_EXISTS, {
         fromUser: request.auth!.user!.id,
         status: 200,
@@ -65,7 +66,11 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     const fromUser = request.auth!.user!.id;
 
     // Use the service that creates friendship and notification in a transaction
-    const friendship = await sendFriendRequestWithNotification(fromUser, recipientUser.id);
+    const friendshipId = await sendFriendRequestWithNotification(
+      existingFriendship,
+      fromUser,
+      recipientUser.id,
+    );
 
     // Send pusher notification to recipient when created
     const privateChannel = `private-user-${recipientUser.id}`;
@@ -78,7 +83,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     });
 
     // result of sending a friend request does not populate user fields
-    const populatedFriendship = await getFriendshipById(friendship.id, fromUser);
+    const populatedFriendship = await getFriendshipById(friendshipId, fromUser);
     return NextResponse.json(populatedFriendship, { status: 201 });
   }
   catch (error) {

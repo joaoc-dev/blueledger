@@ -1,26 +1,43 @@
-import type { FriendshipDocument } from './model';
 import type { FriendshipDisplay } from './schemas';
 import type { CreateNotificationData } from '@/features/notifications/schemas';
 import mongoose from 'mongoose';
 import Notification from '@/features/notifications/model';
 import { NOTIFICATION_TYPES } from '../notifications/constants';
-import { mapModelToDisplay } from './mapper-server';
+import { FRIENDSHIP_STATUS } from './constants';
+
 import Friendship from './model';
 
 export async function sendFriendRequestWithNotification(
+  existingFriendship: FriendshipDisplay | null,
   requesterId: string,
   recipientId: string,
-): Promise<FriendshipDisplay> {
+): Promise<string> {
   const session = await mongoose.startSession();
 
   try {
     return await session.withTransaction(async () => {
-      // Create the friendship request
-      const friendship = await Friendship.create([{
-        requester: requesterId,
-        recipient: recipientId,
-        status: 'pending',
-      }], { session });
+      let friendshipId: string;
+
+      if (existingFriendship) {
+        // Update the friendship status
+        await Friendship.updateOne(
+          { _id: existingFriendship.id },
+          { status: FRIENDSHIP_STATUS.PENDING },
+          { session },
+        );
+
+        friendshipId = existingFriendship.id;
+      }
+      else {
+        // Create the friendship request
+        const createdFriendships = await Friendship.create([{
+          requester: requesterId,
+          recipient: recipientId,
+          status: 'pending',
+        }], { session });
+
+        friendshipId = (createdFriendships[0]!._id as mongoose.Types.ObjectId).toString();
+      }
 
       // Create the notification
       const notificationData: CreateNotificationData = {
@@ -29,11 +46,9 @@ export async function sendFriendRequestWithNotification(
         isRead: false,
         user: recipientId,
       };
-
       await Notification.create([notificationData], { session });
 
-      // Return the successful result
-      return mapModelToDisplay(friendship[0] as FriendshipDocument);
+      return friendshipId;
     });
   }
   finally {
