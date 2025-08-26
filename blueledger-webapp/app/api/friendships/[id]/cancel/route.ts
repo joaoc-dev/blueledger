@@ -8,15 +8,15 @@ import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
 /**
- * PATCH /api/friendship/[id]/decline
+ * PATCH /api/friendships/[id]/cancel
  *
- * Declines a pending friendship request.
+ * Cancels a pending friendship request.
  * Returns the updated friendship.
  *
  * Return statuses:
- * - 200 OK : Friendship successfully declined.
+ * - 200 OK : Friendship successfully canceled.
  * - 400 Bad Request : Friendship is not in a pending state.
- * - 403 Forbidden : User is not authorized to decline this friendship request.
+ * - 403 Forbidden : User is not authorized to cancel this friendship request.
  * - 404 Not Found : Friendship does not exist.
  * - 500 Internal Server Error : Unexpected error during processing.
  */
@@ -24,7 +24,7 @@ export const PATCH = withAuth(async (
   request: NextAuthRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
-  const logger = createLogger('api/friendship/decline', request);
+  const logger = createLogger('api/friendship/cancel', request);
 
   try {
     const { id } = await params;
@@ -38,8 +38,8 @@ export const PATCH = withAuth(async (
       return NextResponse.json({ error: 'Friendship not found' }, { status: 404 });
     }
 
-    // Check if the user is the recipient of the request
-    if (friendship.recipient.toString() !== userId) {
+    // Check if the user is the requester of the friendshiprequest
+    if (friendship.requester.toString() !== userId) {
       logger.warn(LogEvents.UNAUTHORIZED_REQUEST, {
         userId,
         friendshipId: id,
@@ -47,7 +47,7 @@ export const PATCH = withAuth(async (
       });
 
       return NextResponse.json(
-        { error: 'You can only decline friend requests sent to you' },
+        { error: 'You can only cancel friend requests you sent' },
         { status: 403 },
       );
     }
@@ -67,13 +67,13 @@ export const PATCH = withAuth(async (
       );
     }
 
-    // Update the friendship status to declined
-    const updatedFriendship = await updateFriendshipStatus(id, FRIENDSHIP_STATUS.DECLINED);
+    // Update the friendship status to canceled
+    const updatedFriendship = await updateFriendshipStatus(id, FRIENDSHIP_STATUS.CANCELED);
     if (!updatedFriendship) {
       throw new Error('Failed to update friendship status');
     }
 
-    logger.info(LogEvents.FRIENDSHIP_INVITE_DECLINED, {
+    logger.info(LogEvents.FRIENDSHIP_INVITE_CANCELED, {
       friendshipId: updatedFriendship.id,
       status: 200,
     });
@@ -83,14 +83,11 @@ export const PATCH = withAuth(async (
   catch (error) {
     Sentry.captureException(error);
 
-    logger.error(LogEvents.ERROR_DECLINING_FRIENDSHIP_INVITE, {
+    logger.error(LogEvents.ERROR_CANCELING_FRIENDSHIP_INVITE, {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
     });
 
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

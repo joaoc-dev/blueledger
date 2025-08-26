@@ -8,7 +8,7 @@ import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
 /**
- * PATCH /api/friendship/[id]/accept
+ * PATCH /api/friendships/[id]/accept
  *
  * Accepts a pending friendship request.
  * Returns the updated friendship.
