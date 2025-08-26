@@ -42,6 +42,9 @@ export const AnalyticsEvents = {
   FRIENDSHIP_INVITE_SUBMIT: 'friendship_invite_submit',
   FRIENDSHIP_INVITE_SUCCESS: 'friendship_invite_success',
   FRIENDSHIP_INVITE_ERROR: 'friendship_invite_error',
+  FRIENDSHIP_INVITE_ACCEPTED_CLICKED: 'friendship_invite_accepted_clicked',
+  FRIENDSHIP_INVITE_ACCEPTED_SUCCESS: 'friendship_invite_accepted_success',
+  FRIENDSHIP_INVITE_ACCEPTED_ERROR: 'friendship_invite_accepted_error',
 
   // Notifications
   NOTIFICATION_MARK_AS_READ_CLICKED: 'notification_mark_as_read_clicked',

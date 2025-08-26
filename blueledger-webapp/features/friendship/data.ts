@@ -111,7 +111,7 @@ export async function updateFriendship(
 
   const updatedFriendship = await Friendship.findByIdAndUpdate(
     friendship.id,
-    friendship,
+    friendship.data,
     { new: true },
   );
 
@@ -131,8 +131,6 @@ export async function updateFriendshipStatus(
   status: FriendshipStatus,
   acceptedAt?: Date,
 ): Promise<FriendshipDisplay | null> {
-  await dbConnect();
-
   const updateData: UpdateFriendshipData = {
     id: friendshipId,
     data: {

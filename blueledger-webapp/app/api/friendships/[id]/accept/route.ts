@@ -75,7 +75,9 @@ export const PATCH = withAuth(async (
       status: 200,
     });
 
-    return NextResponse.json(updatedFriendship, { status: 200 });
+    // result of updating the status of a friend request does not populate user fields
+    const populatedFriendship = await getFriendshipById(id, userId);
+    return NextResponse.json(populatedFriendship, { status: 200 });
   }
   catch (error) {
     Sentry.captureException(error);

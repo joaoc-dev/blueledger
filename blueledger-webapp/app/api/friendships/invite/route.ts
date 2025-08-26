@@ -79,7 +79,6 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
 
     // result of sending a friend request does not populate user fields
     const populatedFriendship = await getFriendshipById(friendship.id, fromUser);
-    console.warn(populatedFriendship);
     return NextResponse.json(populatedFriendship, { status: 201 });
   }
   catch (error) {

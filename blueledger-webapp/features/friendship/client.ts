@@ -13,8 +13,8 @@ export async function sendFriendshipInvite(email: string): Promise<FriendshipDis
   return await apiPost<FriendshipDisplay>(`${endpoint}/invite`, { email });
 }
 
-export async function acceptFriendshipInvite(friendshipId: string): Promise<void> {
-  return await apiPatch<void>(`${endpoint}/${friendshipId}/accept`);
+export async function acceptFriendshipInvite(friendshipId: string): Promise<FriendshipDisplay> {
+  return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/accept`);
 }
 
 export async function declineFriendshipInvite(friendshipId: string): Promise<void> {

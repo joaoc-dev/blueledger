@@ -6,8 +6,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { AnalyticsEvents } from '@/constants/analytics-events';
 import { friendshipKeys } from '@/constants/query-keys';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
-import { sendFriendshipInvite } from './client';
+import { acceptFriendshipInvite, sendFriendshipInvite } from './client';
 import { FRIENDSHIP_STATUS } from './constants';
+
+interface FriendshipsContext {
+  previousFriendships: FriendshipDisplay[];
+  optimisticFriendship?: FriendshipDisplay;
+}
 
 export function useFriendships() {
   const queryClient = getQueryClient();
@@ -49,6 +54,14 @@ export function useFriendships() {
       ));
   };
 
+  const applyUpdateMutationResult = (
+    mutationResult: FriendshipDisplay,
+    id: string,
+  ) => {
+    queryClient.setQueryData<FriendshipDisplay[]>(friendshipKeys.byUser, friendships =>
+      friendships?.map(friendship => (friendship.id === id ? mutationResult : friendship)));
+  };
+
   const rollbackMutation = (previousFriendships: FriendshipDisplay[] | undefined) => {
     if (!previousFriendships)
       return;
@@ -59,7 +72,12 @@ export function useFriendships() {
     );
   };
 
-  const inviteMutation = useMutation({
+  const inviteMutation = useMutation<
+    FriendshipDisplay,
+    Error,
+    UserDisplay,
+    FriendshipsContext
+  >({
     mutationFn: (user: UserDisplay) => sendFriendshipInvite(user.email),
     onMutate: async (user: UserDisplay) => {
       const optimisticFriendship: FriendshipDisplay = {
@@ -79,7 +97,7 @@ export function useFriendships() {
         optimisticFriendship,
       );
     },
-    onSuccess: (mutationResult, _email, context) => {
+    onSuccess: (mutationResult, _, context) => {
       if (!context?.optimisticFriendship)
         return;
 
@@ -92,14 +110,62 @@ export function useFriendships() {
         action: 'send friend request',
       });
     },
-    onError: (error, email, context) => {
-      console.error('Failed to send friend request: ', error, email);
+    onError: (error, user, context) => {
+      console.error('Failed to send friend request: ', error, user.email);
       rollbackMutation(context?.previousFriendships);
       posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ERROR, { action: 'send friend request' });
     },
   });
 
+  const acceptMutation = useMutation<
+    FriendshipDisplay,
+    Error,
+    FriendshipDisplay,
+    FriendshipsContext
+  >({
+    mutationFn: (friendship: FriendshipDisplay) => acceptFriendshipInvite(friendship.id),
+    onMutate: async (friendship: FriendshipDisplay) => {
+      const optimisticFriendship: FriendshipDisplay = {
+        ...friendship,
+        acceptedAt: new Date(),
+        updatedAt: new Date(),
+        status: FRIENDSHIP_STATUS.ACCEPTED,
+      };
+
+      const updateQueryFunction = (friendships: FriendshipDisplay[]) =>
+        sortByDateDesc(
+          friendships.map(f =>
+            f.id === friendship.id ? optimisticFriendship : f,
+          ),
+        );
+
+      return await applyOptimisticMutation(
+        updateQueryFunction,
+        optimisticFriendship,
+      );
+    },
+    onSuccess: (mutationResult, friendship, context) => {
+      if (!context?.optimisticFriendship)
+        return;
+
+      applyUpdateMutationResult(
+        mutationResult,
+        friendship.id,
+      );
+
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPTED_SUCCESS, {
+        action: 'accept friend request',
+      });
+    },
+    onError: (error, friendship, context) => {
+      console.error('Failed to send friend request: ', error, friendship.id);
+      rollbackMutation(context?.previousFriendships);
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPTED_ERROR, { action: 'accept friend request' });
+    },
+  });
+
   return {
     inviteMutation,
+    acceptMutation,
   };
 }
