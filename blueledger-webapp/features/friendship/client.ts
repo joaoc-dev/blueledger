@@ -4,23 +4,23 @@ import { mapApiResponseListToDisplay } from './mapper-client';
 
 const endpoint = '/friendships';
 
-export async function getFriends(): Promise<FriendshipDisplay[]> {
+export async function getFriendships(): Promise<FriendshipDisplay[]> {
   const response = await apiGet<FriendshipApiResponse[]>(endpoint);
   return mapApiResponseListToDisplay(response);
 }
 
-export async function sendFriendRequest(email: string): Promise<void> {
-  return await apiPost<void>(`${endpoint}/request`, { email });
+export async function sendFriendshipInvite(email: string): Promise<void> {
+  return await apiPost<void>(`${endpoint}/invite`, { email });
 }
 
-export async function acceptFriendRequest(friendshipId: string): Promise<void> {
-  return await apiPatch<void>(`${endpoint}/accept/${friendshipId}`);
+export async function acceptFriendshipInvite(friendshipId: string): Promise<void> {
+  return await apiPatch<void>(`${endpoint}/${friendshipId}/accept`);
 }
 
-export async function declineFriendRequest(friendshipId: string): Promise<void> {
-  return await apiPatch<void>(`${endpoint}/decline/${friendshipId}`);
+export async function declineFriendshipInvite(friendshipId: string): Promise<void> {
+  return await apiPatch<void>(`${endpoint}/${friendshipId}/decline`);
 }
 
-export async function cancelFriendRequest(friendshipId: string): Promise<void> {
-  return await apiPatch<void>(`${endpoint}/cancel/${friendshipId}`);
+export async function cancelFriendshipInvite(friendshipId: string): Promise<void> {
+  return await apiPatch<void>(`${endpoint}/${friendshipId}/cancel`);
 }

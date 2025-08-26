@@ -37,6 +37,11 @@ export const AnalyticsEvents = {
   EXPENSE_DELETE_SUCCESS: 'expense_delete_success',
   EXPENSE_DELETE_ERROR: 'expense_delete_error',
 
+  // Friendships
+  FRIENDSHIP_INVITE_SUBMIT: 'friendship_invite_submit',
+  FRIENDSHIP_INVITE_SUCCESS: 'friendship_invite_success',
+  FRIENDSHIP_INVITE_ERROR: 'friendship_invite_error',
+
   // Notifications
   NOTIFICATION_MARK_AS_READ_CLICKED: 'notification_mark_as_read_clicked',
   NOTIFICATION_MARK_AS_READ_SUCCESS: 'notification_mark_as_read_success',

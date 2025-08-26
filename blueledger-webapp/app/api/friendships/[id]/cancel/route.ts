@@ -31,15 +31,14 @@ export const PATCH = withAuth(async (
     const userId = request.auth!.user!.id;
 
     // Find the friendship
-    const friendship = await getFriendshipById(id);
+    const friendship = await getFriendshipById(id, userId);
     if (!friendship) {
       logger.warn(LogEvents.FRIENDSHIP_NOT_FOUND, { id, status: 404 });
 
       return NextResponse.json({ error: 'Friendship not found' }, { status: 404 });
     }
 
-    // Check if the user is the requester of the friendshiprequest
-    if (friendship.requester.toString() !== userId) {
+    if (!friendship.userIsRequester) {
       logger.warn(LogEvents.UNAUTHORIZED_REQUEST, {
         userId,
         friendshipId: id,
@@ -52,7 +51,6 @@ export const PATCH = withAuth(async (
       );
     }
 
-    // Check if the status is pending
     if (friendship.status !== FRIENDSHIP_STATUS.PENDING) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
         friendshipId: id,
@@ -67,7 +65,6 @@ export const PATCH = withAuth(async (
       );
     }
 
-    // Update the friendship status to canceled
     const updatedFriendship = await updateFriendshipStatus(id, FRIENDSHIP_STATUS.CANCELED);
     if (!updatedFriendship) {
       throw new Error('Failed to update friendship status');

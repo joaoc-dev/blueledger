@@ -28,6 +28,7 @@ export const updateFriendshipSchema = z.object({
   id: idSchema,
   data: z.object({
     status: friendshipStatusSchema.optional(),
+    acceptedAt: z.date().optional(),
   }),
 });
 
@@ -41,12 +42,20 @@ export type DeleteFriendshipData = z.infer<typeof deleteFriendshipSchema>;
 
 export const friendshipDisplaySchema = z.object({
   id: idSchema,
+  optimisticId: z.string().optional(),
   requesterName: z.string().optional(),
   requesterEmail: z.string().email().optional(),
   requesterImage: z.string().optional(),
   recipientName: z.string().optional(),
   recipientEmail: z.string().email().optional(),
   recipientImage: z.string().optional(),
+  userIsRequester: z.boolean().optional(),
+  userIsRecipient: z.boolean().optional(),
+  friend: z.object({
+    name: z.string().optional(),
+    email: z.string().email().optional(),
+    image: z.string().optional(),
+  }).optional(),
   status: friendshipStatusSchema,
   createdAt: z.date(),
   updatedAt: z.date(),
