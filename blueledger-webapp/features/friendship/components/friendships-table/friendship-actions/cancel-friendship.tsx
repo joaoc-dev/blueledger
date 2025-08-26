@@ -1,5 +1,5 @@
 import type { FriendshipDisplay } from '@/features/friendship/schemas';
-import { Check } from 'lucide-react';
+import { XCircle } from 'lucide-react';
 import posthog from 'posthog-js';
 import { toast } from 'sonner';
 import ConfirmationDialog from '@/components/shared/confirmation-dialog';
@@ -8,38 +8,38 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useFriendships } from '@/features/friendship/hooks';
 
-interface AcceptFriendshipProps {
+interface CancelFriendshipProps {
   friendship: FriendshipDisplay;
   isCompact: boolean;
   disabled: boolean;
 }
 
-function AcceptFriendship({ friendship, isCompact, disabled }: AcceptFriendshipProps) {
-  const { acceptMutation } = useFriendships();
+function CancelFriendship({ friendship, isCompact, disabled }: CancelFriendshipProps) {
+  const { cancelMutation } = useFriendships();
 
-  const handleAccept = async () => {
+  const handleCancel = async () => {
     try {
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPTED_CLICKED, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_CLICKED, {
         id: friendship.id,
       });
 
-      toast.loading('Accepting friend request...', {
+      toast.loading('Cancelling friend request...', {
         id: friendship.id,
       });
 
-      await acceptMutation.mutateAsync(friendship);
+      await cancelMutation.mutateAsync(friendship);
 
-      toast.success('Friend request accepted successfully', {
+      toast.success('Friend request cancelled successfully', {
         id: friendship.id,
       });
     }
     catch (error) {
-      console.error('Error accepting friend request', error);
+      console.error('Error cancelling friend request', error);
 
-      // Check for specific error types using ApiError properties
+      // Check for specific error types
       if (error && typeof error === 'object' && 'status' in error) {
         const apiError = error as any;
-        if (apiError.status === 404 || apiError.status === 400) {
+        if (apiError.status === 404 || apiError === 400) {
           toast.error('Friendship invite no longer exists', {
             id: friendship.id,
           });
@@ -48,7 +48,7 @@ function AcceptFriendship({ friendship, isCompact, disabled }: AcceptFriendshipP
       }
 
       // Generic error for other cases
-      toast.error('Failed to accept friend request', {
+      toast.error('Failed to cancel friend request', {
         id: friendship.id,
       });
     }
@@ -64,28 +64,29 @@ function AcceptFriendship({ friendship, isCompact, disabled }: AcceptFriendshipP
                 variant="ghost"
                 disabled={disabled}
               >
-                <Check />
+                <XCircle />
               </Button>
             )
           : (
               <Button
-                className="w-25 border-green-500 text-green-500/90 hover:bg-green-500/10 focus-visible:ring-green-500/40 cursor-pointer"
+                className="w-25 border-destructive text-destructive/90 hover:bg-destructive/10 focus-visible:ring-destructive/40 cursor-pointer"
                 variant="outline"
                 disabled={disabled}
                 size="sm"
               >
-                <span>Accept</span>
+                <span>Cancel</span>
               </Button>
             )}
       </DialogTrigger>
       <ConfirmationDialog
-        title="Accept friend request?"
-        onConfirm={handleAccept}
+        title="Cancel friend request?"
+        onConfirm={handleCancel}
         confirmButtonText="Continue"
         cancelButtonText="Cancel"
+        variant="destructive"
       />
     </Dialog>
   );
 }
 
-export default AcceptFriendship;
+export default CancelFriendship;

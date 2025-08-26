@@ -39,14 +39,8 @@ function DeclineFriendship({ friendship, isCompact, disabled }: DeclineFriendshi
       // Check for specific error types
       if (error && typeof error === 'object' && 'status' in error) {
         const apiError = error as any;
-        if (apiError.status === 404) {
+        if (apiError.status === 404 || apiError.status === 400) {
           toast.error('Friendship invite no longer exists', {
-            id: friendship.id,
-          });
-          return;
-        }
-        else if (apiError.status === 400) {
-          toast.error('Friendship request status has changed', {
             id: friendship.id,
           });
           return;

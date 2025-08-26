@@ -6,7 +6,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { AnalyticsEvents } from '@/constants/analytics-events';
 import { friendshipKeys } from '@/constants/query-keys';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
-import { acceptFriendshipInvite, declineFriendshipInvite, sendFriendshipInvite } from './client';
+import {
+  acceptFriendshipInvite,
+  cancelFriendshipInvite,
+  declineFriendshipInvite,
+  sendFriendshipInvite,
+} from './client';
 import { FRIENDSHIP_STATUS } from './constants';
 
 interface FriendshipsContext {
@@ -216,11 +221,15 @@ export function useFriendships() {
       // Check for specific error cases
       if (error && typeof error === 'object' && 'status' in error) {
         const apiError = error as any;
-        if (apiError.status === 404) {
+        if (apiError.status === 404 || apiError.status === 400) {
           // Already removed from list, keep it removed
-          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINED_ERROR, {
-            action: 'decline friend request',
-            error: 'friendship_not_found',
+          const errorMessage = apiError.status === 404
+            ? 'friendship_not_found'
+            : 'friendship_status_changed';
+
+          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_ERROR, {
+            action: 'cancel friend request',
+            error: errorMessage,
           });
           return;
         }
@@ -241,9 +250,69 @@ export function useFriendships() {
     },
   });
 
+  const cancelMutation = useMutation<
+    FriendshipDisplay,
+    Error,
+    FriendshipDisplay,
+    FriendshipsContext
+  >({
+    mutationFn: (friendship: FriendshipDisplay) => cancelFriendshipInvite(friendship.id),
+    onMutate: async (friendship: FriendshipDisplay) => {
+      // For decline, we optimistically remove from list immediately
+      await queryClient.cancelQueries({ queryKey: friendshipKeys.byUser });
+
+      const previousFriendships = queryClient.getQueryData<FriendshipDisplay[]>(friendshipKeys.byUser) || [];
+      const updatedFriendships = previousFriendships.filter(f => f.id !== friendship.id);
+
+      queryClient.setQueryData<FriendshipDisplay[]>(friendshipKeys.byUser, updatedFriendships);
+
+      return { previousFriendships };
+    },
+    onSuccess: (_mutationResult, _friendship, _context) => {
+      // Keep it removed from the list
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_SUCCESS, {
+        action: 'cancel friend request',
+      });
+    },
+    onError: (error, friendship, context) => {
+      console.error('Failed to cancel friend request: ', error, friendship.id);
+
+      // Check for specific error cases
+      if (error && typeof error === 'object' && 'status' in error) {
+        const apiError = error as any;
+        if (apiError.status === 404 || apiError.status === 400) {
+          // Already removed from list, keep it removed
+          const errorMessage = apiError.status === 404
+            ? 'friendship_not_found'
+            : 'friendship_status_changed';
+
+          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_ERROR, {
+            action: 'cancel friend request',
+            error: errorMessage,
+          });
+          return;
+        }
+      }
+
+      // For other errors, add it back to the list
+      if (context?.previousFriendships) {
+        queryClient.setQueryData<FriendshipDisplay[]>(
+          friendshipKeys.byUser,
+          context.previousFriendships,
+        );
+      }
+
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_ERROR, {
+        action: 'cancel friend request',
+        error: error instanceof Error ? error.message : 'unknown_error',
+      });
+    },
+  });
+
   return {
     inviteMutation,
     acceptMutation,
     declineMutation,
+    cancelMutation,
   };
 }

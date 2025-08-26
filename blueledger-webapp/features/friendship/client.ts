@@ -17,10 +17,10 @@ export async function acceptFriendshipInvite(friendshipId: string): Promise<Frie
   return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/accept`);
 }
 
-export async function declineFriendshipInvite(friendshipId: string): Promise<void> {
-  return await apiPatch<void>(`${endpoint}/${friendshipId}/decline`);
+export async function declineFriendshipInvite(friendshipId: string): Promise<FriendshipDisplay> {
+  return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/decline`);
 }
 
-export async function cancelFriendshipInvite(friendshipId: string): Promise<void> {
-  return await apiPatch<void>(`${endpoint}/${friendshipId}/cancel`);
+export async function cancelFriendshipInvite(friendshipId: string): Promise<FriendshipDisplay> {
+  return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/cancel`);
 }
