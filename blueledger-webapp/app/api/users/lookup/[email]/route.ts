@@ -27,6 +27,7 @@ export const GET = withAuth(async (
         details: { email: 'Invalid email' },
         status: 400,
       });
+      await logger.flush();
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
     }
 
@@ -34,6 +35,7 @@ export const GET = withAuth(async (
     if (!userLookup) {
       logger.info(LogEvents.USER_NOT_FOUND, { status: 404 });
 
+      await logger.flush();
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
@@ -52,6 +54,7 @@ export const GET = withAuth(async (
 
     logger.info(LogEvents.USER_FETCHED, { status: 200 });
 
+    await logger.flush();
     return NextResponse.json(user, { status: 200 });
   }
   catch (error) {
@@ -62,6 +65,7 @@ export const GET = withAuth(async (
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 },

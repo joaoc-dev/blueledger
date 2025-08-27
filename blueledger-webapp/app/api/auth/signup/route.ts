@@ -23,13 +23,16 @@ export async function POST(request: NextRequest) {
         status: 400,
       });
 
+      await logger.flush();
       return NextResponse.json(inputValidationResult.error, { status: 400 });
     }
 
     const userInput = inputValidationResult.data;
     const existingUser = await getUserByEmail(userInput.email);
-    if (existingUser)
+    if (existingUser) {
+      await logger.flush();
       return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
+    }
 
     const passwordHash = await hashPassword(userInput.password);
 
@@ -44,6 +47,7 @@ export async function POST(request: NextRequest) {
         status: 400,
       });
 
+      await logger.flush();
       return NextResponse.json('New user validation failed', { status: 400 });
     }
     const user = await createUser(newUserValidationResult.data);
@@ -59,6 +63,7 @@ export async function POST(request: NextRequest) {
         status: 201,
       },
     );
+    await logger.flush();
     return NextResponse.json({ success: true });
   }
   catch (error) {
@@ -70,6 +75,7 @@ export async function POST(request: NextRequest) {
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

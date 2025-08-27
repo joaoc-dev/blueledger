@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
         status: 400,
       });
 
+      await logger.flush();
       return NextResponse.json(validationResult.error, { status: 400 });
     }
 
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
     if (!validateRateLimits.success) {
       logger.info(LogEvents.RATE_LIMIT_EXCEEDED, { email, status: 429 });
 
+      await logger.flush();
       return NextResponse.json(
         {
           error: 'Please wait before attempting to reset your password.',
@@ -44,11 +46,13 @@ export async function POST(request: NextRequest) {
 
     const success = await confirmPasswordResetForUser(email, code, newPassword);
     if (!success) {
+      await logger.flush();
       return NextResponse.json({ error: 'Failed to confirm password reset' }, { status: 400 });
     }
 
     logger.info(LogEvents.EMAIL_PASSWORD_RESET_CONFIRMED, { email });
 
+    await logger.flush();
     return NextResponse.json({ success: true });
   }
   catch (error) {
@@ -59,6 +63,7 @@ export async function POST(request: NextRequest) {
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

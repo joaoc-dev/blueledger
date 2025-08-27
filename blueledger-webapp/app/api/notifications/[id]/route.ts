@@ -28,6 +28,7 @@ export const PATCH = withAuth(async (
         details: validationResult.error.details,
         status: 400,
       });
+      await logger.flush();
       return NextResponse.json(validationResult.error, { status: 400 });
     }
 
@@ -36,6 +37,7 @@ export const PATCH = withAuth(async (
       notificationId: id,
       status: 200,
     });
+    await logger.flush();
     return NextResponse.json(notification, { status: 200 });
   }
   catch (error) {
@@ -46,6 +48,7 @@ export const PATCH = withAuth(async (
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 },

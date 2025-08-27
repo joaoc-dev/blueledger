@@ -22,6 +22,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
         status: 400,
       });
 
+      await logger.flush();
       return NextResponse.json(validationResult.error, { status: 400 });
     }
 
@@ -32,6 +33,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     if (!validateRateLimits.success) {
       logger.info(LogEvents.RATE_LIMIT_EXCEEDED, { userId, status: 429 });
 
+      await logger.flush();
       return NextResponse.json(
         {
           error: 'Please wait before submitting another code.',
@@ -43,11 +45,13 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
 
     const success = await confirmVerificationCodeForUser(userId, code);
     if (!success) {
+      await logger.flush();
       return NextResponse.json({ error: 'Failed to confirm verification code' }, { status: 400 });
     }
 
     logger.info(LogEvents.EMAIL_VERIFICATION_CONFIRMED, { userId });
 
+    await logger.flush();
     return NextResponse.json({ success: true });
   }
   catch (error) {
@@ -58,6 +62,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

@@ -27,6 +27,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
         userId,
         status: 404,
       });
+      await logger.flush();
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
@@ -47,6 +48,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
           userId,
           status: 404,
         });
+        await logger.flush();
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
       }
 
@@ -57,6 +59,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       userId,
       status: 200,
     });
+    await logger.flush();
     return NextResponse.json({ image: imageUrl }, { status: 200 });
   }
   catch (error) {
@@ -75,6 +78,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       });
     }
 
+    await logger.flush();
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 },

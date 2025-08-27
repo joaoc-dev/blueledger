@@ -18,10 +18,12 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
 
     if (!user) {
       logger.warn(LogEvents.USER_NOT_FOUND, { userId, status: 404 });
+      await logger.flush();
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     logger.info(LogEvents.USER_FETCHED, { userId, status: 200 });
+    await logger.flush();
     return NextResponse.json(user);
   }
   catch (error) {
@@ -30,6 +32,7 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
     });
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });
@@ -51,6 +54,7 @@ export const PATCH = withAuth(async (request: NextAuthRequest) => {
         details: validationResult.error.details,
         status: 400,
       });
+      await logger.flush();
       return NextResponse.json(validationResult.error, { status: 400 });
     }
 
@@ -58,10 +62,12 @@ export const PATCH = withAuth(async (request: NextAuthRequest) => {
 
     if (!user) {
       logger.warn(LogEvents.USER_NOT_FOUND, { userId, status: 404 });
+      await logger.flush();
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     logger.info(LogEvents.USER_UPDATED, { userId, status: 200 });
+    await logger.flush();
     return NextResponse.json({ user, message: 'User updated successfully' });
   }
   catch (error) {
@@ -70,6 +76,7 @@ export const PATCH = withAuth(async (request: NextAuthRequest) => {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
     });
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

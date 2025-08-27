@@ -33,6 +33,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
         status: 400,
       });
 
+      await logger.flush();
       return NextResponse.json(validationResult.error, { status: 400 });
     }
 
@@ -46,6 +47,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       targetUserId: validationResult.data!.user,
       status: 201,
     });
+    await logger.flush();
     return NextResponse.json({ message: 'Group invite sent' }, { status: 201 });
   }
   catch (error) {
@@ -56,6 +58,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

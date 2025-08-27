@@ -36,6 +36,7 @@ export const PATCH = withAuth(async (
     if (!friendship) {
       logger.warn(LogEvents.FRIENDSHIP_NOT_FOUND, { id, status: 404 });
 
+      await logger.flush();
       return NextResponse.json({ error: 'Friendship not found' }, { status: 404 });
     }
 
@@ -47,6 +48,7 @@ export const PATCH = withAuth(async (
         status: 403,
       });
 
+      await logger.flush();
       return NextResponse.json(
         { error: 'You are not authorized to remove this friendship' },
         { status: 403 },
@@ -62,6 +64,7 @@ export const PATCH = withAuth(async (
         status: 400,
       });
 
+      await logger.flush();
       return NextResponse.json(
         { error: 'Only accepted friendships can be removed' },
         { status: 400 },
@@ -80,6 +83,7 @@ export const PATCH = withAuth(async (
       status: 200,
     });
 
+    await logger.flush();
     return NextResponse.json(
       {
         message: 'Friendship successfully removed',
@@ -96,6 +100,7 @@ export const PATCH = withAuth(async (
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

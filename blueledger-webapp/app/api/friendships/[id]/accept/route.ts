@@ -35,6 +35,7 @@ export const PATCH = withAuth(async (
     if (!friendship) {
       logger.warn(LogEvents.FRIENDSHIP_NOT_FOUND, { id, status: 404 });
 
+      await logger.flush();
       return NextResponse.json({ error: 'Friendship not found' }, { status: 404 });
     }
 
@@ -45,6 +46,7 @@ export const PATCH = withAuth(async (
         status: 403,
       });
 
+      await logger.flush();
       return NextResponse.json(
         { error: 'You can only accept friend requests sent to you' },
         { status: 403 },
@@ -59,6 +61,7 @@ export const PATCH = withAuth(async (
         status: 400,
       });
 
+      await logger.flush();
       return NextResponse.json(
         { error: 'Friendship request is not pending' },
         { status: 400 },
@@ -77,6 +80,7 @@ export const PATCH = withAuth(async (
 
     // result of updating the status of a friend request does not populate user fields
     const populatedFriendship = await getFriendshipById(id, userId);
+    await logger.flush();
     return NextResponse.json(populatedFriendship, { status: 200 });
   }
   catch (error) {
@@ -87,6 +91,7 @@ export const PATCH = withAuth(async (
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

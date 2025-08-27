@@ -19,6 +19,7 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
       status: 200,
     });
 
+    await logger.flush();
     return NextResponse.json(notifications);
   }
   catch (error) {
@@ -29,6 +30,7 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

@@ -21,6 +21,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
         status: 429,
       });
 
+      await logger.flush();
       return NextResponse.json(
         {
           error: 'Please wait before requesting another code.',
@@ -31,14 +32,17 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     }
 
     const success = await issueVerificationCodeForUser(userId, VERIFICATION_CODE_TTL_MS);
-    if (!success)
+    if (!success) {
+      await logger.flush();
       return NextResponse.json({ error: 'Failed to send verification code' }, { status: 500 });
+    }
 
     logger.info(LogEvents.EMAIL_VERIFICATION_SENT, {
       userId,
       status: 200,
     });
 
+    await logger.flush();
     return NextResponse.json({ success: true });
   }
   catch (error) {
@@ -49,6 +53,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

@@ -17,6 +17,7 @@ export const PATCH = withAuth(async (request: NextAuthRequest) => {
       userId,
       status: 200,
     });
+    await logger.flush();
     return NextResponse.json({ success: true });
   }
   catch (error) {
@@ -27,6 +28,7 @@ export const PATCH = withAuth(async (request: NextAuthRequest) => {
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

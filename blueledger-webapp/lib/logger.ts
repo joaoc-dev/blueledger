@@ -57,26 +57,30 @@ class RequestLogger {
 
   info(event: string, data?: Record<string, any>) {
     this.logger.info(event, {
+      ...data,
       requestId: this.requestId,
       durationMs: Date.now() - this.startTime,
-      ...data,
     });
   }
 
   warn(event: string, data?: Record<string, any>) {
     this.logger.warn(event, {
+      ...data,
       requestId: this.requestId,
       durationMs: Date.now() - this.startTime,
-      ...data,
     });
   }
 
   error(event: string, data?: Record<string, any>) {
     this.logger.error(event, {
+      ...data,
       requestId: this.requestId,
       durationMs: Date.now() - this.startTime,
-      ...data,
     });
+  }
+
+  async flush() {
+    await this.logger.flush();
   }
 }
 

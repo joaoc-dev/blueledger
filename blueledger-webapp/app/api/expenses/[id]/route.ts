@@ -28,6 +28,7 @@ export const PATCH = withAuth(async (
         status: 400,
       });
 
+      await logger.flush();
       return NextResponse.json(validationResult.error, { status: 400 });
     }
 
@@ -39,10 +40,12 @@ export const PATCH = withAuth(async (
         status: 404,
       });
 
+      await logger.flush();
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
     }
 
     logger.info(LogEvents.EXPENSE_UPDATED, { expenseId: expense.id, status: 200 });
+    await logger.flush();
     return NextResponse.json(expense, { status: 200 });
   }
   catch (error) {
@@ -53,6 +56,7 @@ export const PATCH = withAuth(async (
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });
@@ -71,6 +75,7 @@ export const DELETE = withAuth(async (
         details: validationResult.error.details,
         status: 400,
       });
+      await logger.flush();
       return NextResponse.json(validationResult.error, { status: 400 });
     }
 
@@ -80,10 +85,12 @@ export const DELETE = withAuth(async (
     if (!expense) {
       logger.warn(LogEvents.EXPENSE_NOT_FOUND, { id, status: 404 });
 
+      await logger.flush();
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
     }
 
     logger.info(LogEvents.EXPENSE_DELETED, { expenseId: expense.id, status: 200 });
+    await logger.flush();
     return NextResponse.json(expense, { status: 200 });
   }
   catch (error) {
@@ -94,6 +101,7 @@ export const DELETE = withAuth(async (
       status: 500,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });
