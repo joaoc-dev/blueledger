@@ -24,3 +24,7 @@ export async function declineFriendshipInvite(friendshipId: string): Promise<Fri
 export async function cancelFriendshipInvite(friendshipId: string): Promise<FriendshipDisplay> {
   return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/cancel`);
 }
+
+export async function removeFriendship(friendshipId: string): Promise<FriendshipDisplay> {
+  return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/remove`);
+}

@@ -1,5 +1,5 @@
 import type { FriendshipDisplay } from '@/features/friendship/schemas';
-import { XCircle } from 'lucide-react';
+import { UserMinus } from 'lucide-react';
 import posthog from 'posthog-js';
 import { toast } from 'sonner';
 import ConfirmationDialog from '@/components/shared/confirmation-dialog';
@@ -8,28 +8,28 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useFriendships } from '@/features/friendship/hooks';
 
-interface CancelFriendshipProps {
+interface RemoveFriendshipProps {
   friendship: FriendshipDisplay;
   isCompact: boolean;
   disabled: boolean;
 }
 
-function CancelFriendship({ friendship, isCompact, disabled }: CancelFriendshipProps) {
-  const { cancelMutation } = useFriendships();
+function RemoveFriendship({ friendship, isCompact, disabled }: RemoveFriendshipProps) {
+  const { removeMutation } = useFriendships();
 
-  const handleCancel = async () => {
+  const handleRemove = async () => {
     try {
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_CLICKED, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVED_CLICKED, {
         id: friendship.id,
       });
 
-      toast.loading('Cancelling friend request...', {
+      toast.loading('Removing friendship...', {
         id: friendship.id,
       });
 
-      await cancelMutation.mutateAsync(friendship);
+      await removeMutation.mutateAsync(friendship);
 
-      toast.success('Friend request cancelled successfully', {
+      toast.success('Friendship removed successfully', {
         id: friendship.id,
       });
     }
@@ -37,8 +37,8 @@ function CancelFriendship({ friendship, isCompact, disabled }: CancelFriendshipP
       // Check for specific error types
       if (error && typeof error === 'object' && 'status' in error) {
         const apiError = error as any;
-        if (apiError.status === 404 || apiError === 400) {
-          toast.error('Friendship invite no longer exists', {
+        if (apiError.status === 404 || apiError.status === 400 || apiError.status === 403) {
+          toast.error('Friendship no longer exists', {
             id: friendship.id,
           });
           return;
@@ -46,7 +46,7 @@ function CancelFriendship({ friendship, isCompact, disabled }: CancelFriendshipP
       }
 
       // Generic error for other cases
-      toast.error('Failed to cancel friend request', {
+      toast.error('Failed to remove friendship', {
         id: friendship.id,
       });
     }
@@ -62,7 +62,7 @@ function CancelFriendship({ friendship, isCompact, disabled }: CancelFriendshipP
                 variant="ghost"
                 disabled={disabled}
               >
-                <XCircle />
+                <UserMinus />
               </Button>
             )
           : (
@@ -72,13 +72,13 @@ function CancelFriendship({ friendship, isCompact, disabled }: CancelFriendshipP
                 disabled={disabled}
                 size="sm"
               >
-                <span>Cancel</span>
+                <span>Remove</span>
               </Button>
             )}
       </DialogTrigger>
       <ConfirmationDialog
-        title="Cancel friend request?"
-        onConfirm={handleCancel}
+        title="Unfriend?"
+        onConfirm={handleRemove}
         confirmButtonText="Continue"
         cancelButtonText="Cancel"
         variant="destructive"
@@ -87,4 +87,4 @@ function CancelFriendship({ friendship, isCompact, disabled }: CancelFriendshipP
   );
 }
 
-export default CancelFriendship;
+export default RemoveFriendship;

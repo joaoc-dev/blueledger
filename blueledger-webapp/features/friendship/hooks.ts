@@ -10,6 +10,7 @@ import {
   acceptFriendshipInvite,
   cancelFriendshipInvite,
   declineFriendshipInvite,
+  removeFriendship,
   sendFriendshipInvite,
 } from './client';
 import { FRIENDSHIP_STATUS } from './constants';
@@ -309,10 +310,72 @@ export function useFriendships() {
     },
   });
 
+  const removeMutation = useMutation<
+    FriendshipDisplay,
+    Error,
+    FriendshipDisplay,
+    FriendshipsContext
+  >({
+    mutationFn: (friendship: FriendshipDisplay) => removeFriendship(friendship.id),
+    onMutate: async (friendship: FriendshipDisplay) => {
+      // For remove, we optimistically remove from list immediately
+      await queryClient.cancelQueries({ queryKey: friendshipKeys.byUser });
+
+      const previousFriendships = queryClient.getQueryData<FriendshipDisplay[]>(friendshipKeys.byUser) || [];
+      const updatedFriendships = previousFriendships.filter(f => f.id !== friendship.id);
+
+      queryClient.setQueryData<FriendshipDisplay[]>(friendshipKeys.byUser, updatedFriendships);
+
+      return { previousFriendships };
+    },
+    onSuccess: (_mutationResult, _friendship, _context) => {
+      // Keep it removed from the list
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVED_SUCCESS, {
+        action: 'remove friendship',
+      });
+    },
+    onError: (error, friendship, context) => {
+      console.error('Failed to remove friendship: ', error, friendship.id);
+
+      // Check for specific error cases
+      if (error && typeof error === 'object' && 'status' in error) {
+        const apiError = error as any;
+        if (apiError.status === 404 || apiError.status === 400 || apiError.status === 403) {
+          // Already removed from list, keep it removed
+          const errorMessage = apiError.status === 404
+            ? 'friendship_not_found'
+            : apiError.status === 400
+              ? 'friendship_cannot_be_removed'
+              : 'unauthorized';
+
+          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVED_ERROR, {
+            action: 'remove friendship',
+            error: errorMessage,
+          });
+          return;
+        }
+      }
+
+      // For other errors, add it back to the list
+      if (context?.previousFriendships) {
+        queryClient.setQueryData<FriendshipDisplay[]>(
+          friendshipKeys.byUser,
+          context.previousFriendships,
+        );
+      }
+
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVED_ERROR, {
+        action: 'remove friendship',
+        error: error instanceof Error ? error.message : 'unknown_error',
+      });
+    },
+  });
+
   return {
     inviteMutation,
     acceptMutation,
     declineMutation,
     cancelMutation,
+    removeMutation,
   };
 }

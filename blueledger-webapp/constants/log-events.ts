@@ -40,9 +40,11 @@ export const LogEvents = {
   FRIENDSHIP_INVITE_ACCEPTED: 'friendship_invite_accepted',
   FRIENDSHIP_INVITE_DECLINED: 'friendship_invite_declined',
   FRIENDSHIP_INVITE_CANCELED: 'friendship_invite_canceled',
+  FRIENDSHIP_REMOVED: 'friendship_removed',
   ERROR_ACCEPTING_FRIENDSHIP_INVITE: 'error_accepting_friendship_invite',
   ERROR_DECLINING_FRIENDSHIP_INVITE: 'error_declining_friendship_invite',
   ERROR_CANCELING_FRIENDSHIP_INVITE: 'error_canceling_friendship_invite',
+  ERROR_REMOVING_FRIENDSHIP: 'error_removing_friendship',
 
   // Users
   USER_FETCHED: 'user_fetched',

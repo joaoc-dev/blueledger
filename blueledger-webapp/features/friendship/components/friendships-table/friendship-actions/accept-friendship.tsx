@@ -34,9 +34,7 @@ function AcceptFriendship({ friendship, isCompact, disabled }: AcceptFriendshipP
       });
     }
     catch (error) {
-      console.error('Error accepting friend request', error);
-
-      // Check for specific error types using ApiError properties
+      // Check for specific error types
       if (error && typeof error === 'object' && 'status' in error) {
         const apiError = error as any;
         if (apiError.status === 404 || apiError.status === 400) {

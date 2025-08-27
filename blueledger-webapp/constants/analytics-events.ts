@@ -51,6 +51,9 @@ export const AnalyticsEvents = {
   FRIENDSHIP_INVITE_CANCELLED_CLICKED: 'friendship_invite_cancelled_clicked',
   FRIENDSHIP_INVITE_CANCELLED_SUCCESS: 'friendship_invite_cancelled_success',
   FRIENDSHIP_INVITE_CANCELLED_ERROR: 'friendship_invite_cancelled_error',
+  FRIENDSHIP_INVITE_REMOVED_CLICKED: 'friendship_invite_removed_clicked',
+  FRIENDSHIP_INVITE_REMOVED_SUCCESS: 'friendship_invite_removed_success',
+  FRIENDSHIP_INVITE_REMOVED_ERROR: 'friendship_invite_removed_error',
 
   // Notifications
   NOTIFICATION_MARK_AS_READ_CLICKED: 'notification_mark_as_read_clicked',

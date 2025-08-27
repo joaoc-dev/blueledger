@@ -3,6 +3,7 @@ export const FRIENDSHIP_STATUS = {
   ACCEPTED: 'accepted',
   DECLINED: 'declined',
   CANCELED: 'canceled',
+  REMOVED: 'removed',
   NONE: 'none',
 } as const;
 
@@ -11,6 +12,7 @@ export const FRIENDSHIP_STATUS_VALUES = [
   FRIENDSHIP_STATUS.ACCEPTED,
   FRIENDSHIP_STATUS.DECLINED,
   FRIENDSHIP_STATUS.CANCELED,
+  FRIENDSHIP_STATUS.REMOVED,
   FRIENDSHIP_STATUS.NONE,
 ] as const;
 

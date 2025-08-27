@@ -34,8 +34,6 @@ function DeclineFriendship({ friendship, isCompact, disabled }: DeclineFriendshi
       });
     }
     catch (error) {
-      console.error('Error declining friend request', error);
-
       // Check for specific error types
       if (error && typeof error === 'object' && 'status' in error) {
         const apiError = error as any;
