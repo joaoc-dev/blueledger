@@ -7,7 +7,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'maria.okita@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-01.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '2',
@@ -15,7 +14,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'jenny.salazar@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-02.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '3',
@@ -23,7 +21,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'maria.guzman@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-03.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '4',
@@ -31,7 +28,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'mia.johnson@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-04.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '5',
@@ -39,7 +35,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'ana.silva@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-05.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '6',
@@ -47,7 +42,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'sofia.carvalho@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-06.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '7',
@@ -55,7 +49,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'isabella.rossi@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-07.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '8',
@@ -63,7 +56,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'emily.brown@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-08.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '9',
@@ -71,7 +63,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'laura.fernandez@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-09.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '10',
@@ -79,7 +70,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'grace.lee@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/women/women-avatar-10.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '11',
@@ -87,7 +77,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'mario.perez@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-01.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '12',
@@ -95,7 +84,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'john.oliver@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-02.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '13',
@@ -103,7 +91,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'janus.alvarez@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-03.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '14',
@@ -111,7 +98,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'peter.smith@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-04.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '15',
@@ -119,7 +105,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'antonio.perez@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-05.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '16',
@@ -127,7 +112,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'luis.martinez@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-06.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '17',
@@ -135,7 +119,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'adriano.pereira@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-07.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '18',
@@ -143,7 +126,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'carlos.ruiz@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-08.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '19',
@@ -151,7 +133,6 @@ export const dummyUsers: UserDisplay[] = [
     email: 'victor.chen@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-09.jpg',
-    friendshipStatus: 'none',
   },
   {
     id: '20',
@@ -159,6 +140,5 @@ export const dummyUsers: UserDisplay[] = [
     email: 'mariano.gonzaga@example.com',
     emailVerified: new Date(),
     image: '/placeholder_avatars/men/men-avatar-10.jpg',
-    friendshipStatus: 'none',
   },
 ];

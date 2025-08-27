@@ -51,6 +51,26 @@ export async function getNotificationById(
   return notification ? mapModelToDisplay(notification) : null;
 }
 
+export async function getNotificationByIdAndUser(
+  id: string,
+  userId: string,
+): Promise<NotificationDisplay | null> {
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return null;
+
+  await dbConnect();
+
+  const notification = await Notification.findOne({
+    _id: id,
+    user: userId,
+  })
+    .populate({ path: 'fromUser', select: 'name image' })
+    .populate({ path: 'user', select: 'name image' })
+    .lean();
+
+  return notification ? mapModelToDisplay(notification) : null;
+}
+
 export async function updateNotification(
   notification: PatchNotificationData,
 ): Promise<NotificationDisplay | null> {

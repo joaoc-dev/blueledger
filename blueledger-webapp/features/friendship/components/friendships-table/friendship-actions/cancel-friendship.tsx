@@ -37,7 +37,7 @@ function CancelFriendship({ friendship, isCompact, disabled }: CancelFriendshipP
       // Check for specific error types
       if (error && typeof error === 'object' && 'status' in error) {
         const apiError = error as any;
-        if (apiError.status === 404 || apiError === 400) {
+        if (apiError.status === 404 || apiError.status === 403 || apiError.status === 409) {
           toast.error('Friendship invite no longer exists', {
             id: friendship.id,
           });

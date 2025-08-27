@@ -15,7 +15,7 @@ import { createLogger } from '@/lib/logger';
  *
  * Return statuses:
  * - 200 OK : Friendship successfully canceled.
- * - 400 Bad Request : Friendship is not in a pending state.
+ * - 409 Conflict : Friendship is not in a pending state.
  * - 403 Forbidden : User is not authorized to cancel this friendship request.
  * - 404 Not Found : Friendship does not exist.
  * - 500 Internal Server Error : Unexpected error during processing.
@@ -58,13 +58,13 @@ export const PATCH = withAuth(async (
         friendshipId: id,
         currentStatus: friendship.status,
         requiredStatus: FRIENDSHIP_STATUS.PENDING,
-        status: 400,
+        status: 409,
       });
 
       await logger.flush();
       return NextResponse.json(
-        { error: 'Friendship request is not pending' },
-        { status: 400 },
+        { error: `Cannot cancel friendship request with status '${friendship.status}'` },
+        { status: 409 },
       );
     }
 
@@ -78,8 +78,10 @@ export const PATCH = withAuth(async (
       status: 200,
     });
 
+    // result of updating the status of a friend request does not populate user fields
+    const populatedFriendship = await getFriendshipById(id, userId);
     await logger.flush();
-    return NextResponse.json(updatedFriendship, { status: 200 });
+    return NextResponse.json(populatedFriendship, { status: 200 });
   }
   catch (error) {
     Sentry.captureException(error);

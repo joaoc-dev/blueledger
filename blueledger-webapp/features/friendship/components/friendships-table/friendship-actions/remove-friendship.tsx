@@ -37,7 +37,7 @@ function RemoveFriendship({ friendship, isCompact, disabled }: RemoveFriendshipP
       // Check for specific error types
       if (error && typeof error === 'object' && 'status' in error) {
         const apiError = error as any;
-        if (apiError.status === 404 || apiError.status === 400 || apiError.status === 403) {
+        if (apiError.status === 404 || apiError.status === 403 || apiError.status === 409) {
           toast.error('Friendship no longer exists', {
             id: friendship.id,
           });

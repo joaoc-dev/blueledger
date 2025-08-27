@@ -45,8 +45,32 @@ function AddFriendPanel({ user, onSuccess }: AddFriendPanelProps) {
       toast.success(`Friend request sent`, { id: toastId });
       onSuccess();
     }
-    catch {
-      toast.error(`Failed to send friend request`, { id: toastId });
+    catch (error) {
+      // Check for specific error types
+      if (error && typeof error === 'object' && 'status' in error) {
+        const apiError = error as any;
+        if (apiError.status === 409) {
+          toast.error('Friend request already exists and is pending', {
+            id: toastId,
+          });
+          return;
+        }
+        if (apiError.status === 404) {
+          toast.error('User not found', {
+            id: toastId,
+          });
+          return;
+        }
+        if (apiError.status === 400) {
+          toast.error('Cannot send friend request to yourself', {
+            id: toastId,
+          });
+          return;
+        }
+      }
+
+      // Generic error for other cases
+      toast.error('Failed to send friend request', { id: toastId });
     }
   };
 

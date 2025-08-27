@@ -57,14 +57,35 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     }
 
     const existingFriendship = await getFriendshipByUsers(request.auth!.user!.id, recipientUser.id);
-    if (existingFriendship && existingFriendship.status === FRIENDSHIP_STATUS.PENDING) {
-      logger.info(LogEvents.FRIENDSHIP_INVITE_ALREADY_EXISTS, {
-        fromUser: request.auth!.user!.id,
-        status: 200,
-      });
+    if (existingFriendship) {
+      if (existingFriendship.status === FRIENDSHIP_STATUS.PENDING) {
+        logger.warn(LogEvents.FRIENDSHIP_INVITE_ALREADY_EXISTS, {
+          fromUser: request.auth!.user!.id,
+          toUser: recipientUser.id,
+          status: 409,
+        });
 
-      await logger.flush();
-      return NextResponse.json({ message: 'Already exists' }, { status: 200 });
+        await logger.flush();
+        return NextResponse.json(
+          { error: 'Friend request already exists and is pending' },
+          { status: 409 },
+        );
+      }
+
+      if (existingFriendship.status === FRIENDSHIP_STATUS.ACCEPTED) {
+        logger.warn(LogEvents.FRIENDSHIP_INVITE_ALREADY_EXISTS, {
+          fromUser: request.auth!.user!.id,
+          toUser: recipientUser.id,
+          existingStatus: FRIENDSHIP_STATUS.ACCEPTED,
+          status: 409,
+        });
+
+        await logger.flush();
+        return NextResponse.json(
+          { error: 'You are already friends with this user' },
+          { status: 409 },
+        );
+      }
     }
 
     const fromUser = request.auth!.user!.id;

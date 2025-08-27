@@ -16,7 +16,7 @@ import { createLogger } from '@/lib/logger';
  *
  * Return statuses:
  * - 200 OK : Friendship successfully removed.
- * - 400 Bad Request : Friendship is not in an accepted state.
+ * - 409 Conflict : Friendship is not in an accepted state.
  * - 403 Forbidden : User is not authorized to remove this friendship.
  * - 404 Not Found : Friendship does not exist.
  * - 500 Internal Server Error : Unexpected error during processing.
@@ -61,13 +61,13 @@ export const PATCH = withAuth(async (
         friendshipId: id,
         currentStatus: friendship.status,
         requiredStatus: FRIENDSHIP_STATUS.ACCEPTED,
-        status: 400,
+        status: 409,
       });
 
       await logger.flush();
       return NextResponse.json(
-        { error: 'Only accepted friendships can be removed' },
-        { status: 400 },
+        { error: `Cannot remove friendship with status '${friendship.status}'` },
+        { status: 409 },
       );
     }
 

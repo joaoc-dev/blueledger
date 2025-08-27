@@ -2,7 +2,7 @@ import type { NextAuthRequest } from 'next-auth';
 import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { LogEvents } from '@/constants/log-events';
-import { updateNotification } from '@/features/notifications/data';
+import { getNotificationByIdAndUser, updateNotification } from '@/features/notifications/data';
 import { patchNotificationSchema } from '@/features/notifications/schemas';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
@@ -30,6 +30,24 @@ export const PATCH = withAuth(async (
       });
       await logger.flush();
       return NextResponse.json(validationResult.error, { status: 400 });
+    }
+
+    // Check if the authenticated user owns this notification
+    const userId = request.auth!.user!.id!;
+    const existingNotification = await getNotificationByIdAndUser(id, userId);
+
+    if (!existingNotification) {
+      logger.warn(LogEvents.UNAUTHORIZED_REQUEST, {
+        notificationId: id,
+        userId,
+        reason: 'User attempted to update notification they do not own',
+        status: 403,
+      });
+      await logger.flush();
+      return NextResponse.json(
+        { error: 'Forbidden: You can only update your own notifications' },
+        { status: 403 },
+      );
     }
 
     const notification = await updateNotification(validationResult.data!);
