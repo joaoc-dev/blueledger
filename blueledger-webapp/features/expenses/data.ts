@@ -1,9 +1,9 @@
-import type { ExpenseDocument } from './model';
+import type { ExpenseDocument } from './models';
 import type { CreateExpenseData, ExpenseDisplay, PatchExpenseData } from './schemas';
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongoose-client';
 import { mapModelToDisplay } from './mapper-server';
-import Expense from './model';
+import Expense from './models';
 
 export async function getExpenses(userId: string): Promise<ExpenseDisplay[]> {
   await dbConnect();

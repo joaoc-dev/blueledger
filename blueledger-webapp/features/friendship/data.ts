@@ -1,10 +1,10 @@
 import type { FriendshipStatus } from './constants';
-import type { CreateFriendshipData, FriendshipDisplay, UpdateFriendshipData } from './schemas';
+import type { FriendshipDisplay, UpdateFriendshipData } from './schemas';
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongoose-client';
 import { FRIENDSHIP_STATUS } from './constants';
 import { mapModelToDisplay } from './mapper-server';
-import Friendship from './model';
+import Friendship from './models';
 
 export async function getFriendshipById(
   id: string,
@@ -46,7 +46,10 @@ export async function getFriendshipByUsers(
       { requester: userId, recipient: friendUserId },
       { requester: friendUserId, recipient: userId },
     ],
-  });
+  })
+    .populate({ path: 'requester', select: 'name email image' })
+    .populate({ path: 'recipient', select: 'name email image' })
+    .lean();
 
   return friendship ? mapModelToDisplay(friendship, userId) : null;
 }
@@ -94,17 +97,17 @@ export async function getFriendshipsForUser(
   return friendships.map(friendship => mapModelToDisplay(friendship, userId));
 }
 
-export async function createFriendship(
-  friendship: CreateFriendshipData,
-): Promise<FriendshipDisplay> {
-  await dbConnect();
+// export async function createFriendship(
+//   friendship: CreateFriendshipData,
+// ): Promise<FriendshipDisplay> {
+//   await dbConnect();
 
-  const createdFriendship = await Friendship.create(friendship.data);
+//   const createdFriendship = await Friendship.create(friendship.data);
 
-  return mapModelToDisplay(createdFriendship);
-}
+//   return mapModelToDisplay(createdFriendship);
+// }
 
-export async function updateFriendship(
+async function updateFriendship(
   friendship: UpdateFriendshipData,
 ): Promise<FriendshipDisplay | null> {
   await dbConnect();
@@ -118,13 +121,13 @@ export async function updateFriendship(
   return updatedFriendship ? mapModelToDisplay(updatedFriendship) : null;
 }
 
-export async function deleteFriendship(id: string): Promise<FriendshipDisplay | null> {
-  await dbConnect();
+// export async function deleteFriendship(id: string): Promise<FriendshipDisplay | null> {
+//   await dbConnect();
 
-  const deletedFriendship = await Friendship.findByIdAndDelete(id);
+//   const deletedFriendship = await Friendship.findByIdAndDelete(id);
 
-  return deletedFriendship ? mapModelToDisplay(deletedFriendship) : null;
-}
+//   return deletedFriendship ? mapModelToDisplay(deletedFriendship) : null;
+// }
 
 export async function updateFriendshipStatus(
   friendshipId: string,

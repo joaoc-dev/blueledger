@@ -1,11 +1,11 @@
 import type { FriendshipDisplay } from './schemas';
 import type { CreateNotificationData } from '@/features/notifications/schemas';
 import mongoose from 'mongoose';
-import Notification from '@/features/notifications/model';
+import Notification from '@/features/notifications/models';
 import { NOTIFICATION_TYPES } from '../notifications/constants';
 import { FRIENDSHIP_STATUS } from './constants';
 
-import Friendship from './model';
+import Friendship from './models';
 
 export async function sendFriendRequestWithNotification(
   existingFriendship: FriendshipDisplay | null,

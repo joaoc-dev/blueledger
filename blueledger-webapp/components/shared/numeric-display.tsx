@@ -21,17 +21,21 @@ function NumericDisplay({
   className = '',
   maximumFractionDigits,
 }: NumericDisplayProps) {
-  const formatter = new Intl.NumberFormat(locale, {
-    style:
-      format === 'currency'
-        ? 'currency'
-        : format === 'percent'
-          ? 'percent'
-          : 'decimal',
+  const options: Intl.NumberFormatOptions = {
+    style: format === 'currency' ? 'currency' : format === 'percent' ? 'percent' : 'decimal',
     currency: format === 'currency' ? currency : undefined,
     notation: format === 'compact' ? 'compact' : undefined,
-    maximumFractionDigits: maximumFractionDigits ?? (format === 'percent' ? 2 : 2),
-  });
+  };
+
+  if (typeof maximumFractionDigits === 'number') {
+    options.maximumFractionDigits = maximumFractionDigits;
+    options.minimumFractionDigits = maximumFractionDigits;
+  }
+  else if (format === 'percent') {
+    options.maximumFractionDigits = 2;
+  }
+
+  const formatter = new Intl.NumberFormat(locale, options);
 
   return (
     <div className={`truncate ${className}`}>{formatter.format(value)}</div>

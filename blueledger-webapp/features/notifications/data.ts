@@ -1,4 +1,4 @@
-import type { NotificationDocument } from './model';
+import type { NotificationDocument } from './models';
 import type {
   CreateNotificationData,
   NotificationDisplay,
@@ -7,7 +7,7 @@ import type {
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongoose-client';
 import { mapModelToDisplay } from './mapper-server';
-import Notification from './model';
+import Notification from './models';
 
 export async function createNotification(
   notification: CreateNotificationData,

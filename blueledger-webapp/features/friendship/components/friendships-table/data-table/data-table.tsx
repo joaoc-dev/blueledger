@@ -5,7 +5,7 @@ import type { FriendshipDisplay } from '@/features/friendship/schemas';
 import { useState } from 'react';
 import DraggableTable from '@/components/shared/data-table/draggable/draggable-table';
 import { Pagination } from '@/components/shared/data-table/pagination';
-import TabsWithBadges from '@/components/shared/tabs-with-badges';
+import { TabsWithBadges } from '@/components/shared/tabs-with-badges';
 import { Toolbar } from '../toolbar';
 import { activeFriendshipsColumns, pendingFriendshipsColumns } from './columns';
 import { useActiveFriendshipsTable } from './hooks/useActiveFriendshipsTable';

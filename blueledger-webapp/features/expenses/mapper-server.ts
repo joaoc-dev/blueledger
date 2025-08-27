@@ -1,4 +1,4 @@
-import type { ExpenseDocument } from './model';
+import type { ExpenseDocument } from './models';
 import type { ExpenseDisplay } from './schemas';
 
 export function mapModelToDisplay(expense: ExpenseDocument): ExpenseDisplay {

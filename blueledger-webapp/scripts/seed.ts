@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import User from '@/features/users/model';
+import User from '@/features/users/models';
 import { dummyUsers } from '@/lib/data/dummy-users';
 import dbConnect from '@/lib/db/mongoose-client';
 

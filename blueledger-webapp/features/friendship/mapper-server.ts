@@ -1,4 +1,4 @@
-import type { FriendshipDocument } from './model';
+import type { FriendshipDocument } from './models';
 import type { FriendshipDisplay } from './schemas';
 
 export function mapModelToDisplay(

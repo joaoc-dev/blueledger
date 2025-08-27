@@ -4,7 +4,7 @@ import type { Table } from '@tanstack/react-table';
 import type { FriendshipDisplay } from '@/features/friendship/schemas';
 import { useQueryClient } from '@tanstack/react-query';
 import { RotateCw, UserPlus } from 'lucide-react';
-import { posthog } from 'posthog-js';
+import posthog from 'posthog-js';
 import { useState } from 'react';
 import { ViewOptions } from '@/components/shared/data-table/view-options';
 import { Button } from '@/components/ui/button';

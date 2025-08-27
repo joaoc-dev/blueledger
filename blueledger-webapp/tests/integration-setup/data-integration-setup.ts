@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 import { vi } from 'vitest';
 
 // Import models to register them
-import '@/features/users/model';
-import '@/features/notifications/model';
-import '@/features/expenses/model';
+import '@/features/users/models';
+import '@/features/notifications/models';
+import '@/features/expenses/models';
 
 vi.mock('@/lib/db/mongoose-client', () => ({
   default: vi.fn().mockResolvedValue(undefined),

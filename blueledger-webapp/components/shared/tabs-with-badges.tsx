@@ -51,5 +51,3 @@ export function TabsWithBadges({ tabs, onTabChange }: TabsWithBadgesProps) {
     </Tabs>
   );
 }
-
-export default TabsWithBadges;

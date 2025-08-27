@@ -5,6 +5,7 @@ import type {
   UserAuthRecord,
 } from '../schemas';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { FRIENDSHIP_STATUS } from '@/features/friendship/constants';
 import {
   createUserInputSchema,
   createUserSchema,
@@ -91,6 +92,7 @@ describe('users schemas', () => {
         image: undefined,
         imagePublicId: undefined,
         emailVerified: new Date().toISOString(),
+        friendshipStatus: FRIENDSHIP_STATUS.NONE,
       };
       expect(() => userApiResponseSchema.parse(data)).not.toThrow();
     });

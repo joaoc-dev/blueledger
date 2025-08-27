@@ -46,6 +46,10 @@ export const LogEvents = {
   ERROR_CANCELING_FRIENDSHIP_INVITE: 'error_canceling_friendship_invite',
   ERROR_REMOVING_FRIENDSHIP: 'error_removing_friendship',
 
+  // Groups
+  GROUP_INVITE_SENT: 'group_invite_sent',
+  ERROR_SENDING_GROUP_INVITE: 'error_sending_group_invite',
+
   // Users
   USER_FETCHED: 'user_fetched',
   USER_UPDATED: 'user_updated',

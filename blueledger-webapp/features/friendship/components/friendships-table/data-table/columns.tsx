@@ -2,7 +2,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type { FriendshipDisplay } from '@/features/friendship/schemas';
 import { columnHeader } from '@/components/shared/data-table/sortable-column';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import FriendshipActions from '../friendship-actions/friendship-actions';
+import { FriendshipActions } from '../friendship-actions';
 
 const fillerColumn: ColumnDef<FriendshipDisplay> = {
   id: 'filler',

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import User from '../model';
+import User from '../models';
 
 describe('user model validation', () => {
   const validData = () => ({

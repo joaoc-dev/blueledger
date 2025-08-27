@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { describe, expect, it } from 'vitest';
 import { NOTIFICATION_TYPES } from '../constants';
-import Notification from '../model';
+import Notification from '../models';
 
 describe('notification model validation', () => {
   const validData = () => ({

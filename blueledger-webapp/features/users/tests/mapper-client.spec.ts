@@ -1,5 +1,6 @@
 import type { UserApiResponse, UserProfileFormData } from '../schemas';
 import { describe, expect, it } from 'vitest';
+import { FRIENDSHIP_STATUS } from '@/features/friendship/constants';
 import { mapApiResponseToDisplay, mapFormDataToApiRequest } from '../mapper-client';
 
 describe('mapper-client', () => {
@@ -11,6 +12,7 @@ describe('mapper-client', () => {
     image: 'profile.jpg',
     imagePublicId: 'public-id-123',
     emailVerified: '2025-01-01T00:00:00.000Z',
+    friendshipStatus: FRIENDSHIP_STATUS.NONE,
   };
 
   describe('mapApiResponseToDisplay', () => {

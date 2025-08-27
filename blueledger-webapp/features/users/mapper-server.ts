@@ -1,4 +1,4 @@
-import type { UserDocument } from './model';
+import type { UserDocument } from './models';
 import type { UserDisplay } from './schemas';
 
 export function mapModelToDisplay(user: UserDocument): UserDisplay {
@@ -11,5 +11,6 @@ export function mapModelToDisplay(user: UserDocument): UserDisplay {
     email: obj.email,
     bio: obj.bio,
     emailVerified: obj.emailVerified,
+    friendshipStatus: obj.friendshipStatus,
   };
 }

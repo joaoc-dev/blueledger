@@ -2,7 +2,7 @@
 
 import type { FriendshipDisplay } from '@/features/friendship/schemas';
 import { useState } from 'react';
-import TabsWithBadges from '@/components/shared/tabs-with-badges';
+import { TabsWithBadges } from '@/components/shared/tabs-with-badges';
 import { useActiveFriendshipsTable } from '../data-table/hooks/useActiveFriendshipsTable';
 import { usePendingFriendshipsTable } from '../data-table/hooks/usePendingFriendshipsTable';
 import { Toolbar } from '../toolbar';

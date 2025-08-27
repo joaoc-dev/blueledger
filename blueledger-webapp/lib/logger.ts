@@ -12,7 +12,7 @@ interface RequestLogData {
   userId?: string;
 }
 
-export class RequestLogger {
+class RequestLogger {
   private logger: Logger;
   private requestId: string;
   private startTime: number;

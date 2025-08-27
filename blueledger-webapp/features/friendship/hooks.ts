@@ -65,7 +65,7 @@ export function useFriendships() {
     id: string,
   ) => {
     queryClient.setQueryData<FriendshipDisplay[]>(friendshipKeys.byUser, friendships =>
-      friendships?.map(friendship => (friendship.id === id ? mutationResult : friendship)));
+      friendships?.map(friendship => (friendship.id === id ? mutationResult : friendship)) || []);
   };
 
   const rollbackMutation = (previousFriendships: FriendshipDisplay[] | undefined) => {
@@ -88,6 +88,7 @@ export function useFriendships() {
     onMutate: async (user: UserDisplay) => {
       const optimisticFriendship: FriendshipDisplay = {
         id: uuidv4(),
+        optimisticId: uuidv4(),
         status: FRIENDSHIP_STATUS.PENDING,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -228,7 +229,7 @@ export function useFriendships() {
             ? 'friendship_not_found'
             : 'friendship_status_changed';
 
-          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_ERROR, {
+          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINED_ERROR, {
             action: 'cancel friend request',
             error: errorMessage,
           });

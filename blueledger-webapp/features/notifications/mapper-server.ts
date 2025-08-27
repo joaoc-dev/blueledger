@@ -1,4 +1,4 @@
-import type { NotificationDocument } from './model';
+import type { NotificationDocument } from './models';
 import type { NotificationDisplay } from './schemas';
 
 export function mapModelToDisplay(
