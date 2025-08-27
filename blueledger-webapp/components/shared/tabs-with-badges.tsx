@@ -25,18 +25,25 @@ export function TabsWithBadges({ tabs, onTabChange }: TabsWithBadgesProps) {
   ].join(' ');
 
   return (
-    <Tabs defaultValue={tabs[0]?.value} className="flex w-full flex-col">
+    <Tabs
+      defaultValue={tabs[0]?.value}
+      className="flex w-full flex-col"
+      onValueChange={onTabChange}
+    >
       <TabsList className="inline-flex w-full p-0 bg-background justify-start border-b rounded-none gap-1">
 
         {tabs.map(tab => (
           <TabsTrigger
             key={tab.value}
             value={tab.value}
-            onClick={() => { onTabChange?.(tab.value); }}
             className={tabClass}
           >
             <span className="text-xs">{tab.label}</span>
-            <Badge variant="secondary" className="ml-2 px-1 py-0 text-xs rounded-full">{tab.badge}</Badge>
+            {
+              tab.badge && (
+                <Badge variant="secondary" className="ml-2 px-1 py-0 text-xs rounded-full">{tab.badge}</Badge>
+              )
+            }
           </TabsTrigger>
         ))}
 

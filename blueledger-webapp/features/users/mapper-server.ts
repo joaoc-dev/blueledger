@@ -11,6 +11,5 @@ export function mapModelToDisplay(user: UserDocument): UserDisplay {
     email: obj.email,
     bio: obj.bio,
     emailVerified: obj.emailVerified,
-    friendshipStatus: obj.friendshipStatus,
   };
 }

@@ -54,7 +54,7 @@ export function ViewOptions<TData>({
                   });
                 }}
               >
-                {column.id}
+                {column.columnDef.header?.toString?.() || column.id}
               </DropdownMenuCheckboxItem>
             );
           })}

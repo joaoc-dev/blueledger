@@ -22,8 +22,8 @@ export async function sendFriendRequestWithNotification(
         // Update the friendship status
         await Friendship.updateOne(
           { _id: existingFriendship.id },
-          { status: FRIENDSHIP_STATUS.PENDING },
-          { session },
+          { $set: { status: FRIENDSHIP_STATUS.PENDING } },
+          { session, runValidators: true },
         );
 
         friendshipId = existingFriendship.id;

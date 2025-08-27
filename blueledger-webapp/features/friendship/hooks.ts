@@ -170,14 +170,18 @@ export function useFriendships() {
       // Check for specific error cases that require removing the friendship from the list
       if (error && typeof error === 'object' && 'status' in error) {
         const apiError = error as any;
-        if (apiError.status === 404) {
+        if (apiError.status === 404 || apiError.status === 400) {
           // Remove the friendship from the list
           queryClient.setQueryData<FriendshipDisplay[]>(friendshipKeys.byUser, friendships =>
             friendships?.filter(f => f.id !== friendship.id));
 
+          const errorMessage = apiError.status === 404
+            ? 'friendship_not_found'
+            : 'friendship_status_changed';
+
           posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPTED_ERROR, {
             action: 'accept friend request',
-            error: 'friendship_not_found',
+            error: errorMessage,
           });
 
           return;

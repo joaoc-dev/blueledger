@@ -65,7 +65,7 @@ const userDisplaySchema = z.object({
   imagePublicId: imagePublicIdSchema,
   emailVerified: emailVerifiedSchema,
   isSelf: z.boolean().optional(),
-  friendshipStatus: friendshipStatusSchema,
+  friendshipStatus: friendshipStatusSchema.optional(),
 });
 
 export type UserDisplay = z.infer<typeof userDisplaySchema>;
