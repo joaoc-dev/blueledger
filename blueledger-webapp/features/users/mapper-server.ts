@@ -1,4 +1,4 @@
-import type { UserDocument } from './model';
+import type { UserDocument } from './models';
 import type { UserDisplay } from './schemas';
 
 export function mapModelToDisplay(user: UserDocument): UserDisplay {

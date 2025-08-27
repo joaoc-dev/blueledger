@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { describe, expect, it } from 'vitest';
 import { EXPENSE_CATEGORIES } from '../constants';
-import Expense from '../model';
+import Expense from '../models';
 
 describe('expense model validation', () => {
   const validData = () => ({

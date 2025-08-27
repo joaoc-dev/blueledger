@@ -1,4 +1,4 @@
-import type { NotificationDocument } from './model';
+import type { NotificationDocument } from './models';
 import type {
   CreateNotificationData,
   NotificationDisplay,
@@ -7,7 +7,7 @@ import type {
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongoose-client';
 import { mapModelToDisplay } from './mapper-server';
-import Notification from './model';
+import Notification from './models';
 
 export async function createNotification(
   notification: CreateNotificationData,
@@ -44,6 +44,26 @@ export async function getNotificationById(
   await dbConnect();
 
   const notification = await Notification.findById(id)
+    .populate({ path: 'fromUser', select: 'name image' })
+    .populate({ path: 'user', select: 'name image' })
+    .lean();
+
+  return notification ? mapModelToDisplay(notification) : null;
+}
+
+export async function getNotificationByIdAndUser(
+  id: string,
+  userId: string,
+): Promise<NotificationDisplay | null> {
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return null;
+
+  await dbConnect();
+
+  const notification = await Notification.findOne({
+    _id: id,
+    user: userId,
+  })
     .populate({ path: 'fromUser', select: 'name image' })
     .populate({ path: 'user', select: 'name image' })
     .lean();

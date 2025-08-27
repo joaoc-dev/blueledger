@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -15,24 +14,27 @@ interface ModalProps {
   title: string;
   open: boolean;
   onClose?: () => void;
+  goBackOnClose?: boolean;
 }
 
 export default function Modal({
   children,
   title,
+  open,
   onClose,
+  goBackOnClose,
 }: ModalProps) {
   const router = useRouter();
-  const [open, setOpen] = useState(true);
 
   const handleClose = () => {
-    setOpen(false);
     onClose?.();
-    router.back();
+    if (goBackOnClose) {
+      router.back();
+    }
   };
 
   return (
-    <Dialog defaultOpen={true} open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogOverlay>
         <DialogContent className="w-full max-w-sm sm:max-w-md">
           <DialogHeader className="mb-4">

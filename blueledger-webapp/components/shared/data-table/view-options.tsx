@@ -28,7 +28,6 @@ export function ViewOptions<TData>({
         <Button
           className="hidden md:flex items-center gap-2"
           variant="outline"
-          size="sm"
           disabled={disabled}
         >
           <Settings2 />
@@ -55,7 +54,7 @@ export function ViewOptions<TData>({
                   });
                 }}
               >
-                {column.id}
+                {column.columnDef.header?.toString?.() || column.id}
               </DropdownMenuCheckboxItem>
             );
           })}

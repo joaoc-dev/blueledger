@@ -5,3 +5,7 @@ export const expenseKeys = {
 export const notificationKeys = {
   byUser: ['notifications', 'user'] as const,
 };
+
+export const friendshipKeys = {
+  byUser: ['friendships', 'user'] as const,
+};

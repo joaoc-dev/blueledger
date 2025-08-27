@@ -30,14 +30,8 @@ function NavBar() {
     return <NavBarLoading />;
 
   return isMobile
-    ? (
-        <div className="relative">
-          <MobileNavBar links={links} />
-        </div>
-      )
-    : (
-        <DesktopNavBar links={links} />
-      );
+    ? <MobileNavBar links={links} />
+    : <DesktopNavBar links={links} />;
 }
 
 export default NavBar;

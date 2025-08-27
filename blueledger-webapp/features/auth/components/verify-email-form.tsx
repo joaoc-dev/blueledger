@@ -6,13 +6,13 @@ import { useRouter } from 'next/navigation';
 import posthog from 'posthog-js';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { validateRequest } from '@/app/api/validateRequest';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Separator } from '@/components/ui/separator';
 import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useCooldown } from '@/hooks/useCooldown';
+import { validateSchema } from '@/lib/validate-schema';
 import { SEND_LIMIT_SHORT, VERIFICATION_CODE_LENGTH } from '../constants';
 import { useConfirmVerificationCode } from '../hooks/useConfirmVerificationCode';
 import { useSendVerificationCode } from '../hooks/useSendVerificationCode';
@@ -61,7 +61,7 @@ function VerifyEmailForm() {
       if (confirmCooldownTimer.seconds > 0)
         return;
 
-      const validationResult = validateRequest(validationCodeSchema, code);
+      const validationResult = validateSchema(validationCodeSchema, code);
       if (!validationResult.success) {
         setErrorText('Please enter a valid code');
         return;

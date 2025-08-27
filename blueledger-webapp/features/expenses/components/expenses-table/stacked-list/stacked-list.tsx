@@ -15,9 +15,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { useColumnFiltersWithUrl } from '@/components/shared/data-table/hooks/useColumnFiltersWithUrl';
 import Spinner from '@/components/shared/spinner';
 import { columns } from '../data-table/columns';
+import { useColumnFiltersWithUrl } from '../hooks/useColumnFiltersWithUrl';
 import { Toolbar } from '../toolbar';
 import { ListCard } from './list-card';
 
@@ -62,7 +62,7 @@ export function StackedList({ data, isLoading, isFetching }: DataTableProps) {
     <div className="space-y-4">
       <Toolbar table={table} isFetching={isFetching} isLoading={isLoading} />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 max-h-[calc(100vh-200px)] overflow-y-auto">
         {hasData
           ? (
               Object.entries(groupedExpenses).map(([date, expenses]) => (

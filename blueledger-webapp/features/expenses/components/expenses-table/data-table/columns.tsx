@@ -65,7 +65,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     size: 100,
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('quantity'));
-      return <NumericDisplay value={amount} />;
+      return <NumericDisplay value={amount} maximumFractionDigits={2} />;
     },
   },
   {
@@ -75,7 +75,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     size: 100,
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('price'));
-      return <NumericDisplay value={amount} format="currency" />;
+      return <NumericDisplay value={amount} format="currency" maximumFractionDigits={2} />;
     },
   },
   {
@@ -85,7 +85,7 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     size: 120,
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('totalPrice'));
-      return <NumericDisplay value={amount} format="currency" />;
+      return <NumericDisplay value={amount} format="currency" maximumFractionDigits={2} />;
     },
   },
   {
@@ -102,13 +102,13 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
   },
   {
     id: 'actions',
-    size: 100,
-    maxSize: 100,
+    size: 110,
+    maxSize: 110,
     cell: ({ row }) => {
       const expense = row.original;
 
       return (
-        <div className="flex justify-end">
+        <div className="flex justify-center gap-1">
           <ExpenseActions
             id={expense.optimisticId ?? expense.id!}
             disabled={!!expense.optimisticId}
@@ -120,5 +120,6 @@ export const columns: ColumnDef<ExpenseDisplay>[] = [
     enableHiding: false,
     enableResizing: false,
     enablePinning: true,
+    enableSorting: false,
   },
 ];

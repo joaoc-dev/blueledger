@@ -37,6 +37,24 @@ export const AnalyticsEvents = {
   EXPENSE_DELETE_SUCCESS: 'expense_delete_success',
   EXPENSE_DELETE_ERROR: 'expense_delete_error',
 
+  // Friendships
+  FRIENDSHIP_ADD_CLICKED: 'friendship_add_clicked',
+  FRIENDSHIP_INVITE_SUBMIT: 'friendship_invite_submit',
+  FRIENDSHIP_INVITE_SUCCESS: 'friendship_invite_success',
+  FRIENDSHIP_INVITE_ERROR: 'friendship_invite_error',
+  FRIENDSHIP_INVITE_ACCEPTED_CLICKED: 'friendship_invite_accepted_clicked',
+  FRIENDSHIP_INVITE_ACCEPTED_SUCCESS: 'friendship_invite_accepted_success',
+  FRIENDSHIP_INVITE_ACCEPTED_ERROR: 'friendship_invite_accepted_error',
+  FRIENDSHIP_INVITE_DECLINED_CLICKED: 'friendship_invite_declined_clicked',
+  FRIENDSHIP_INVITE_DECLINED_SUCCESS: 'friendship_invite_declined_success',
+  FRIENDSHIP_INVITE_DECLINED_ERROR: 'friendship_invite_declined_error',
+  FRIENDSHIP_INVITE_CANCELLED_CLICKED: 'friendship_invite_cancelled_clicked',
+  FRIENDSHIP_INVITE_CANCELLED_SUCCESS: 'friendship_invite_cancelled_success',
+  FRIENDSHIP_INVITE_CANCELLED_ERROR: 'friendship_invite_cancelled_error',
+  FRIENDSHIP_INVITE_REMOVED_CLICKED: 'friendship_invite_removed_clicked',
+  FRIENDSHIP_INVITE_REMOVED_SUCCESS: 'friendship_invite_removed_success',
+  FRIENDSHIP_INVITE_REMOVED_ERROR: 'friendship_invite_removed_error',
+
   // Notifications
   NOTIFICATION_MARK_AS_READ_CLICKED: 'notification_mark_as_read_clicked',
   NOTIFICATION_MARK_AS_READ_SUCCESS: 'notification_mark_as_read_success',

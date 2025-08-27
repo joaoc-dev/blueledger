@@ -2,7 +2,7 @@ import type { CreateUserData, PatchUserData, UserAuthRecord, UserDisplay } from 
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db/mongoose-client';
 import { mapModelToDisplay } from './mapper-server';
-import User from './model';
+import User from './models';
 
 export async function getUserById(id: string): Promise<UserDisplay | null> {
   if (!mongoose.Types.ObjectId.isValid(id))

@@ -1,12 +1,14 @@
 'use client';
 
 import type { ExpenseDisplay, ExpenseFormData } from '../schemas';
+import type { NumericInputProps } from '@/components/shared/numeric-input';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import posthog from 'posthog-js';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 import { DateTimePicker } from '@/components/shared/date-time-picker';
+import { NumericInput } from '@/components/shared/numeric-input';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -80,7 +82,13 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input {...field} type="text" />
+                <Input
+                  {...field}
+                  type="text"
+                  className="h-12 px-4 py-3 text-base touch-manipulation"
+                  style={{ fontSize: '16px' }} // Prevents zoom on iOS
+                  placeholder="What did you buy?"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -93,20 +101,10 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
             <FormItem>
               <FormLabel>Quantity</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const number = Number(value);
-
-                    if (Number.isNaN(number)) {
-                      field.onChange(0);
-                    }
-                    else {
-                      field.onChange(number);
-                    }
-                  }}
+                <QuantityInput
+                  value={field.value || undefined}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
                 />
               </FormControl>
               <FormMessage />
@@ -120,20 +118,10 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
             <FormItem>
               <FormLabel>Price</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const number = Number(value);
-
-                    if (Number.isNaN(number)) {
-                      field.onChange(0);
-                    }
-                    else {
-                      field.onChange(number);
-                    }
-                  }}
+                <PriceInput
+                  value={field.value || undefined}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
                 />
               </FormControl>
               <FormMessage />
@@ -200,3 +188,40 @@ function ExpenseForm({ expense }: ExpenseFormProps) {
 }
 
 export default ExpenseForm;
+
+function PriceInput(props: Omit<NumericInputProps, 'decimalScale' | 'fixedDecimalScale' | 'thousandSeparator' | 'prefix' | 'ariaLabel' | 'decrementAriaLabel' | 'incrementAriaLabel'>) {
+  return (
+    <NumericInput
+      {...props}
+      decimalScale={2}
+      fixedDecimalScale
+      thousandSeparator=","
+      prefix="$"
+      step={1}
+      ariaLabel="Price in dollars"
+      decrementAriaLabel="Decrease price"
+      incrementAriaLabel="Increase price"
+      min={0}
+      max={999999}
+      placeholder="$0.00"
+    />
+  );
+}
+
+function QuantityInput(props: Omit<NumericInputProps, 'decimalScale' | 'thousandSeparator' | 'prefix' | 'ariaLabel' | 'decrementAriaLabel' | 'incrementAriaLabel'>) {
+  return (
+    <NumericInput
+      {...props}
+      decimalScale={2}
+      thousandSeparator={false}
+      prefix=""
+      step={0.5}
+      ariaLabel="Quantity"
+      decrementAriaLabel="Decrease quantity"
+      incrementAriaLabel="Increase quantity"
+      min={0}
+      max={999}
+      placeholder="0"
+    />
+  );
+}

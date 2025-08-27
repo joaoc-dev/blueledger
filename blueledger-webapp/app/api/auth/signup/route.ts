@@ -7,50 +7,47 @@ import { issueVerificationCodeForUser } from '@/features/auth/data';
 import { hashPassword } from '@/features/auth/utils';
 import { createUser, getUserByEmail } from '@/features/users/data';
 import { createUserInputSchema, createUserSchema } from '@/features/users/schemas';
-import { createLogger, logRequest } from '@/lib/logger';
-import { validateRequest } from '../../validateRequest';
+import { createLogger } from '@/lib/logger';
+import { validateSchema } from '@/lib/validate-schema';
 
 export async function POST(request: NextRequest) {
-  const logger = createLogger('api/auth/signup');
-  const startTime = Date.now();
-  let requestId: string | undefined;
+  const logger = createLogger('api/auth/signup', request);
 
   try {
     const body = await request.json();
-    ({ requestId } = logRequest(logger, request));
 
-    const inputValidationResult = validateRequest(createUserInputSchema, body);
+    const inputValidationResult = validateSchema(createUserInputSchema, body);
     if (!inputValidationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
-        requestId,
         details: inputValidationResult.error.details,
         status: 400,
-        durationMs: Date.now() - startTime,
       });
 
+      await logger.flush();
       return NextResponse.json(inputValidationResult.error, { status: 400 });
     }
 
     const userInput = inputValidationResult.data;
     const existingUser = await getUserByEmail(userInput.email);
-    if (existingUser)
+    if (existingUser) {
+      await logger.flush();
       return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
+    }
 
     const passwordHash = await hashPassword(userInput.password);
 
-    const newUserValidationResult = validateRequest(createUserSchema, {
+    const newUserValidationResult = validateSchema(createUserSchema, {
       ...userInput,
       passwordHash,
     });
 
     if (!newUserValidationResult.success) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
-        requestId,
         details: newUserValidationResult.error.details,
         status: 400,
-        durationMs: Date.now() - startTime,
       });
 
+      await logger.flush();
       return NextResponse.json('New user validation failed', { status: 400 });
     }
     const user = await createUser(newUserValidationResult.data);
@@ -61,26 +58,24 @@ export async function POST(request: NextRequest) {
     logger.info(
       LogEvents.AUTH_SIGN_UP,
       {
-        requestId,
         provider: 'credentials_signup',
         userId: user.id,
         status: 201,
-        durationMs: Date.now() - startTime,
       },
     );
+    await logger.flush();
     return NextResponse.json({ success: true });
   }
   catch (error) {
     Sentry.captureException(error);
 
     logger.error(LogEvents.AUTH_SIGN_UP_ERROR, {
-      requestId,
       provider: 'credentials_signup',
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
-      durationMs: Date.now() - startTime,
     });
 
+    await logger.flush();
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

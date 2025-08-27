@@ -16,12 +16,12 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import DraggableTable from '@/components/shared/data-table/draggable/draggable-table';
-import { useColumnFiltersWithUrl } from '@/components/shared/data-table/hooks/useColumnFiltersWithUrl';
 import { usePaginationWithUrl } from '@/components/shared/data-table/hooks/usePaginationWithUrl';
 import { usePersistentTableState } from '@/components/shared/data-table/hooks/usePersistentTableState';
 import { useSortingWithUrl } from '@/components/shared/data-table/hooks/useSortingWithUrl';
 import { Pagination } from '@/components/shared/data-table/pagination';
 import { EXPENSES_TABLE_CONFIG } from '../constants';
+import { useColumnFiltersWithUrl } from '../hooks/useColumnFiltersWithUrl';
 import { Toolbar } from '../toolbar';
 import { columns } from './columns';
 

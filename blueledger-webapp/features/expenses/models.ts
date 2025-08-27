@@ -62,6 +62,7 @@ const ExpenseSchema = new Schema<ExpenseDocument>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'User ID is required'],
+      index: true,
     },
   },
   {

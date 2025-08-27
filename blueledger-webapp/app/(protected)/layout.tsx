@@ -39,7 +39,7 @@ async function ProtectedLayout({ children }: { children: React.ReactNode }) {
         </SessionProvider>
         <NavBar />
       </header>
-      <main className="p-10 max-w-screen-xl">{children}</main>
+      <main className="px-6 py-10 max-w-screen-xl md:mt-16">{children}</main>
     </div>
   );
 }

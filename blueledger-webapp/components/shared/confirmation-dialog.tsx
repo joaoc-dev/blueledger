@@ -13,32 +13,34 @@ interface ConfirmationDialogProps {
   description?: string;
   cancelButtonText?: string;
   confirmButtonText?: string;
+  variant?: 'default' | 'destructive';
   onConfirm?: () => void;
   onCancel?: () => void;
 }
 
 function ConfirmationDialog({
   title = 'Dialog Title',
-  description = 'Dialog description',
+  description,
   cancelButtonText = 'Cancel',
   confirmButtonText = 'Confirm',
   onConfirm,
   onCancel,
+  variant,
 }: ConfirmationDialogProps) {
   return (
-    <DialogContent>
-      <DialogHeader>
+    <DialogContent className="w-xs">
+      <DialogHeader className="mb-4">
         <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
+        {description && <DialogDescription>{description}</DialogDescription>}
       </DialogHeader>
-      <DialogFooter>
+      <DialogFooter className="flex gap-2">
         <DialogClose asChild>
-          <Button variant="outline" onClick={onCancel}>
+          <Button className="flex-1" variant="outline" onClick={onCancel}>
             {cancelButtonText}
           </Button>
         </DialogClose>
         <DialogClose asChild>
-          <Button variant="destructive" onClick={onConfirm}>
+          <Button className="flex-1" variant={variant} onClick={onConfirm}>
             {confirmButtonText}
           </Button>
         </DialogClose>

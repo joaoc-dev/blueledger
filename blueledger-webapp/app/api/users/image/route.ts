@@ -9,17 +9,14 @@ import {
   handleImageUploadAndUserUpdate,
   removePreviousImageIfExists,
 } from '@/lib/cloudinary';
-import { createLogger, logRequest } from '@/lib/logger';
+import { createLogger } from '@/lib/logger';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/users/image/post');
-  const startTime = Date.now();
+  const logger = createLogger('api/users/image/post', request);
   let publicId: string | null | undefined;
   let imageUrl: string | null | undefined;
-  let requestId: string | undefined;
 
   try {
-    ({ requestId } = logRequest(logger, request));
     const formData = await request.formData();
     const image = formData.get('image') as Blob;
 
@@ -27,17 +24,17 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     const user = await getUserById(userId!);
     if (!user) {
       logger.warn(LogEvents.USER_NOT_FOUND, {
-        requestId,
         userId,
         status: 404,
-        durationMs: Date.now() - startTime,
       });
+      await logger.flush();
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     const originalImagePublicId = user.imagePublicId;
 
-    if (image) {
+    // Check if image is provided and not empty (handle empty string for removal)
+    if (image && (typeof image === 'string' ? (image as string).trim() !== '' : image.size > 0)) {
       const updatedUser = await handleImageUploadAndUserUpdate(userId!, image);
       publicId = updatedUser.imagePublicId;
       imageUrl = updatedUser.image;
@@ -48,11 +45,10 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       const updatedUser = await removeImageFromUser(userId!);
       if (!updatedUser) {
         logger.warn(LogEvents.USER_NOT_FOUND, {
-          requestId,
           userId,
           status: 404,
-          durationMs: Date.now() - startTime,
         });
+        await logger.flush();
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
       }
 
@@ -60,32 +56,29 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     }
 
     logger.info(LogEvents.USER_IMAGE_UPDATED, {
-      requestId,
       userId,
       status: 200,
-      durationMs: Date.now() - startTime,
     });
+    await logger.flush();
     return NextResponse.json({ image: imageUrl }, { status: 200 });
   }
   catch (error) {
     Sentry.captureException(error);
 
     logger.error(LogEvents.ERROR_UPDATING_USER_IMAGE, {
-      requestId,
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
-      durationMs: Date.now() - startTime,
     });
 
     if (publicId) {
       const destroyResult = await destroyImage(publicId);
       logger.warn('destroy_public_image_rollback', {
-        requestId,
         publicId,
         destroyResult,
       });
     }
 
+    await logger.flush();
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 },

@@ -20,7 +20,7 @@ async function EditExpensePageModal({
     notFound();
 
   return (
-    <Modal title="Edit Expense" open={true}>
+    <Modal title="Edit Expense" open={true} goBackOnClose={true}>
       <ExpenseForm expense={expense} />
     </Modal>
   );

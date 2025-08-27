@@ -1,3 +1,5 @@
+'use client';
+
 import type { ColumnDef, Table as TableType } from '@tanstack/react-table';
 import type { Dispatch, SetStateAction } from 'react';
 import {

@@ -10,6 +10,11 @@ export async function getUser(): Promise<UserDisplay> {
   return mapApiResponseToDisplay(response);
 }
 
+export async function lookupUserByEmail(email: string): Promise<UserDisplay> {
+  const response = await apiGet<UserApiResponse>(`/users/lookup/${email}`);
+  return mapApiResponseToDisplay(response);
+}
+
 export async function updateUser(
   data: UserProfileFormData,
 ): Promise<UserDisplay> {
@@ -26,7 +31,7 @@ export async function updateUserImage(
     formData.append('image', image);
   }
   else {
-    formData.append('image', new Blob([], { type: 'application/octet-stream' }));
+    formData.append('image', '');
   }
   const response = await apiPost<UserApiResponse>(`/users/image`, formData);
   return mapApiResponseToDisplay(response);

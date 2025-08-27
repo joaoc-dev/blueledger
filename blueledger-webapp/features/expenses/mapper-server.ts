@@ -1,8 +1,12 @@
-import type { ExpenseDocument } from './model';
+import type { ExpenseDocument } from './models';
 import type { ExpenseDisplay } from './schemas';
 
 export function mapModelToDisplay(expense: ExpenseDocument): ExpenseDisplay {
-  const obj = expense.toObject();
+  const obj = expense.toObject ? expense.toObject() : expense;
+  const userId
+    = obj.user?._id?.toString?.()
+      ?? (typeof obj.user === 'string' ? obj.user : obj.user?.toString?.());
+
   return {
     id: obj._id.toString(),
     description: obj.description,
@@ -11,7 +15,7 @@ export function mapModelToDisplay(expense: ExpenseDocument): ExpenseDisplay {
     totalPrice: obj.totalPrice,
     category: obj.category,
     date: obj.date,
-    user: { id: obj.user.toString() },
+    user: { id: userId },
     createdAt: obj.createdAt,
     updatedAt: obj.updatedAt,
   };

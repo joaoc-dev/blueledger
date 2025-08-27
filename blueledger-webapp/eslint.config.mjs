@@ -20,6 +20,7 @@ export default antfu({
     'components/ui-modified/**',
     'components/third-party/**',
     'components/third-party-modified/**',
+    'docker-compose.yaml',
   ],
 }, {
   rules: {

@@ -25,7 +25,6 @@ describe('confirmationDialog', () => {
       );
 
       expect(getByText('Dialog Title')).toBeInTheDocument();
-      expect(getByText('Dialog description')).toBeInTheDocument();
       expect(getByText('Cancel')).toBeInTheDocument();
       expect(getByText('Confirm')).toBeInTheDocument();
     });

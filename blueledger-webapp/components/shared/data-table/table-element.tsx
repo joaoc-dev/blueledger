@@ -1,3 +1,5 @@
+'use client';
+
 import type { Table as TableType } from '@tanstack/react-table';
 import React, { useMemo } from 'react';
 import { Table, TableBody, TableHeader } from '@/components/ui/table';

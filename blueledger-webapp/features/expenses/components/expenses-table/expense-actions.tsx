@@ -55,7 +55,12 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
     <>
       {isCompact
         ? (
-            <ButtonLink variant="ghost" href={fullHref} disabled={disabled}>
+            <ButtonLink
+              variant="ghost"
+              href={fullHref}
+              disabled={disabled}
+              className="!hover:bg-red-500 border-1"
+            >
               <SquarePen />
             </ButtonLink>
           )
@@ -75,7 +80,7 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
           {isCompact
             ? (
                 <Button
-                  className="cursor-pointer"
+                  className="cursor-pointer border-1"
                   variant="ghost"
                   disabled={disabled}
                 >
@@ -94,11 +99,12 @@ function ExpenseActions({ id, disabled, isCompact }: ItemOptionsProps) {
               )}
         </DialogTrigger>
         <ConfirmationDialog
-          title="Are you sure you want to delete this expense?"
+          title="Delete expense?"
           description="This operation is irreversible."
           onConfirm={handleDelete}
           confirmButtonText="Delete"
           cancelButtonText="Cancel"
+          variant="destructive"
         />
       </Dialog>
     </>

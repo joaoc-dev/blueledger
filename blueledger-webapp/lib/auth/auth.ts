@@ -2,12 +2,12 @@ import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import bcrypt from 'bcryptjs';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { validateRequest } from '@/app/api/validateRequest';
 import { LogEvents } from '@/constants/log-events';
 import { issueVerificationCodeForUser } from '@/features/auth/data';
 import { signInSchema } from '@/features/auth/schemas';
 import { getUserAuthRecordByEmail, getUserAuthRecordById } from '@/features/users/data';
 import { createLogger } from '@/lib/logger';
+import { validateSchema } from '@/lib/validate-schema';
 import clientPromise from '../db/mongoDB-client';
 import authConfig from './auth.config';
 
@@ -27,7 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const requestId = globalThis.crypto?.randomUUID?.();
         const startTime = Date.now();
 
-        const validationResult = validateRequest(signInSchema, credentials);
+        const validationResult = validateSchema(signInSchema, credentials);
         if (!validationResult.success) {
           logger.warn(LogEvents.VALIDATION_FAILED, {
             requestId,
