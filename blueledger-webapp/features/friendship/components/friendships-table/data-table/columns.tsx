@@ -45,7 +45,7 @@ export const activeFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
 
       return (
         <div className="flex items-center gap-3">
-          <Avatar className="size-8">
+          <Avatar className="size-9">
             <AvatarImage src={friend?.image || undefined} alt={friend?.name || 'User'} />
             <AvatarFallback>{friend?.name?.[0]?.toUpperCase() ?? 'U'}</AvatarFallback>
           </Avatar>
@@ -131,7 +131,7 @@ export const pendingFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
 
       return (
         <div className="flex items-center gap-3">
-          <Avatar className="size-8">
+          <Avatar className="size-9">
             <AvatarImage src={friend?.image || undefined} alt={friend?.name || 'User'} />
             <AvatarFallback>{friend?.name?.[0]?.toUpperCase() ?? 'U'}</AvatarFallback>
           </Avatar>

@@ -37,9 +37,8 @@ function ListCard({ friendship }: ListCardProps) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center gap-3 h-full">
-
-          <FriendshipActions friendship={friendship} isCompact={false} />
+        <div className="flex flex-col items-center justify-center gap-3 h-full ml-4">
+          <FriendshipActions friendship={friendship} isCompact={true} />
         </div>
 
       </div>

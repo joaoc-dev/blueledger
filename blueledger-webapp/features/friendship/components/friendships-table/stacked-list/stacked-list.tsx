@@ -37,11 +37,11 @@ export function StackedList({
   const hasPendingData = pendingTableRows.length > 0;
 
   const activeFriendshipsStackedList = (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-2 w-full max-h-[calc(100vh-200px)] overflow-y-auto">
       {hasActiveData
         ? (
-            activeFriendships.map(friendship => (
-              <ListCard key={friendship.id} friendship={friendship} />
+            activeTableRows.map(row => (
+              <ListCard key={row.original.id} friendship={row.original} />
             ))
           )
         : (
@@ -53,11 +53,11 @@ export function StackedList({
   );
 
   const pendingFriendshipsStackedList = (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-2 w-full max-h-[calc(100vh-200px)] overflow-y-auto">
       {hasPendingData
         ? (
-            pendingFriendships.map(friendship => (
-              <ListCard key={friendship.id} friendship={friendship} />
+            pendingTableRows.map(row => (
+              <ListCard key={row.original.id} friendship={row.original} />
             ))
           )
         : (
@@ -73,13 +73,13 @@ export function StackedList({
       label: 'Friends',
       value: 'friends',
       content: activeFriendshipsStackedList,
-      badge: activeFriendships.length,
+      badge: activeTableRows.length,
     },
     {
       label: 'Pending',
       value: 'pending',
       content: pendingFriendshipsStackedList,
-      badge: pendingFriendships.length,
+      badge: pendingTableRows.length,
     },
   ];
 
