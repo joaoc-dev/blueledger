@@ -47,6 +47,10 @@ export const LogEvents = {
   ERROR_REMOVING_FRIENDSHIP: 'error_removing_friendship',
 
   // Groups
+  GROUP_CREATED: 'group_created',
+  GROUP_MEMBERSHIPS_FETCHED: 'group_memberships_fetched',
+  ERROR_GETTING_GROUP_MEMBERSHIPS: 'error_getting_group_memberships',
+  ERROR_CREATING_GROUP: 'error_creating_group',
   GROUP_INVITE_SENT: 'group_invite_sent',
   ERROR_SENDING_GROUP_INVITE: 'error_sending_group_invite',
 
@@ -102,4 +106,8 @@ export const LogEvents = {
   DB_CONNECT_REUSE: 'db_connect_reuse',
   DB_CONNECT_SUCCESS: 'db_connect_success',
   DB_CONNECT_FAILED: 'db_connect_failed',
+
+  // Dashboard
+  DASHBOARD_DATA_FETCHED: 'dashboard_data_fetched',
+  ERROR_GETTING_DASHBOARD_DATA: 'error_getting_dashboard_data',
 } as const;
