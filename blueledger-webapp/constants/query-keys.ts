@@ -9,3 +9,7 @@ export const notificationKeys = {
 export const friendshipKeys = {
   byUser: ['friendships', 'user'] as const,
 };
+
+export const dashboardKeys = {
+  charts: ['dashboard', 'charts'] as const,
+};
