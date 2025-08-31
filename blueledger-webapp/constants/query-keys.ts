@@ -13,3 +13,11 @@ export const friendshipKeys = {
 export const dashboardKeys = {
   charts: ['dashboard', 'charts'] as const,
 };
+
+export const groupMembershipKeys = {
+  byUser: ['groupMemberships', 'user'] as const,
+};
+
+export const membershipKeys = {
+  byUser: ['memberships', 'user'] as const,
+};
