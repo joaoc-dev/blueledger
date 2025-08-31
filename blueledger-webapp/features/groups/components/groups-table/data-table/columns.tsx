@@ -201,7 +201,7 @@ export const pendingInvitesColumns: ColumnDef<GroupMembershipDisplay>[] = [
 
       return (
         <div className="flex justify-center gap-1">
-          <PendingGroupActions groupMembership={groupMembership} disabled={false} />
+          <PendingGroupActions groupMembership={groupMembership} />
         </div>
       );
     },
