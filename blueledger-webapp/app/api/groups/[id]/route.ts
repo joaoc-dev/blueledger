@@ -2,12 +2,93 @@ import type { NextAuthRequest } from 'next-auth';
 import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { LogEvents } from '@/constants/log-events';
-import { isGroupOwner } from '@/features/groups/data/group-memberships';
-import { deleteGroup, getGroupById } from '@/features/groups/data/groups-data';
-import { deleteGroupSchema } from '@/features/groups/schemas';
+import { getGroupMembershipByGroupIdAndUserId, isGroupOwner } from '@/features/groups/data/group-memberships';
+import { deleteGroup, getGroupById, updateGroup } from '@/features/groups/data/groups-data';
+import { deleteGroupSchema, patchGroupSchema } from '@/features/groups/schemas';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
+
+/**
+ * PATCH /api/groups/[id]
+ *
+ * Updates an existing group's information. Only the group owner can modify their group.
+ * Returns the updated group membership with all related details.
+ *
+ * Return statuses:
+ * - 200 OK : Group successfully updated.
+ * - 400 Bad Request : Invalid group ID format or request data.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 403 Forbidden : User is not the owner of the group.
+ * - 404 Not Found : Group does not exist.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
+export const PATCH = withAuth(async (
+  request: NextAuthRequest,
+  { params }: { params: Promise<{ id: string }> },
+) => {
+  const logger = createLogger('api/groups/[id]:patch', request);
+
+  try {
+    const { id } = await params;
+    const body = await request.json();
+
+    const validation = validateSchema(patchGroupSchema, { id, data: body });
+    if (!validation.success) {
+      logger.warn(LogEvents.VALIDATION_FAILED, {
+        details: validation.error.details,
+        status: 400,
+      });
+
+      await logger.flush();
+      return NextResponse.json(validation.error, { status: 400 });
+    }
+
+    const group = await getGroupById(id);
+    if (!group) {
+      logger.warn(LogEvents.GROUP_NOT_FOUND, { id, status: 404 });
+
+      await logger.flush();
+      return NextResponse.json({ error: 'Group not found' }, { status: 404 });
+    }
+
+    const userId = request.auth!.user!.id;
+    const isOwner = await isGroupOwner(id, userId);
+    if (!isOwner) {
+      logger.warn(LogEvents.GROUP_NOT_AUTHORIZED, { id, status: 403 });
+
+      await logger.flush();
+      return NextResponse.json({ error: 'Only owner can update group' }, { status: 403 });
+    }
+
+    const updatedGroup = await updateGroup(validation.data!);
+    if (!updatedGroup) {
+      logger.error(LogEvents.ERROR_PATCHING_GROUP, {
+        error: 'Failed to update group',
+        status: 500,
+      });
+
+      await logger.flush();
+      return NextResponse.json({ error: 'Failed to update group' }, { status: 500 });
+    }
+    logger.info(LogEvents.GROUP_CREATED, { id, status: 200 });
+
+    const populatedGroupMembership = await getGroupMembershipByGroupIdAndUserId(id, userId);
+    await logger.flush();
+    return NextResponse.json(populatedGroupMembership, { status: 200 });
+  }
+  catch (error) {
+    Sentry.captureException(error);
+
+    logger.error(LogEvents.ERROR_PATCHING_GROUP, {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      status: 500,
+    });
+
+    await logger.flush();
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+});
 
 /**
  * DELETE /api/groups/[id]
@@ -64,7 +145,7 @@ export const DELETE = withAuth(async (
     }
 
     // Soft delete the group by marking it as inactive
-    await deleteGroup({ id: group.id! });
+    await deleteGroup(group.id!);
 
     logger.info(LogEvents.GROUP_DELETED, { groupId: group.id, action: 'deleted', status: 200 });
     await logger.flush();
