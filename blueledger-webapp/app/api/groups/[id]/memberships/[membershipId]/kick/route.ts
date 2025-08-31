@@ -5,6 +5,7 @@ import { LogEvents } from '@/constants/log-events';
 import { GROUP_MEMBERSHIP_STATUS } from '@/features/groups/constants';
 import {
   getGroupMembershipWithDetails,
+  isGroupMembershipRecipient,
   isGroupOwner,
   updateGroupMembershipStatus,
 } from '@/features/groups/data/group-memberships';
@@ -16,7 +17,7 @@ export const PATCH = withAuth(async (
   request: NextAuthRequest,
   { params }: { params: Promise<{ id: string; membershipId: string }> },
 ) => {
-  const logger = createLogger('api/groups/[id]/memberships/[membershipId]/cancel:patch', request);
+  const logger = createLogger('api/groups/[id]/memberships/[membershipId]/kick', request);
 
   try {
     const { id: groupId, membershipId } = await params;
@@ -30,6 +31,21 @@ export const PATCH = withAuth(async (
       return NextResponse.json({ error: 'Group not found' }, { status: 404 });
     }
 
+    const isOwner = await isGroupOwner(groupId, userId);
+    if (!isOwner) {
+      logger.warn(LogEvents.UNAUTHORIZED_REQUEST, {
+        userId,
+        groupId,
+        status: 403,
+      });
+
+      await logger.flush();
+      return NextResponse.json(
+        { error: 'Users can only be kicked by the owner of the group' },
+        { status: 403 },
+      );
+    }
+
     const membership = await getGroupMembershipWithDetails(membershipId);
     if (!membership || membership.group.id !== groupId) {
       logger.warn(LogEvents.GROUP_MEMBERSHIP_NOT_FOUND, {
@@ -41,42 +57,39 @@ export const PATCH = withAuth(async (
       return NextResponse.json({ error: 'Membership not found' }, { status: 404 });
     }
 
-    const isOwner = await isGroupOwner(groupId, userId);
-    if (!isOwner) {
-      logger.warn(LogEvents.UNAUTHORIZED_REQUEST, {
+    const isMembershipRecipient = await isGroupMembershipRecipient(membershipId, userId);
+    if (isMembershipRecipient) {
+      logger.warn(LogEvents.VALIDATION_FAILED, {
         userId,
-        groupId,
-        status: 403,
+        membershipId,
+        status: 409,
       });
 
       await logger.flush();
-      return NextResponse.json(
-        { error: 'Invites can only be canceled by the owner of the group' },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: 'You can only kick other members' }, { status: 409 });
     }
 
-    if (membership.status !== GROUP_MEMBERSHIP_STATUS.PENDING) {
+    if (membership.status !== GROUP_MEMBERSHIP_STATUS.ACCEPTED) {
       logger.warn(LogEvents.VALIDATION_FAILED, {
         membershipId,
         currentStatus: membership.status,
-        requiredStatus: GROUP_MEMBERSHIP_STATUS.PENDING,
+        requiredStatus: GROUP_MEMBERSHIP_STATUS.ACCEPTED,
         status: 409,
       });
 
       await logger.flush();
       return NextResponse.json(
-        { error: `Cannot cancel membership with status '${membership.status}'` },
+        { error: `Cannot remove membership with status '${membership.status}'` },
         { status: 409 },
       );
     }
 
     await updateGroupMembershipStatus({
       membershipId,
-      status: GROUP_MEMBERSHIP_STATUS.CANCELED,
+      status: GROUP_MEMBERSHIP_STATUS.REMOVED,
     });
 
-    logger.info(LogEvents.GROUP_INVITE_CANCELED, {
+    logger.info(LogEvents.GROUP_MEMBERSHIP_REMOVED, {
       groupId,
       membershipId,
       status: 200,
@@ -89,7 +102,7 @@ export const PATCH = withAuth(async (
   catch (error) {
     Sentry.captureException(error);
 
-    logger.error(LogEvents.ERROR_CANCELING_GROUP_MEMBERSHIP, {
+    logger.error(LogEvents.ERROR_REMOVING_GROUP_MEMBERSHIP, {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
     });
