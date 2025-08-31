@@ -40,7 +40,6 @@ function ListCard({ friendship }: ListCardProps) {
         <div className="flex flex-col items-center justify-center gap-3 h-full ml-4">
           <FriendshipActions friendship={friendship} isCompact={true} />
         </div>
-
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
 export async function POST(request: NextRequest) {
-  const logger = createLogger('api/auth/signup', request);
+  const logger = createLogger('api/auth/signup:post', request);
 
   try {
     const body = await request.json();

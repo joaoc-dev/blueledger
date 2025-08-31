@@ -72,12 +72,12 @@ function DeclineFriendship({ friendship, isCompact, disabled }: DeclineFriendshi
                 disabled={disabled}
                 size="sm"
               >
-                <span>Reject</span>
+                <span>Decline</span>
               </Button>
             )}
       </DialogTrigger>
       <ConfirmationDialog
-        title="Reject friend request?"
+        title="Decline friend request?"
         onConfirm={handleReject}
         confirmButtonText="Continue"
         cancelButtonText="Cancel"

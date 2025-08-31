@@ -7,7 +7,7 @@ import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
 export const PATCH = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/notifications/mark-all-read', request);
+  const logger = createLogger('api/notifications/mark-all-read:patch', request);
 
   try {
     const userId = request.auth!.user!.id!;

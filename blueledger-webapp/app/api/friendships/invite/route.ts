@@ -15,7 +15,7 @@ import { sendToPusher } from '@/lib/pusher/pusher-server';
 import { validateSchema } from '@/lib/validate-schema';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/friendship/request:post', request);
+  const logger = createLogger('api/friendships/invite:post', request);
 
   try {
     const body = await request.json();

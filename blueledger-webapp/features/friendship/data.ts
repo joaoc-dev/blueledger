@@ -134,6 +134,9 @@ export async function updateFriendshipStatus(
   status: FriendshipStatus,
   acceptedAt?: Date,
 ): Promise<FriendshipDisplay | null> {
+  if (!mongoose.Types.ObjectId.isValid(friendshipId))
+    return null;
+
   const updateData: UpdateFriendshipData = {
     id: friendshipId,
     data: {

@@ -24,7 +24,7 @@ export const PATCH = withAuth(async (
   request: NextAuthRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
-  const logger = createLogger('api/friendship/accept', request);
+  const logger = createLogger('api/friendships/[id]/accept:patch', request);
 
   try {
     const { id } = await params;

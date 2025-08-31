@@ -169,6 +169,8 @@ export const pendingFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
   fillerColumn,
   {
     id: 'actions',
+    size: 110,
+    maxSize: 110,
     cell: ({ row }) => {
       const friendship = row.original;
 
@@ -180,10 +182,7 @@ export const pendingFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
     },
     enableSorting: false,
     enableHiding: false,
-    size: 110,
-    maxSize: 110,
     enableResizing: false,
     enablePinning: true,
   },
-
 ];

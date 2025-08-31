@@ -15,7 +15,7 @@ export const PATCH = withAuth(async (
   request: NextAuthRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
-  const logger = createLogger('api/expenses/patch', request);
+  const logger = createLogger('api/expenses/[id]:patch', request);
 
   try {
     const { id } = await params;
@@ -65,7 +65,7 @@ export const DELETE = withAuth(async (
   request: NextAuthRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
-  const logger = createLogger('api/expenses/delete', request);
+  const logger = createLogger('api/expenses/[id]:delete', request);
   try {
     const { id } = await params;
 

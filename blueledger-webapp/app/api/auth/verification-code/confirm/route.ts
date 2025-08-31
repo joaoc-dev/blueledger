@@ -10,7 +10,7 @@ import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/auth/verification-code/confirm', request);
+  const logger = createLogger('api/auth/verification-code/confirm:post', request);
 
   try {
     const body = await request.json();

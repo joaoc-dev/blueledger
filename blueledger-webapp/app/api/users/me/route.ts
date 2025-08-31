@@ -10,7 +10,7 @@ import { validateSchema } from '@/lib/validate-schema';
 
 // 🎯 OPTION 1: DIRECT USE - Even cleaner, no wrapper needed!
 export const GET = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/users/me/get', request);
+  const logger = createLogger('api/users/me:get', request);
 
   try {
     const userId = request.auth?.user?.id;
@@ -38,7 +38,7 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
 });
 
 export const PATCH = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/users/me/patch', request);
+  const logger = createLogger('api/users/me:patch', request);
 
   try {
     const userId = request.auth?.user?.id;

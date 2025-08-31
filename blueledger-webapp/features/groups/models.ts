@@ -1,12 +1,14 @@
 import type { Document, Model, ObjectId } from 'mongoose';
-import type { GroupMembershipStatus, GroupRole } from './constants';
+import type { GroupMembershipStatus, GroupRole, GroupStatus } from './constants';
 import mongoose, { Schema } from 'mongoose';
-import { GROUP_MEMBERSHIP_STATUS, GROUP_ROLES } from './constants';
+import { GROUP_MEMBERSHIP_STATUS, GROUP_ROLES, GROUP_STATUS } from './constants';
 
 interface IGroup {
   name: string;
   image?: string;
   owner: ObjectId | string;
+  status: GroupStatus;
+  deletedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,6 +34,12 @@ const GroupSchema = new Schema<GroupDocument>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Owner is required'],
+      index: true,
+    },
+    status: {
+      type: String,
+      enum: Object.values(GROUP_STATUS),
+      default: GROUP_STATUS.ACTIVE,
       index: true,
     },
   },

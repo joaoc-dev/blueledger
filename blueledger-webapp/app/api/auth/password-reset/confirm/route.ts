@@ -9,7 +9,7 @@ import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
 export async function POST(request: NextRequest) {
-  const logger = createLogger('api/auth/password-reset/confirm', request);
+  const logger = createLogger('api/auth/password-reset/confirm:post', request);
 
   try {
     const body = await request.json();

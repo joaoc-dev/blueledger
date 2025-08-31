@@ -33,7 +33,7 @@ export async function sendFriendRequestWithNotification(
         const createdFriendships = await Friendship.create([{
           requester: requesterId,
           recipient: recipientId,
-          status: 'pending',
+          status: FRIENDSHIP_STATUS.PENDING,
         }], { session });
 
         friendshipId = (createdFriendships[0]!._id as mongoose.Types.ObjectId).toString();

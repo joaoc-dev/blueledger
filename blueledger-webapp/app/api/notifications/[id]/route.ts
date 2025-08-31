@@ -12,7 +12,7 @@ export const PATCH = withAuth(async (
   request: NextAuthRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
-  const logger = createLogger('api/notifications/patch', request);
+  const logger = createLogger('api/notifications/[id]:patch', request);
 
   try {
     const { id } = await params;

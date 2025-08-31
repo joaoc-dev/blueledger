@@ -7,7 +7,7 @@ import { createLogger } from '@/lib/logger';
 import { authorizeChannel } from '@/lib/pusher/pusher-server';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/pusher/auth', request);
+  const logger = createLogger('api/pusher/auth:post', request);
 
   try {
     const formData = await request.text();

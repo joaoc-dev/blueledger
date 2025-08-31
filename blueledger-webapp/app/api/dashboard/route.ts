@@ -14,7 +14,7 @@ import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/dashboard/get', request);
+  const logger = createLogger('api/dashboard:get', request);
 
   try {
     const userId = request.auth!.user!.id;

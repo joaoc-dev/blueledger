@@ -7,11 +7,12 @@ import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/friendships/get', request);
+  const logger = createLogger('api/friendships:get', request);
 
   try {
     const userId = request.auth!.user!.id;
     const friendships = await getFriendshipsForUser(userId);
+
     logger.info(LogEvents.FRIENDSHIPS_FETCHED, {
       returnedCount: friendships.length,
       status: 200,
@@ -22,7 +23,7 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
   }
   catch (error) {
     Sentry.captureException(error);
-    console.warn(error);
+
     logger.error(LogEvents.ERROR_GETTING_FRIENDSHIPS, {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,

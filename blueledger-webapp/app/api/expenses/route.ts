@@ -9,7 +9,7 @@ import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/expenses/create', request);
+  const logger = createLogger('api/expenses:post', request);
 
   try {
     const body = await request.json();
@@ -51,7 +51,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
 });
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/expenses/get', request);
+  const logger = createLogger('api/expenses:get', request);
 
   try {
     const userId = request.auth!.user!.id;

@@ -9,7 +9,7 @@ import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/auth/verification-code/send', request);
+  const logger = createLogger('api/auth/verification-code/send:post', request);
 
   try {
     const userId = request.auth!.user!.id;

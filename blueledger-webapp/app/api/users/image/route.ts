@@ -12,7 +12,7 @@ import {
 import { createLogger } from '@/lib/logger';
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/users/image/post', request);
+  const logger = createLogger('api/users/image:post', request);
   let publicId: string | null | undefined;
   let imageUrl: string | null | undefined;
 
