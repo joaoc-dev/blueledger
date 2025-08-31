@@ -34,10 +34,16 @@ export default function Modal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen)
+          handleClose();
+      }}
+    >
       <DialogOverlay>
         <DialogContent className="w-full max-w-sm sm:max-w-md">
-          <DialogHeader className="mb-4">
+          <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
           {children}
