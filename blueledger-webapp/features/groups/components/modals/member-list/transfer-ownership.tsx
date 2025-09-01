@@ -12,10 +12,12 @@ interface TransferOwnershipProps {
   groupId: string;
   membershipId: string;
   memberName: string;
-  onSuccess?: () => void;
+  onTransfer?: () => void;
+  isOperationInProgress: boolean;
+  setIsOperationInProgress: (inProgress: boolean) => void;
 }
 
-function TransferOwnership({ groupId, membershipId, memberName, onSuccess }: TransferOwnershipProps) {
+function TransferOwnership({ groupId, membershipId, memberName, onTransfer, isOperationInProgress, setIsOperationInProgress }: TransferOwnershipProps) {
   const { transferOwnershipMutation } = useGroupMemberships();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -24,6 +26,7 @@ function TransferOwnership({ groupId, membershipId, memberName, onSuccess }: Tra
       return;
 
     try {
+      setIsOperationInProgress(true);
       posthog.capture(AnalyticsEvents.GROUP_MEMBERSHIP_TRANSFER_OWNERSHIP_CLICKED, {
         groupId,
         membershipId,
@@ -35,6 +38,7 @@ function TransferOwnership({ groupId, membershipId, memberName, onSuccess }: Tra
         id: membershipId,
       });
 
+      onTransfer?.();
       await transferOwnershipMutation.mutateAsync({
         groupId,
         membershipId,
@@ -44,8 +48,6 @@ function TransferOwnership({ groupId, membershipId, memberName, onSuccess }: Tra
       toast.success('Ownership transferred successfully', {
         id: membershipId,
       });
-
-      onSuccess?.();
     }
     catch (error) {
       // Check for specific error types
@@ -64,6 +66,9 @@ function TransferOwnership({ groupId, membershipId, memberName, onSuccess }: Tra
         id: membershipId,
       });
     }
+    finally {
+      setIsOperationInProgress(false);
+    }
   };
 
   return (
@@ -73,6 +78,7 @@ function TransferOwnership({ groupId, membershipId, memberName, onSuccess }: Tra
           className="cursor-pointer border-1"
           variant="ghost"
           size="sm"
+          disabled={isOperationInProgress}
         >
           <Crown className="w-4 h-4" />
         </Button>

@@ -89,7 +89,7 @@ export const PATCH = withAuth(async (
       status: GROUP_MEMBERSHIP_STATUS.REMOVED,
     });
 
-    logger.info(LogEvents.GROUP_MEMBERSHIP_REMOVED, {
+    logger.info(LogEvents.GROUP_MEMBERSHIP_KICKED, {
       groupId,
       membershipId,
       status: 200,
@@ -102,7 +102,7 @@ export const PATCH = withAuth(async (
   catch (error) {
     Sentry.captureException(error);
 
-    logger.error(LogEvents.ERROR_REMOVING_GROUP_MEMBERSHIP, {
+    logger.error(LogEvents.ERROR_KICKING_GROUP_MEMBERSHIP, {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
     });

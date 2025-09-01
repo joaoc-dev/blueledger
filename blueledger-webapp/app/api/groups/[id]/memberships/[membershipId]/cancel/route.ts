@@ -76,7 +76,7 @@ export const PATCH = withAuth(async (
       status: GROUP_MEMBERSHIP_STATUS.CANCELED,
     });
 
-    logger.info(LogEvents.GROUP_INVITE_CANCELED, {
+    logger.info(LogEvents.GROUP_MEMBERSHIP_CANCELED, {
       groupId,
       membershipId,
       status: 200,

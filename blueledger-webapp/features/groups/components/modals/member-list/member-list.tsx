@@ -1,4 +1,5 @@
 import type { GroupMembershipDisplay } from '../../../schemas';
+import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { GROUP_MEMBERSHIP_STATUS, GROUP_ROLES } from '../../../constants';
 import { MembershipStatusOverlay } from '../membership-status-overlay';
@@ -8,18 +9,21 @@ import TransferOwnership from './transfer-ownership';
 
 interface MemberListProps {
   memberships: GroupMembershipDisplay[];
-  userMembership: GroupMembershipDisplay;
   isLoading: boolean;
+  error: Error | null;
+  currentUserMembership: GroupMembershipDisplay;
   mode: 'manage' | 'transfer' | 'view';
-  onTransferSuccess?: () => void;
+  onTransfer?: () => void;
 }
 
-function MemberList({ memberships, isLoading, userMembership, mode, onTransferSuccess }: MemberListProps) {
+function MemberList({ memberships, isLoading, error, currentUserMembership, mode, onTransfer }: MemberListProps) {
+  const [isOperationInProgress, setIsOperationInProgress] = useState(false);
+
   return (
     <>
       <div className="flex flex-col gap-1 overflow-hidden text-sm text-muted-foreground">
         <p className="truncate">
-          {userMembership.group.name}
+          {currentUserMembership.group.name}
         </p>
         {isLoading
           ? (
@@ -36,9 +40,19 @@ function MemberList({ memberships, isLoading, userMembership, mode, onTransferSu
           ? (
               <LoadingMembers />
             )
-          : (memberships || []).length > 0
+          : error
+            ? (
+                <FailedToLoadMembers />
+              )
+            : memberships.length > 0
               ? (
-                  <List memberships={memberships} mode={mode} onTransferSuccess={onTransferSuccess} />
+                  <List
+                    memberships={memberships}
+                    mode={mode}
+                    onTransfer={onTransfer}
+                    isOperationInProgress={isOperationInProgress}
+                    setIsOperationInProgress={setIsOperationInProgress}
+                  />
                 )
               : (
                   <NoMembers />
@@ -60,6 +74,16 @@ function LoadingMembers() {
   );
 }
 
+function FailedToLoadMembers() {
+  return (
+    <div className="flex items-center justify-center h-full">
+      <div className="text-center text-muted-foreground">
+        <p className="text-sm font-medium">Failed to load members</p>
+      </div>
+    </div>
+  );
+}
+
 function NoMembers() {
   return (
     <div className="flex items-center justify-center h-full">
@@ -73,10 +97,12 @@ function NoMembers() {
 interface ListProps {
   memberships: GroupMembershipDisplay[];
   mode: 'manage' | 'transfer' | 'view';
-  onTransferSuccess?: () => void;
+  onTransfer?: () => void;
+  isOperationInProgress: boolean;
+  setIsOperationInProgress: (inProgress: boolean) => void;
 }
 
-function List({ memberships, mode, onTransferSuccess }: ListProps) {
+function List({ memberships, mode, onTransfer, isOperationInProgress, setIsOperationInProgress }: ListProps) {
   // Sort members consistently: owner first, then accepted members, then pending invites
   const sortedMemberships = [...memberships].sort((a, b) => {
     // Owner always comes first
@@ -147,6 +173,8 @@ function List({ memberships, mode, onTransferSuccess }: ListProps) {
                             groupId={membership.group.id}
                             membershipId={membership.id!}
                             memberEmail={membership.user?.email || ''}
+                            isOperationInProgress={isOperationInProgress}
+                            setIsOperationInProgress={setIsOperationInProgress}
                           />
                         )}
 
@@ -157,6 +185,8 @@ function List({ memberships, mode, onTransferSuccess }: ListProps) {
                             groupId={membership.group.id}
                             membershipId={membership.id!}
                             memberName={membership.user?.name || 'Unknown'}
+                            isOperationInProgress={isOperationInProgress}
+                            setIsOperationInProgress={setIsOperationInProgress}
                           />
                         )}
                       </>
@@ -169,7 +199,9 @@ function List({ memberships, mode, onTransferSuccess }: ListProps) {
                       groupId={membership.group.id}
                       membershipId={membership.id!}
                       memberName={membership.user?.name || 'Unknown'}
-                      onSuccess={onTransferSuccess}
+                      onTransfer={onTransfer}
+                      isOperationInProgress={isOperationInProgress}
+                      setIsOperationInProgress={setIsOperationInProgress}
                     />
                   )}
                 </div>

@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { membershipKeys } from '@/constants/query-keys';
+import { groupMembershipKeys } from '@/constants/query-keys';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { getQueryClient } from '@/lib/react-query/get-query-client';
 import { getMemberships } from '../../client';
@@ -32,7 +32,7 @@ function GroupsTable() {
     error,
     isLoading,
   } = useQuery({
-    queryKey: membershipKeys.byUser,
+    queryKey: groupMembershipKeys.byUser,
     queryFn: delayedGetMemberships,
   });
 
@@ -53,7 +53,7 @@ function GroupsTable() {
         <Button
           disabled={isFetching}
           onClick={() =>
-            queryClient.invalidateQueries({ queryKey: membershipKeys.byUser })}
+            queryClient.invalidateQueries({ queryKey: groupMembershipKeys.byUser })}
         >
           Retry
         </Button>

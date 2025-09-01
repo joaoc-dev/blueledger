@@ -89,7 +89,7 @@ export const PATCH = withAuth(async (
       status: GROUP_MEMBERSHIP_STATUS.DECLINED,
     });
 
-    logger.info(LogEvents.GROUP_INVITE_DECLINED, {
+    logger.info(LogEvents.GROUP_MEMBERSHIP_DECLINED, {
       groupId,
       membershipId,
       userId,

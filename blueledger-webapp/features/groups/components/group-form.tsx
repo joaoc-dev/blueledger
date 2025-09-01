@@ -35,15 +35,21 @@ function GroupForm({ currentUserMembership, onSubmit }: GroupFormProps) {
       id: toastId,
     });
 
+    const analyticsEvent = isUpdate
+      ? AnalyticsEvents.GROUP_EDIT_CLICKED
+      : AnalyticsEvents.GROUP_CREATE_CLICKED;
+
+    const analyticsAction = isUpdate ? 'update' : 'create';
+
     try {
-      posthog.capture(AnalyticsEvents.GROUP_SUBMIT, {
-        action: isUpdate ? 'update' : 'create',
+      posthog.capture(analyticsEvent, {
+        action: analyticsAction,
         hasImage: !!data.image,
       });
 
       if (isUpdate) {
         await groups.updateGroupMutation.mutateAsync({
-          id: currentUserMembership.group.id,
+          currentUserMembership,
           updatedGroup: data,
         });
       }

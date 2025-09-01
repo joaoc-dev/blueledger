@@ -120,13 +120,20 @@ export const PATCH = withAuth(async (
       validation.data!.toUserMembershipId,
     );
 
+    logger.info(LogEvents.GROUP_MEMBERSHIP_OWNERSHIP_TRANSFERRED, {
+      fromMembershipId: currentUserMembership.id,
+      toMembershipId: validation.data!.toUserMembershipId,
+      groupId,
+      status: 200,
+    });
+
     await logger.flush();
     return NextResponse.json({ success: true }, { status: 200 });
   }
   catch (error) {
     Sentry.captureException(error);
 
-    logger.error(LogEvents.ERROR_TRANSFERRING_OWNERSHIP, {
+    logger.error(LogEvents.ERROR_TRANSFERRING_GROUP_MEMBERSHIP_OWNERSHIP, {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
     });

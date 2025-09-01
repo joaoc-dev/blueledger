@@ -49,10 +49,59 @@ export const LogEvents = {
   // Groups
   GROUP_CREATED: 'group_created',
   GROUP_MEMBERSHIPS_FETCHED: 'group_memberships_fetched',
-  ERROR_GETTING_GROUP_MEMBERSHIPS: 'error_getting_group_memberships',
+  GROUP_DELETED: 'group_deleted',
+  GROUP_UPDATED: 'group_updated',
+  GROUP_NOT_FOUND: 'group_not_found',
   ERROR_CREATING_GROUP: 'error_creating_group',
-  GROUP_INVITE_SENT: 'group_invite_sent',
-  ERROR_SENDING_GROUP_INVITE: 'error_sending_group_invite',
+  ERROR_GETTING_GROUP_MEMBERSHIPS: 'error_getting_group_memberships',
+  ERROR_GETTING_GROUP: 'error_getting_group',
+  ERROR_PATCHING_GROUP: 'error_patching_group',
+  ERROR_DELETING_GROUP: 'error_deleting_group',
+  GROUP_NOT_AUTHORIZED: 'group_not_authorized',
+
+  // Group membership invite
+  GROUP_MEMBERSHIP_INVITE: 'group_membership_invite',
+  GROUP_MEMBERSHIP_INVITED: 'group_membership_invited',
+  ERROR_INVITING_GROUP_MEMBERSHIP: 'error_sending_group_invite',
+
+  // Group membership accept
+  GROUP_MEMBERSHIP_ACCEPT: 'group_membership_accept',
+  GROUP_MEMBERSHIP_ACCEPTED: 'group_membership_accepted',
+  ERROR_ACCEPTING_GROUP_MEMBERSHIP: 'error_accepting_group_membership',
+
+  // Group membership decline
+  GROUP_MEMBERSHIP_DECLINE: 'group_membership_decline',
+  GROUP_MEMBERSHIP_DECLINED: 'group_membership_declined',
+  ERROR_DECLINING_GROUP_MEMBERSHIP: 'error_declining_group_membership',
+
+  // Group membership cancel
+  GROUP_MEMBERSHIP_CANCEL: 'group_membership_cancel',
+  GROUP_MEMBERSHIP_CANCELED: 'group_membership_canceled',
+  ERROR_CANCELING_GROUP_MEMBERSHIP: 'error_canceling_group_membership',
+
+  // Group membership leave
+  GROUP_MEMBERSHIP_LEAVE: 'group_membership_leave',
+  GROUP_MEMBERSHIP_LEFT: 'group_membership_left',
+  ERROR_LEAVING_GROUP_MEMBERSHIP: 'error_leaving_group_membership',
+
+  // Group membership kick
+  GROUP_MEMBERSHIP_KICK: 'group_membership_kick',
+  GROUP_MEMBERSHIP_KICKED: 'group_membership_kicked',
+  ERROR_KICKING_GROUP_MEMBERSHIP: 'error_removing_group_membership',
+
+  // Group membership ownership transfer
+  GROUP_MEMBERSHIP_OWNERSHIP_TRANSFER: 'group_membership_ownership_transfer',
+  GROUP_MEMBERSHIP_OWNERSHIP_TRANSFERRED: 'group_membership_ownership_transferred',
+  ERROR_TRANSFERRING_GROUP_MEMBERSHIP_OWNERSHIP: 'error_transferring_group_membership_ownership',
+
+  // Group invitable friends
+  GROUP_INVITABLE_FRIENDS_REQUESTED: 'group_invitable_friends_requested',
+  GROUP_INVITABLE_FRIENDS_FETCHED: 'group_invitable_friends_fetched',
+  ERROR_GETTING_INVITABLE_FRIENDS: 'error_getting_invitable_friends',
+
+  GROUP_MEMBERSHIP_NOT_FOUND: 'group_membership_not_found',
+  GROUP_MEMBERSHIP_STATUS_UPDATED: 'group_membership_status_updated',
+  ERROR_UPDATING_GROUP_MEMBERSHIP_STATUS: 'error_updating_group_membership_status',
 
   // Users
   USER_FETCHED: 'user_fetched',

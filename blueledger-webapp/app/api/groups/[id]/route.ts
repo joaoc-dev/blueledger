@@ -71,7 +71,7 @@ export const PATCH = withAuth(async (
       await logger.flush();
       return NextResponse.json({ error: 'Failed to update group' }, { status: 500 });
     }
-    logger.info(LogEvents.GROUP_CREATED, { id, status: 200 });
+    logger.info(LogEvents.GROUP_UPDATED, { id, status: 200 });
 
     const populatedGroupMembership = await getGroupMembershipByGroupIdAndUserId(id, userId);
     await logger.flush();

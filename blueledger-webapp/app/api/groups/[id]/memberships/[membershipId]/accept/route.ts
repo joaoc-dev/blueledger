@@ -86,7 +86,7 @@ export const PATCH = withAuth(async (
       acceptedAt: new Date(),
     });
 
-    logger.info(LogEvents.GROUP_INVITE_ACCEPTED, {
+    logger.info(LogEvents.GROUP_MEMBERSHIP_ACCEPTED, {
       groupId,
       membershipId,
       userId,

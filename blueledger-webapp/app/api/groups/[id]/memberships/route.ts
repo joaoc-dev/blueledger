@@ -183,7 +183,7 @@ export const POST = withAuth(async (
       || existingMembership?.status === GROUP_MEMBERSHIP_STATUS.ACCEPTED;
 
     if (existingMembership && (invalidMembershipStatus)) {
-      logger.warn(LogEvents.GROUP_INVITE_SENT, { groupId, recipientUserId, status: 409 });
+      logger.warn(LogEvents.GROUP_MEMBERSHIP_INVITE, { groupId, recipientUserId, status: 409 });
 
       await logger.flush();
       return NextResponse.json(
@@ -204,7 +204,7 @@ export const POST = withAuth(async (
     const privateChannel = `private-user-${recipientUser.id}`;
     sendToPusher(privateChannel, PusherEvents.NOTIFICATION as PusherEvent, '');
 
-    logger.info(LogEvents.GROUP_INVITE_SENT, {
+    logger.info(LogEvents.GROUP_MEMBERSHIP_INVITE, {
       fromUser: inviterId,
       targetUserId: recipientUser.id,
       status: 201,
@@ -218,7 +218,7 @@ export const POST = withAuth(async (
   catch (error) {
     Sentry.captureException(error);
 
-    logger.error(LogEvents.ERROR_SENDING_GROUP_INVITE, {
+    logger.error(LogEvents.ERROR_INVITING_GROUP_MEMBERSHIP, {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
     });

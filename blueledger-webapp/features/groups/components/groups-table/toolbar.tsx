@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { ViewOptions } from '@/components/shared/data-table/view-options';
 import { Button } from '@/components/ui/button';
 import { AnalyticsEvents } from '@/constants/analytics-events';
-import { membershipKeys } from '@/constants/query-keys';
+import { groupMembershipKeys } from '@/constants/query-keys';
 import GroupModal from '../modals/group-modal';
 import { Filter } from './filter';
 
@@ -27,7 +27,7 @@ export function Toolbar({ table, isFetching, isLoading }: ToolbarProps) {
     posthog.capture(AnalyticsEvents.TABLE_REFRESH_CLICKED, {
       table: 'groups',
     });
-    queryClient.refetchQueries({ queryKey: membershipKeys.byUser });
+    queryClient.refetchQueries({ queryKey: groupMembershipKeys.byUser });
   };
 
   const isDisabled = isLoading || isFetching;
