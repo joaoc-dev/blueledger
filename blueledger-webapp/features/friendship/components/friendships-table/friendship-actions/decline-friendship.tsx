@@ -29,7 +29,7 @@ function DeclineFriendship({ friendship, isCompact, disabled }: DeclineFriendshi
 
       await declineMutation.mutateAsync(friendship);
 
-      toast.success('Friend request declined successfully', {
+      toast.success('Friend request declined', {
         id: friendship.id,
       });
     }

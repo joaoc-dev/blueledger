@@ -16,7 +16,7 @@ export const GET = withAuth(async (
   request: NextAuthRequest,
   { params }: { params: Promise<{ email: string }> },
 ) => {
-  const logger = createLogger('api/users/lookup/[email]', request);
+  const logger = createLogger('api/users/lookup/[email]:get', request);
 
   try {
     const { email } = await params;

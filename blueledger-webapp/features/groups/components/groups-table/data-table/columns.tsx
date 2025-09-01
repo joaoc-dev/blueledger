@@ -43,7 +43,7 @@ export const activeGroupsColumns: ColumnDef<GroupMembershipDisplay>[] = [
   },
   {
     id: 'owner',
-    accessorKey: 'owner',
+    accessorFn: groupMembership => groupMembership.group.ownerName,
     header: columnHeader('Owner'),
     size: 250,
     cell: ({ row }) => {
@@ -79,7 +79,7 @@ export const activeGroupsColumns: ColumnDef<GroupMembershipDisplay>[] = [
   },
   {
     id: 'memberSince',
-    accessorKey: 'memberSince',
+    accessorFn: groupMembership => groupMembership.group.memberSince,
     header: columnHeader('Member since'),
     size: 150,
     cell: ({ row }) => {
@@ -142,7 +142,7 @@ export const pendingInvitesColumns: ColumnDef<GroupMembershipDisplay>[] = [
   },
   {
     id: 'owner',
-    accessorKey: 'owner',
+    accessorFn: groupMembership => groupMembership.group.ownerName,
     header: columnHeader('Owner'),
     size: 250,
     cell: ({ row }) => {
@@ -164,7 +164,7 @@ export const pendingInvitesColumns: ColumnDef<GroupMembershipDisplay>[] = [
   },
   {
     id: 'invitedBy',
-    accessorKey: 'invitedBy',
+    accessorFn: groupMembership => groupMembership.invitedByName,
     header: columnHeader('Invited by'),
     size: 200,
     cell: ({ row }) => {
