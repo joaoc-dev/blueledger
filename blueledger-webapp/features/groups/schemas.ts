@@ -1,5 +1,7 @@
 import { Types } from 'mongoose';
 import { z } from 'zod';
+import { userDisplaySchema } from '../users/schemas';
+
 import {
   GROUP_MEMBERSHIP_STATUS_VALUES,
   GROUP_ROLES_VALUES,
@@ -132,3 +134,11 @@ const _groupMembershipApiResponseSchema = groupMembershipDisplaySchema.extend({
 });
 
 export type GroupMembershipApiResponse = z.infer<typeof _groupMembershipApiResponseSchema>;
+
+export const membershipCheckApiResponseSchema = z.object({
+  user: userDisplaySchema,
+  membershipStatus: groupMembershipStatusSchema.optional(),
+  canInvite: z.boolean(),
+});
+
+export type MembershipCheckApiResponse = z.infer<typeof membershipCheckApiResponseSchema>;
