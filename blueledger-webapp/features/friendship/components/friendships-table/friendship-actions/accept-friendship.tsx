@@ -19,7 +19,7 @@ function AcceptFriendship({ friendship, isCompact, disabled }: AcceptFriendshipP
 
   const handleAccept = async () => {
     try {
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPTED_CLICKED, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPT_CLICKED, {
         id: friendship.id,
       });
 
@@ -29,7 +29,7 @@ function AcceptFriendship({ friendship, isCompact, disabled }: AcceptFriendshipP
 
       await acceptMutation.mutateAsync(friendship);
 
-      toast.success('Friend request accepted successfully', {
+      toast.success('Friend request accepted', {
         id: friendship.id,
       });
     }

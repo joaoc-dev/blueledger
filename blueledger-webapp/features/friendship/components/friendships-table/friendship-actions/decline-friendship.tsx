@@ -19,7 +19,7 @@ function DeclineFriendship({ friendship, isCompact, disabled }: DeclineFriendshi
 
   const handleReject = async () => {
     try {
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINED_CLICKED, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINE_CLICKED, {
         id: friendship.id,
       });
 

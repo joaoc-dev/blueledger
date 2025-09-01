@@ -160,7 +160,7 @@ export function useFriendships() {
         friendship.id,
       );
 
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPTED_SUCCESS, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPT_SUCCESS, {
         action: 'accept friend request',
       });
     },
@@ -179,7 +179,7 @@ export function useFriendships() {
             ? 'friendship_not_found'
             : 'friendship_status_changed';
 
-          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPTED_ERROR, {
+          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPT_ERROR, {
             action: 'accept friend request',
             error: errorMessage,
           });
@@ -190,7 +190,7 @@ export function useFriendships() {
 
       // For other errors, rollback the optimistic update
       rollbackMutation(context?.previousFriendships);
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPTED_ERROR, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_ACCEPT_ERROR, {
         action: 'accept friend request',
         error: error instanceof Error ? error.message : 'unknown_error',
       });
@@ -217,7 +217,7 @@ export function useFriendships() {
     },
     onSuccess: (_mutationResult, _friendship, _context) => {
       // Keep it removed from the list
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINED_SUCCESS, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINE_SUCCESS, {
         action: 'decline friend request',
       });
     },
@@ -233,7 +233,7 @@ export function useFriendships() {
             ? 'friendship_not_found'
             : 'friendship_status_changed';
 
-          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINED_ERROR, {
+          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINE_ERROR, {
             action: 'cancel friend request',
             error: errorMessage,
           });
@@ -249,7 +249,7 @@ export function useFriendships() {
         );
       }
 
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINED_ERROR, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINE_ERROR, {
         action: 'decline friend request',
         error: error instanceof Error ? error.message : 'unknown_error',
       });
@@ -276,7 +276,7 @@ export function useFriendships() {
     },
     onSuccess: (_mutationResult, _friendship, _context) => {
       // Keep it removed from the list
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_SUCCESS, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCEL_SUCCESS, {
         action: 'cancel friend request',
       });
     },
@@ -292,7 +292,7 @@ export function useFriendships() {
             ? 'friendship_not_found'
             : 'friendship_status_changed';
 
-          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_ERROR, {
+          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCEL_ERROR, {
             action: 'cancel friend request',
             error: errorMessage,
           });
@@ -308,7 +308,7 @@ export function useFriendships() {
         );
       }
 
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_ERROR, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCEL_ERROR, {
         action: 'cancel friend request',
         error: error instanceof Error ? error.message : 'unknown_error',
       });
@@ -335,7 +335,7 @@ export function useFriendships() {
     },
     onSuccess: (_mutationResult, _friendship, _context) => {
       // Keep it removed from the list
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVED_SUCCESS, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVE_SUCCESS, {
         action: 'remove friendship',
       });
     },
@@ -353,7 +353,7 @@ export function useFriendships() {
               ? 'friendship_cannot_be_removed'
               : 'unauthorized';
 
-          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVED_ERROR, {
+          posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVE_ERROR, {
             action: 'remove friendship',
             error: errorMessage,
           });
@@ -369,7 +369,7 @@ export function useFriendships() {
         );
       }
 
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVED_ERROR, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVE_ERROR, {
         action: 'remove friendship',
         error: error instanceof Error ? error.message : 'unknown_error',
       });
