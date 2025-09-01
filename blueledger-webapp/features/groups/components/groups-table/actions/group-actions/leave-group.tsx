@@ -6,36 +6,41 @@ import ConfirmationDialog from '@/components/shared/confirmation-dialog';
 import { Button } from '@/components/ui-modified/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { AnalyticsEvents } from '@/constants/analytics-events';
-import { useGroups } from '@/features/groups/hooks/useGroups';
+import { useGroupMemberships } from '@/features/groups/hooks/useGroupMemberships';
 import { cn } from '@/lib/utils';
 
 interface LeaveGroupProps {
-  groupMembership: GroupMembershipDisplay;
+  currentUserMembership: GroupMembershipDisplay;
   className?: string;
   onModalOpen?: () => void;
   onModalClose?: () => void;
 }
 
-function LeaveGroup({ groupMembership, className, onModalOpen, onModalClose }: LeaveGroupProps) {
-  const { leaveGroupMutation } = useGroups();
+function LeaveGroup({
+  currentUserMembership,
+  className,
+  onModalOpen,
+  onModalClose,
+}: LeaveGroupProps) {
+  const { leaveGroupMutation } = useGroupMemberships();
 
   const handleLeave = async () => {
     try {
       posthog.capture(AnalyticsEvents.GROUP_LEAVE_CLICKED, {
-        groupId: groupMembership.group.id,
-        groupName: groupMembership.group.name,
+        groupId: currentUserMembership.group.id,
+        groupName: currentUserMembership.group.name,
       });
 
       onModalOpen?.();
 
       toast.loading('Leaving group...', {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
 
-      await leaveGroupMutation.mutateAsync(groupMembership);
+      await leaveGroupMutation.mutateAsync(currentUserMembership);
 
       toast.success('Successfully left the group', {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
     }
     catch (error) {
@@ -44,7 +49,7 @@ function LeaveGroup({ groupMembership, className, onModalOpen, onModalClose }: L
         const apiError = error as any;
         if (apiError.status === 404 || apiError.status === 403 || apiError.status === 409) {
           toast.error('Membership invite no longer exists', {
-            id: groupMembership.id,
+            id: currentUserMembership.id,
           });
           return;
         }
@@ -52,7 +57,7 @@ function LeaveGroup({ groupMembership, className, onModalOpen, onModalClose }: L
 
       // Generic error for other cases
       toast.error('Failed to leave group', {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
     }
     finally {

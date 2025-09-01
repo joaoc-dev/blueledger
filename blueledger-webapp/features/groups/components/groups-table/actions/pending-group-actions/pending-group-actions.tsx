@@ -3,14 +3,14 @@ import AcceptMembership from './accept-membership';
 import DeclineMembership from './decline-membership';
 
 interface PendingGroupActionsProps {
-  groupMembership: GroupMembershipDisplay;
+  currentUserMembership: GroupMembershipDisplay;
 }
 
-export function PendingGroupActions({ groupMembership }: PendingGroupActionsProps) {
+export function PendingGroupActions({ currentUserMembership }: PendingGroupActionsProps) {
   return (
     <>
-      <AcceptMembership groupMembership={groupMembership} disabled={!!groupMembership.optimisticId} />
-      <DeclineMembership groupMembership={groupMembership} disabled={!!groupMembership.optimisticId} />
+      <AcceptMembership currentUserMembership={currentUserMembership} disabled={!!currentUserMembership.optimisticId} />
+      <DeclineMembership currentUserMembership={currentUserMembership} disabled={!!currentUserMembership.optimisticId} />
     </>
   );
 }

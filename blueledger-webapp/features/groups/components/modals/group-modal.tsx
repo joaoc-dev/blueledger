@@ -5,11 +5,11 @@ import GroupForm from '../group-form';
 interface GroupModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  group?: GroupMembershipDisplay;
+  currentUserMembership?: GroupMembershipDisplay;
 }
 
-function GroupModal({ isOpen, setIsOpen, group }: GroupModalProps) {
-  const isUpdate = !!group?.group.id;
+function GroupModal({ isOpen, setIsOpen, currentUserMembership }: GroupModalProps) {
+  const isUpdate = !!currentUserMembership?.group.id;
 
   function handleClose() {
     setIsOpen(false);
@@ -23,7 +23,7 @@ function GroupModal({ isOpen, setIsOpen, group }: GroupModalProps) {
       goBackOnClose={false}
     >
       <GroupForm
-        group={group}
+        currentUserMembership={currentUserMembership}
         onSubmit={handleClose}
       />
     </Modal>

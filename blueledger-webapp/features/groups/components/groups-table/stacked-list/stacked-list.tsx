@@ -26,11 +26,17 @@ export function StackedList({
 
   const {
     activeGroupsTable,
-  } = useActiveGroupsTable(activeGroups);
+  } = useActiveGroupsTable(activeGroups, {
+    enablePagination: false,
+    enableSorting: false,
+  });
 
   const {
     pendingInvitesTable,
-  } = usePendingGroupInvitesTable(pendingInvites);
+  } = usePendingGroupInvitesTable(pendingInvites, {
+    enablePagination: false,
+    enableSorting: false,
+  });
 
   const activeTableRows = activeGroupsTable.getRowModel().rows;
   const pendingTableRows = pendingInvitesTable.getRowModel().rows;
@@ -42,7 +48,7 @@ export function StackedList({
       {hasActiveData
         ? (
             activeTableRows.map(row => (
-              <ListCard key={row.original.id} groupMembership={row.original} />
+              <ListCard key={row.original.id} currentUserMembership={row.original} />
             ))
           )
         : (
@@ -58,7 +64,7 @@ export function StackedList({
       {hasPendingData
         ? (
             pendingTableRows.map(row => (
-              <ListCard key={row.original.id} groupMembership={row.original} />
+              <ListCard key={row.original.id} currentUserMembership={row.original} />
             ))
           )
         : (

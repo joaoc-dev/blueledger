@@ -9,27 +9,27 @@ import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useGroupMemberships } from '@/features/groups/hooks/useGroupMemberships';
 
 interface DeclineMembershipProps {
-  groupMembership: GroupMembershipDisplay;
+  currentUserMembership: GroupMembershipDisplay;
   disabled: boolean;
 }
 
-function DeclineMembership({ groupMembership, disabled }: DeclineMembershipProps) {
+function DeclineMembership({ currentUserMembership, disabled }: DeclineMembershipProps) {
   const { declineMutation } = useGroupMemberships();
 
   const handleReject = async () => {
     try {
       posthog.capture(AnalyticsEvents.GROUP_INVITE_DECLINE_CLICKED, {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
 
       toast.loading('Declining group invite...', {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
 
-      await declineMutation.mutateAsync(groupMembership);
+      await declineMutation.mutateAsync(currentUserMembership);
 
       toast.success('Group invite declined', {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
     }
     catch (error) {
@@ -38,7 +38,7 @@ function DeclineMembership({ groupMembership, disabled }: DeclineMembershipProps
         const apiError = error as any;
         if (apiError.status === 404 || apiError.status === 403 || apiError.status === 409) {
           toast.error('Group invite no longer exists', {
-            id: groupMembership.id,
+            id: currentUserMembership.id,
           });
           return;
         }
@@ -46,7 +46,7 @@ function DeclineMembership({ groupMembership, disabled }: DeclineMembershipProps
 
       // Generic error for other cases
       toast.error('Failed to decline group invite', {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
     }
   };

@@ -19,17 +19,17 @@ import { useGroupForm } from '@/features/groups/hooks/useGroupForm';
 import { useGroups } from '@/features/groups/hooks/useGroups';
 
 interface GroupFormProps {
-  group?: GroupMembershipDisplay;
+  currentUserMembership?: GroupMembershipDisplay;
   onSubmit: () => void;
 }
 
-function GroupForm({ group, onSubmit }: GroupFormProps) {
-  const form = useGroupForm(group);
+function GroupForm({ currentUserMembership, onSubmit }: GroupFormProps) {
+  const form = useGroupForm(currentUserMembership);
   const groups = useGroups();
 
   const handleSubmit = async (data: GroupFormData) => {
-    const isUpdate = !!group?.group.id;
-    const toastId = group?.group.id ?? uuidv4();
+    const isUpdate = !!currentUserMembership?.group.id;
+    const toastId = currentUserMembership?.group.id ?? uuidv4();
 
     toast.loading(`${isUpdate ? 'Updating' : 'Creating'} group...`, {
       id: toastId,
@@ -43,7 +43,7 @@ function GroupForm({ group, onSubmit }: GroupFormProps) {
 
       if (isUpdate) {
         await groups.updateGroupMutation.mutateAsync({
-          id: group.group.id,
+          id: currentUserMembership.group.id,
           updatedGroup: data,
         });
       }

@@ -20,7 +20,7 @@ export const activeGroupsColumns: ColumnDef<GroupMembershipDisplay>[] = [
   {
     id: 'name',
     header: 'Group',
-    accessorFn: groupMembership => groupMembership.group.name,
+    accessorFn: currentUserMembership => currentUserMembership.group.name,
     enableSorting: false,
     enableHiding: false,
     cell: ({ row }) => {
@@ -43,24 +43,24 @@ export const activeGroupsColumns: ColumnDef<GroupMembershipDisplay>[] = [
   },
   {
     id: 'owner',
-    accessorFn: groupMembership => groupMembership.group.ownerName,
+    accessorFn: currentUserMembership => currentUserMembership.group.ownerName,
     header: columnHeader('Owner'),
     size: 250,
     cell: ({ row }) => {
-      const groupMembership = row.original;
+      const currentUserMembership = row.original;
 
       return (
         <div className="flex items-center gap-3">
           <Avatar className="size-9">
             <AvatarImage
-              src={(groupMembership.group as any).ownerImage || undefined}
-              alt={groupMembership.group.ownerName || 'User'}
+              src={(currentUserMembership.group as any).ownerImage || undefined}
+              alt={currentUserMembership.group.ownerName || 'User'}
             />
             <AvatarFallback>
-              {groupMembership.group.ownerName?.[0]?.toUpperCase() ?? 'U'}
+              {currentUserMembership.group.ownerName?.[0]?.toUpperCase() ?? 'U'}
             </AvatarFallback>
           </Avatar>
-          <span>{groupMembership.group.ownerName || 'Unknown user'}</span>
+          <span>{currentUserMembership.group.ownerName || 'Unknown user'}</span>
         </div>
       );
     },
@@ -70,7 +70,7 @@ export const activeGroupsColumns: ColumnDef<GroupMembershipDisplay>[] = [
     accessorKey: 'members',
     header: columnHeader('Members'),
     size: 300,
-    accessorFn: groupMembership => groupMembership.group.memberCount,
+    accessorFn: currentUserMembership => currentUserMembership.group.memberCount,
     cell: ({ getValue }) => (
       <span className="text-sm text-muted-foreground">
         {getValue<string>()}
@@ -79,16 +79,16 @@ export const activeGroupsColumns: ColumnDef<GroupMembershipDisplay>[] = [
   },
   {
     id: 'memberSince',
-    accessorFn: groupMembership => groupMembership.group.memberSince,
+    accessorFn: currentUserMembership => currentUserMembership.group.memberSince,
     header: columnHeader('Member since'),
     size: 150,
     cell: ({ row }) => {
-      const groupMembership = row.original;
+      const currentUserMembership = row.original;
 
       return (
         <span className="text-sm text-muted-foreground">
-          {groupMembership.group.memberSince
-            ? new Date(groupMembership.group.memberSince).toLocaleDateString()
+          {currentUserMembership.group.memberSince
+            ? new Date(currentUserMembership.group.memberSince).toLocaleDateString()
             : ''}
         </span>
       );
@@ -100,11 +100,11 @@ export const activeGroupsColumns: ColumnDef<GroupMembershipDisplay>[] = [
     size: 80,
     maxSize: 80,
     cell: ({ row }) => {
-      const groupMembership = row.original;
+      const currentUserMembership = row.original;
 
       return (
         <div className="flex justify-center">
-          <GroupActions groupMembership={groupMembership} disabled={false} />
+          <GroupActions currentUserMembership={currentUserMembership} disabled={false} />
         </div>
       );
     },
@@ -119,60 +119,60 @@ export const pendingInvitesColumns: ColumnDef<GroupMembershipDisplay>[] = [
   {
     id: 'name',
     header: 'Group',
-    accessorFn: groupMembership => groupMembership.group.name,
+    accessorFn: currentUserMembership => currentUserMembership.group.name,
     enableSorting: false,
     enableHiding: false,
     cell: ({ row }) => {
-      const { group } = row.original;
+      const currentUserMembership = row.original;
 
       return (
         <div className="flex items-center gap-3">
           <Avatar className="size-9">
             <AvatarImage
-              src={group.image || undefined}
-              alt={group.name || 'Group'}
+              src={currentUserMembership.group.image || undefined}
+              alt={currentUserMembership.group.name || 'Group'}
               className="object-cover scale-150"
             />
-            <AvatarFallback>{group.name?.[0]?.toUpperCase() ?? 'G'}</AvatarFallback>
+            <AvatarFallback>{currentUserMembership.group.name?.[0]?.toUpperCase() ?? 'G'}</AvatarFallback>
           </Avatar>
-          <span>{group.name || 'Unknown group'}</span>
+          <span>{currentUserMembership.group.name || 'Unknown group'}</span>
         </div>
       );
     },
   },
   {
     id: 'owner',
-    accessorFn: groupMembership => groupMembership.group.ownerName,
+    accessorFn: currentUserMembership => currentUserMembership.group.ownerName,
     header: columnHeader('Owner'),
     size: 250,
     cell: ({ row }) => {
-      const groupMembership = row.original;
+      const currentUserMembership = row.original;
 
       return (
         <div className="flex items-center gap-3">
           <Avatar className="size-9">
             <AvatarImage
-              src={(groupMembership.group as any).ownerImage || undefined}
-              alt={groupMembership.group.ownerName || 'User'}
+              src={(currentUserMembership.group as any).ownerImage || undefined}
+              alt={currentUserMembership.group.ownerName || 'User'}
             />
-            <AvatarFallback>{groupMembership.group.ownerName?.[0]?.toUpperCase() ?? 'U'}</AvatarFallback>
+            <AvatarFallback>{currentUserMembership.group.ownerName?.[0]?.toUpperCase() ?? 'U'}</AvatarFallback>
           </Avatar>
-          <span>{groupMembership.group.ownerName || 'Unknown user'}</span>
+          <span>{currentUserMembership.group.ownerName || 'Unknown user'}</span>
         </div>
       );
     },
   },
   {
     id: 'invitedBy',
-    accessorFn: groupMembership => groupMembership.invitedByName,
+    accessorFn: currentUserMembership => currentUserMembership.invitedByName,
     header: columnHeader('Invited by'),
     size: 200,
     cell: ({ row }) => {
-      const groupMembership = row.original;
+      const currentUserMembership = row.original;
 
       return (
         <span className="text-sm text-muted-foreground">
-          {groupMembership.invitedByName || 'Unknown'}
+          {currentUserMembership.invitedByName || 'Unknown'}
         </span>
       );
     },
@@ -183,10 +183,10 @@ export const pendingInvitesColumns: ColumnDef<GroupMembershipDisplay>[] = [
     header: columnHeader('Invited on'),
     size: 150,
     cell: ({ row }) => {
-      const { updatedAt } = row.original;
+      const currentUserMembership = row.original;
       return (
         <span className="text-sm text-muted-foreground">
-          {updatedAt ? new Date(updatedAt).toLocaleDateString() : ''}
+          {currentUserMembership.updatedAt ? new Date(currentUserMembership.updatedAt).toLocaleDateString() : ''}
         </span>
       );
     },
@@ -197,11 +197,11 @@ export const pendingInvitesColumns: ColumnDef<GroupMembershipDisplay>[] = [
     size: 110,
     maxSize: 110,
     cell: ({ row }) => {
-      const groupMembership = row.original;
+      const currentUserMembership = row.original;
 
       return (
         <div className="flex justify-center gap-1">
-          <PendingGroupActions groupMembership={groupMembership} />
+          <PendingGroupActions currentUserMembership={currentUserMembership} />
         </div>
       );
     },

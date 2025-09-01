@@ -8,19 +8,19 @@ import GroupModal from '@/features/groups/components/modals/group-modal';
 import { cn } from '@/lib/utils';
 
 interface EditGroupProps {
-  groupMembership: GroupMembershipDisplay;
+  currentUserMembership: GroupMembershipDisplay;
   className?: string;
   onModalOpen?: () => void;
   onModalClose?: () => void;
 }
 
-function EditGroup({ groupMembership, className, onModalOpen, onModalClose }: EditGroupProps) {
+function EditGroup({ currentUserMembership, className, onModalOpen, onModalClose }: EditGroupProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleEdit = () => {
     posthog.capture(AnalyticsEvents.GROUP_EDIT_CLICKED, {
-      groupId: groupMembership.group.id,
-      groupName: groupMembership.group.name,
+      groupId: currentUserMembership.group.id,
+      groupName: currentUserMembership.group.name,
     });
     onModalOpen?.();
     setIsModalOpen(true);
@@ -44,7 +44,7 @@ function EditGroup({ groupMembership, className, onModalOpen, onModalClose }: Ed
             onModalClose?.();
           setIsModalOpen(open);
         }}
-        group={groupMembership}
+        currentUserMembership={currentUserMembership}
       />
     </>
   );

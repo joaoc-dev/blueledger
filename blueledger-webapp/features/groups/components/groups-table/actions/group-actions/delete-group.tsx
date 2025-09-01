@@ -11,30 +11,35 @@ import { useGroups } from '@/features/groups/hooks/useGroups';
 import { cn } from '@/lib/utils';
 
 interface DeleteGroupProps {
-  groupMembership: GroupMembershipDisplay;
+  currentUserMembership: GroupMembershipDisplay;
   className?: string;
   onModalOpen?: () => void;
   onModalClose?: () => void;
 }
 
-function DeleteGroup({ groupMembership, className, onModalOpen, onModalClose }: DeleteGroupProps) {
+function DeleteGroup({
+  currentUserMembership,
+  className,
+  onModalOpen,
+  onModalClose,
+}: DeleteGroupProps) {
   const { deleteGroupMutation } = useGroups();
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleDelete = async () => {
     try {
       posthog.capture(AnalyticsEvents.GROUP_DELETE_CLICKED, {
-        id: groupMembership.group.id,
+        id: currentUserMembership.group.id,
       });
 
       toast.loading('Deleting group...', {
-        id: groupMembership.group.id,
+        id: currentUserMembership.group.id,
       });
 
-      await deleteGroupMutation.mutateAsync(groupMembership.group.id!);
+      await deleteGroupMutation.mutateAsync(currentUserMembership.group.id!);
 
       toast.success('Group deleted successfully', {
-        id: groupMembership.group.id,
+        id: currentUserMembership.group.id,
       });
     }
     catch (error) {
@@ -43,7 +48,7 @@ function DeleteGroup({ groupMembership, className, onModalOpen, onModalClose }: 
         const apiError = error as any;
         if (apiError.status === 404 || apiError.status === 403 || apiError.status === 409) {
           toast.error('Group no longer exists', {
-            id: groupMembership.group.id,
+            id: currentUserMembership.group.id,
           });
           return;
         }
@@ -51,7 +56,7 @@ function DeleteGroup({ groupMembership, className, onModalOpen, onModalClose }: 
 
       // Generic error for other cases
       toast.error('Failed to delete group', {
-        id: groupMembership.group.id,
+        id: currentUserMembership.group.id,
       });
     }
   };

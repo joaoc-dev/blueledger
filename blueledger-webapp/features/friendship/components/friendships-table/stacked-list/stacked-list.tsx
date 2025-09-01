@@ -25,11 +25,17 @@ export function StackedList({
 
   const {
     activeFriendshipsTable,
-  } = useActiveFriendshipsTable(activeFriendships);
+  } = useActiveFriendshipsTable(activeFriendships, {
+    enablePagination: false,
+    enableSorting: false,
+  });
 
   const {
     pendingFriendshipsTable,
-  } = usePendingFriendshipsTable(pendingFriendships);
+  } = usePendingFriendshipsTable(pendingFriendships, {
+    enablePagination: false,
+    enableSorting: false,
+  });
 
   const activeTableRows = activeFriendshipsTable.getRowModel().rows;
   const pendingTableRows = pendingFriendshipsTable.getRowModel().rows;

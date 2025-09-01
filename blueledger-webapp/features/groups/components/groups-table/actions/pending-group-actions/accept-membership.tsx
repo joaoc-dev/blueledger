@@ -9,27 +9,27 @@ import { AnalyticsEvents } from '@/constants/analytics-events';
 import { useGroupMemberships } from '@/features/groups/hooks/useGroupMemberships';
 
 interface AcceptMembershipProps {
-  groupMembership: GroupMembershipDisplay;
+  currentUserMembership: GroupMembershipDisplay;
   disabled: boolean;
 }
 
-function AcceptMembership({ groupMembership, disabled }: AcceptMembershipProps) {
+function AcceptMembership({ currentUserMembership, disabled }: AcceptMembershipProps) {
   const { acceptMutation } = useGroupMemberships();
 
   const handleAccept = async () => {
     try {
       posthog.capture(AnalyticsEvents.GROUP_INVITE_ACCEPT_CLICKED, {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
 
       toast.loading('Accepting membership...', {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
 
-      await acceptMutation.mutateAsync(groupMembership);
+      await acceptMutation.mutateAsync(currentUserMembership);
 
       toast.success('Membership accepted', {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
     }
     catch (error) {
@@ -38,7 +38,7 @@ function AcceptMembership({ groupMembership, disabled }: AcceptMembershipProps) 
         const apiError = error as any;
         if (apiError.status === 404 || apiError.status === 403 || apiError.status === 409) {
           toast.error('Membership invite no longer exists', {
-            id: groupMembership.id,
+            id: currentUserMembership.id,
           });
           return;
         }
@@ -46,7 +46,7 @@ function AcceptMembership({ groupMembership, disabled }: AcceptMembershipProps) 
 
       // Generic error for other cases
       toast.error('Failed to accept membership', {
-        id: groupMembership.id,
+        id: currentUserMembership.id,
       });
     }
   };
