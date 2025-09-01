@@ -3,7 +3,7 @@ import type { GroupMembershipDisplay } from '@/features/groups/schemas';
 import { columnHeader } from '@/components/shared/data-table/sortable-column';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { GroupActions } from '../actions/group-actions';
-import { PendingGroupActions } from '../actions/pending-group-actions/pending-group-actions';
+import { PendingGroupActions } from '../actions/pending-group-actions';
 
 const fillerColumn: ColumnDef<GroupMembershipDisplay> = {
   id: 'filler',

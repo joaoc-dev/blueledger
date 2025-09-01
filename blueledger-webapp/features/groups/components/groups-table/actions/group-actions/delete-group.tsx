@@ -57,14 +57,18 @@ function DeleteGroup({ groupMembership, className, onModalOpen, onModalClose }: 
   };
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={(open) => {
-      setDialogOpen(open);
-      if (open) {
-        onModalOpen?.();
-      } else {
-        onModalClose?.();
-      }
-    }}>
+    <Dialog
+      open={dialogOpen}
+      onOpenChange={(open) => {
+        setDialogOpen(open);
+        if (open) {
+          onModalOpen?.();
+        }
+        else {
+          onModalClose?.();
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="ghost" className={cn('w-full justify-start', className)}>
           <Trash />

@@ -1,6 +1,6 @@
 'use client';
 
-import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import { BadgeCheck, CreditCard, LogOut, Sparkles } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import posthog from 'posthog-js';
@@ -59,16 +59,6 @@ function UserProfileLinks({ onClose, pathname }: UserProfileLinksProps) {
         >
           <CreditCard className="size-4" />
           <span>Billing (soon)</span>
-        </Link>
-      </li>
-      <li className="flex flex-col gap-3">
-        <Link
-          onClick={onClose}
-          href="/user/notifications"
-          className=" flex items-center gap-2"
-        >
-          <Bell className="size-4" />
-          <span>Notifications</span>
         </Link>
       </li>
       <Separator />

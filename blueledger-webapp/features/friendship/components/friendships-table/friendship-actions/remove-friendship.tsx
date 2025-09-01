@@ -19,7 +19,7 @@ function RemoveFriendship({ friendship, isCompact, disabled }: RemoveFriendshipP
 
   const handleRemove = async () => {
     try {
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVED_CLICKED, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_REMOVE_CLICKED, {
         id: friendship.id,
       });
 

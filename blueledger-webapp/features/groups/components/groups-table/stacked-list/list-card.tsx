@@ -2,7 +2,7 @@ import type { GroupMembershipDisplay } from '@/features/groups/schemas';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { GROUP_MEMBERSHIP_STATUS } from '@/features/groups/constants';
 import { GroupActions } from '../actions/group-actions';
-import { PendingGroupActions } from '../actions/pending-group-actions/pending-group-actions';
+import { PendingGroupActions } from '../actions/pending-group-actions';
 
 interface ListCardProps {
   groupMembership: GroupMembershipDisplay;
@@ -48,7 +48,7 @@ function ListCard({ groupMembership }: ListCardProps) {
         {isPending
           ? (
               <div className="flex flex-col items-center justify-center gap-3 h-full ml-4">
-                <PendingGroupActions groupMembership={groupMembership} disabled={false} />
+                <PendingGroupActions groupMembership={groupMembership} />
               </div>
             )
           : (

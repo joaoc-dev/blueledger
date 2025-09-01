@@ -1,6 +1,6 @@
 'use client';
 
-import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import { BadgeCheck, CreditCard, LogOut, Sparkles } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import {
@@ -63,12 +63,6 @@ export function DesktopNavUser() {
           <DropdownMenuItem className="cursor-pointer">
             <CreditCard />
             Billing(soon)
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="cursor-pointer">
-            <Link href="/user/notifications">
-              <Bell />
-              Notifications
-            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
