@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import Providers from '@/lib/react-query/providers';
+import { generateMetadata, generateOrganizationStructuredData, generateWebsiteStructuredData } from '@/lib/seo';
 import './globals.css';
 
 const geistSans = Geist({
@@ -22,10 +23,24 @@ const inter = Inter({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: 'Blue Ledger',
-  description: 'The very best in financial management',
-};
+export const metadata: Metadata = generateMetadata({
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/hand-coins.png',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+    'apple-mobile-web-app-title': 'Blue Ledger',
+    'application-name': 'Blue Ledger',
+  },
+});
+
+// Generate structured data
+const websiteStructuredData = generateWebsiteStructuredData();
+const organizationStructuredData = generateOrganizationStructuredData();
 
 export default function RootLayout({
   children,
@@ -34,6 +49,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteStructuredData),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationStructuredData),
+          }}
+        />
+      </head>
       <AxiomWebVitals />
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}

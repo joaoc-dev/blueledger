@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Disallow protected routes
+Disallow: /dashboard
+Disallow: /expenses
+Disallow: /groups
+Disallow: /friends
+Disallow: /user
+Disallow: /auth/
+Disallow: /api/
+
+
+# Sitemap
+Sitemap: https://blueledger.production.joao-carvalho.com/

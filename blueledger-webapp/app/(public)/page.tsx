@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+import { pageSeoConfigs } from '@/lib/seo';
 import { LandingNav } from './landing-nav';
 import { Faq } from './sections/faq/faq';
 import { Features } from './sections/features/features';
@@ -5,6 +7,42 @@ import { Footer } from './sections/footer';
 import { Hero } from './sections/hero';
 import { Pricing } from './sections/pricing/pricing';
 import { Testimonials } from './sections/testimonials/testimonials';
+
+export const metadata: Metadata = {
+  title: pageSeoConfigs.home.title,
+  description: pageSeoConfigs.home.description,
+  keywords: [
+    'expense tracking app',
+    'bill splitting app',
+    'group expenses',
+    'financial management',
+    'budget app',
+    'receipt scanner',
+    'money management app',
+    'shared expenses',
+    'expense sharing',
+    'split bills',
+  ],
+  openGraph: {
+    title: pageSeoConfigs.home.title,
+    description: pageSeoConfigs.home.description,
+    type: 'website',
+    images: [
+      {
+        url: '/app_screenshot.png',
+        width: 1200,
+        height: 630,
+        alt: 'Blue Ledger - Smart Expense Management',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: pageSeoConfigs.home.title,
+    description: pageSeoConfigs.home.description,
+    images: ['/app_screenshot.png'],
+  },
+};
 
 export default function Home() {
   return (

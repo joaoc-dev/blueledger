@@ -1,8 +1,19 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { LogEvents } from '@/constants/log-events';
 import SignInForm from '@/features/auth/components/signin-form';
 import { auth } from '@/lib/auth/auth';
 import { createLogger } from '@/lib/logger';
+import { pageSeoConfigs } from '@/lib/seo';
+
+export const metadata: Metadata = {
+  title: pageSeoConfigs.signin.title,
+  description: pageSeoConfigs.signin.description,
+  robots: {
+    index: false, // Auth pages should not be indexed
+    follow: false,
+  },
+};
 
 export default async function SignInPage({
   searchParams,
