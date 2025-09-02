@@ -8,7 +8,18 @@ import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
-// 🎯 OPTION 1: DIRECT USE - Even cleaner, no wrapper needed!
+/**
+ * GET /api/users/me
+ *
+ * Retrieves the current authenticated user's profile information.
+ * Returns the user object with all profile details.
+ *
+ * Return statuses:
+ * - 200 OK : User profile successfully retrieved.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 404 Not Found : User not found.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
 export const GET = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/users/me:get', request);
 
@@ -33,10 +44,27 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
       status: 500,
     });
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });
 
+/**
+ * PATCH /api/users/me
+ *
+ * Updates the current authenticated user's profile information.
+ * Allows updating user details like name, email, etc. (based on schema validation).
+ * Returns the updated user object and success message.
+ *
+ * Return statuses:
+ * - 200 OK : User profile successfully updated.
+ * - 400 Bad Request : Invalid request data or validation failed.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 404 Not Found : User not found.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
 export const PATCH = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/users/me:patch', request);
 
@@ -77,6 +105,9 @@ export const PATCH = withAuth(async (request: NextAuthRequest) => {
       status: 500,
     });
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });

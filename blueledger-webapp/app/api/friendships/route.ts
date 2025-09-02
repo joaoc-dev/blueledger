@@ -6,6 +6,17 @@ import { getFriendshipsForUser } from '@/features/friendship/data';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
+/**
+ * GET /api/friendships
+ *
+ * Retrieves all friendships for the authenticated user.
+ * Returns an array of friendship objects with user details for both sides of each friendship.
+ *
+ * Return statuses:
+ * - 200 OK : Friendships successfully retrieved.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
 export const GET = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/friendships:get', request);
 
@@ -30,6 +41,9 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });

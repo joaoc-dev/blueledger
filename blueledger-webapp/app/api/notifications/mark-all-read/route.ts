@@ -6,6 +6,17 @@ import { markAllNotificationsAsRead } from '@/features/notifications/data';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
+/**
+ * PATCH /api/notifications/mark-all-read
+ *
+ * Marks all unread notifications as read for the authenticated user.
+ * Returns a success confirmation upon completion.
+ *
+ * Return statuses:
+ * - 200 OK : All notifications successfully marked as read.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
 export const PATCH = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/notifications/mark-all-read:patch', request);
 
@@ -29,6 +40,9 @@ export const PATCH = withAuth(async (request: NextAuthRequest) => {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });

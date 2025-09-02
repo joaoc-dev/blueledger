@@ -8,13 +8,27 @@ import { validateSendVerificationCodeRateLimits } from '@/features/auth/rate-lim
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
+/**
+ * POST /api/auth/verification-code/send
+ *
+ * Sends a new email verification code to the authenticated user.
+ * Rate limited to prevent abuse. Issues a new verification code with the configured TTL.
+ * Requires user authentication.
+ *
+ * Return statuses:
+ * - 200 OK : Verification code sent successfully.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 429 Too Many Requests : Rate limit exceeded, please wait before requesting another code.
+ * - 500 Internal Server Error : Unexpected error during verification code generation or sending.
+ */
 export const POST = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/auth/verification-code/send:post', request);
 
   try {
     const userId = request.auth!.user!.id;
 
-    const validateRateLimits = await validateSendVerificationCodeRateLimits(userId);
+    const validateRateLimits
+      = await validateSendVerificationCodeRateLimits(userId);
     if (!validateRateLimits.success) {
       logger.info(LogEvents.RATE_LIMIT_EXCEEDED, {
         userId,
@@ -31,10 +45,16 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       );
     }
 
-    const success = await issueVerificationCodeForUser(userId, VERIFICATION_CODE_TTL_MS);
+    const success = await issueVerificationCodeForUser(
+      userId,
+      VERIFICATION_CODE_TTL_MS,
+    );
     if (!success) {
       await logger.flush();
-      return NextResponse.json({ error: 'Failed to send verification code' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Failed to send verification code' },
+        { status: 500 },
+      );
     }
 
     logger.info(LogEvents.EMAIL_VERIFICATION_SENT, {
@@ -54,6 +74,9 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });

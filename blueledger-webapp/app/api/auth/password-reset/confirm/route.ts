@@ -8,6 +8,19 @@ import { passwordResetConfirmSchema } from '@/features/auth/schemas';
 import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
+/**
+ * POST /api/auth/password-reset/confirm
+ *
+ * Completes the password reset process by validating the reset code and updating the user's password.
+ * Requires a valid reset code, email address, and new password.
+ * Rate limited to prevent abuse. Does not require authentication (public endpoint).
+ *
+ * Return statuses:
+ * - 200 OK : Password reset completed successfully.
+ * - 400 Bad Request : Invalid reset code, email, or password, or validation failed.
+ * - 429 Too Many Requests : Rate limit exceeded, please wait before attempting to reset password.
+ * - 500 Internal Server Error : Unexpected error during password reset confirmation.
+ */
 export async function POST(request: NextRequest) {
   const logger = createLogger('api/auth/password-reset/confirm:post', request);
 
@@ -27,7 +40,8 @@ export async function POST(request: NextRequest) {
 
     const email = validationResult.data.email.toLowerCase();
 
-    const validateRateLimits = await validateConfirmPasswordResetRateLimits(email);
+    const validateRateLimits
+      = await validateConfirmPasswordResetRateLimits(email);
     if (!validateRateLimits.success) {
       logger.info(LogEvents.RATE_LIMIT_EXCEEDED, { email, status: 429 });
 
@@ -47,7 +61,10 @@ export async function POST(request: NextRequest) {
     const success = await confirmPasswordResetForUser(email, code, newPassword);
     if (!success) {
       await logger.flush();
-      return NextResponse.json({ error: 'Failed to confirm password reset' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Failed to confirm password reset' },
+        { status: 400 },
+      );
     }
 
     logger.info(LogEvents.EMAIL_PASSWORD_RESET_CONFIRMED, { email });
@@ -64,6 +81,9 @@ export async function POST(request: NextRequest) {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }

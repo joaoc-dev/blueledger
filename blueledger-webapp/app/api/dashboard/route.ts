@@ -13,6 +13,18 @@ import { getExpenses } from '@/features/expenses/data';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
+/**
+ * GET /api/dashboard
+ *
+ * Retrieves dashboard data including expense analytics and charts.
+ * Returns aggregated data for category shares, cumulative spend, day of week patterns, hour of day patterns, and seasonal trends.
+ *
+ * Return statuses:
+ * - 200 OK : Dashboard data successfully retrieved.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
+
 export const GET = withAuth(async (request: NextAuthRequest) => {
   const logger = createLogger('api/dashboard:get', request);
 
@@ -21,19 +33,14 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
 
     const expenses = await getExpenses(userId);
 
-    const [
-      categoryShare,
-      cumulativeSpend,
-      dayOfWeek,
-      hourOfDay,
-      seasonal,
-    ] = await Promise.all([
-      Promise.resolve(mapExpenseDisplayToCategoryShareData(expenses)),
-      Promise.resolve(mapExpenseDisplayToCumulativeSpendYTDData(expenses)),
-      Promise.resolve(mapExpenseDisplayToDayOfWeekData(expenses)),
-      Promise.resolve(mapExpenseDisplayToHourOfDayData(expenses)),
-      Promise.resolve(mapExpenseDisplayToSeasonalData(expenses)),
-    ]);
+    const [categoryShare, cumulativeSpend, dayOfWeek, hourOfDay, seasonal]
+      = await Promise.all([
+        Promise.resolve(mapExpenseDisplayToCategoryShareData(expenses)),
+        Promise.resolve(mapExpenseDisplayToCumulativeSpendYTDData(expenses)),
+        Promise.resolve(mapExpenseDisplayToDayOfWeekData(expenses)),
+        Promise.resolve(mapExpenseDisplayToHourOfDayData(expenses)),
+        Promise.resolve(mapExpenseDisplayToSeasonalData(expenses)),
+      ]);
 
     const dashboardData = {
       categoryShare,
@@ -57,6 +64,9 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });

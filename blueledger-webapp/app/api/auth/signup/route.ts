@@ -6,10 +6,26 @@ import { VERIFICATION_CODE_TTL_MS } from '@/features/auth/constants';
 import { issueVerificationCodeForUser } from '@/features/auth/data';
 import { hashPassword } from '@/features/auth/utils';
 import { createUser, getUserByEmail } from '@/features/users/data';
-import { createUserInputSchema, createUserSchema } from '@/features/users/schemas';
+import {
+  createUserInputSchema,
+  createUserSchema,
+} from '@/features/users/schemas';
 import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
+/**
+ * POST /api/auth/signup
+ *
+ * Creates a new user account and sends a verification code for email verification.
+ * Validates input data, checks for existing users, hashes passwords, and issues verification codes.
+ * Does not require authentication (public endpoint).
+ *
+ * Return statuses:
+ * - 200 OK : User account created successfully and verification code sent.
+ * - 400 Bad Request : Invalid request data or validation failed.
+ * - 409 Conflict : Email already exists in the system.
+ * - 500 Internal Server Error : Unexpected error during user creation or verification code sending.
+ */
 export async function POST(request: NextRequest) {
   const logger = createLogger('api/auth/signup:post', request);
 
@@ -31,7 +47,10 @@ export async function POST(request: NextRequest) {
     const existingUser = await getUserByEmail(userInput.email);
     if (existingUser) {
       await logger.flush();
-      return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
+      return NextResponse.json(
+        { error: 'Email already in use' },
+        { status: 409 },
+      );
     }
 
     const passwordHash = await hashPassword(userInput.password);
@@ -55,14 +74,11 @@ export async function POST(request: NextRequest) {
     // Issue email verification code
     await issueVerificationCodeForUser(user.id, VERIFICATION_CODE_TTL_MS);
 
-    logger.info(
-      LogEvents.AUTH_SIGN_UP,
-      {
-        provider: 'credentials_signup',
-        userId: user.id,
-        status: 201,
-      },
-    );
+    logger.info(LogEvents.AUTH_SIGN_UP, {
+      provider: 'credentials_signup',
+      userId: user.id,
+      status: 201,
+    });
     await logger.flush();
     return NextResponse.json({ success: true });
   }
@@ -76,6 +92,9 @@ export async function POST(request: NextRequest) {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }
