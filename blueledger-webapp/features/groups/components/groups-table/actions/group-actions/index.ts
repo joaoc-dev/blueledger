@@ -1,1 +1,1 @@
-export { GroupActions } from './group-actions';
+export { default as GroupActions } from './group-actions-with-modals';

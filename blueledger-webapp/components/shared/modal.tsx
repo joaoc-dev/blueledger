@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
 } from '@/components/ui/dialog';
 
@@ -41,14 +40,12 @@ export default function Modal({
           handleClose();
       }}
     >
-      <DialogOverlay>
-        <DialogContent className="w-full max-w-sm sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
-          {children}
-        </DialogContent>
-      </DialogOverlay>
+      <DialogContent className="w-full max-w-sm sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
+        {children}
+      </DialogContent>
     </Dialog>
   );
 }

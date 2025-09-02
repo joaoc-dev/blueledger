@@ -2,7 +2,7 @@ import type { GroupMembershipDisplay } from '@/features/groups/schemas';
 import { Crown, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { GROUP_ROLES } from '@/features/groups/constants';
 import AddMember from './add-member';
 import DeleteGroup from './delete-group';
@@ -15,147 +15,102 @@ import ViewMembers from './view-members';
 interface GroupActionsProps {
   currentUserMembership: GroupMembershipDisplay;
   disabled: boolean;
+  onEditGroup?: () => void;
+  onAddMember?: () => void;
+  onManageMembers?: () => void;
+  onTransferOwnership?: () => void;
+  onViewMembers?: () => void;
+  onDeleteGroup?: () => void;
+  onLeaveGroup?: () => void;
 }
 
-export function GroupActions({ currentUserMembership, disabled }: GroupActionsProps) {
-  // We keep the dropdown logically open while a modal is open to avoid mobile keyboards
-  // pushing the underlying dropdown. We hide it visually (but keep it mounted) so focus
-  // and layout don't jump. On modal close, we close the menu and then allow unmount.
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [keepMountedWhileModalOpen, setKeepMountedWhileModalOpen] = useState(false);
+export function GroupActions({
+  currentUserMembership,
+  disabled,
+  onEditGroup,
+  onAddMember,
+  onManageMembers,
+  onTransferOwnership,
+  onViewMembers,
+  onDeleteGroup,
+  onLeaveGroup,
+}: GroupActionsProps) {
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
+  // Safety check for null/undefined membership
+  if (!currentUserMembership || !currentUserMembership.role) {
+    return null;
+  }
 
   const isOwner = currentUserMembership.role === GROUP_ROLES.OWNER;
-  const dropdownMenuItemClass = 'h-10 text-lg md:h-9 md:text-sm';
+  const menuItemClass = 'flex w-full items-center gap-2 px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm cursor-pointer transition-colors';
+
+  const handleAction = (action?: () => void) => {
+    setPopoverOpen(false); // Close popover immediately
+    action?.(); // Call the action handler if it exists
+  };
 
   return (
-    <>
-      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            className="cursor-pointer border-1 relative"
-            variant="ghost"
-            disabled={disabled}
-          >
-            <MoreHorizontal />
-            {isOwner && <Crown className="absolute -top-1 -right-1 w-3 h-3 text-amber-600" />}
-          </Button>
-        </DropdownMenuTrigger>
-        {/* Keep content mounted while modal is open (hidden to prevent flicker/keyboard push). */}
-        <DropdownMenuContent
-          {...(keepMountedWhileModalOpen ? { forceMount: true } : {})}
-          className={
-            (keepMountedWhileModalOpen || !menuOpen)
-              ? 'w-(--radix-dropdown-menu-trigger-width) min-w-56 invisible opacity-0 pointer-events-none'
-              : 'w-(--radix-dropdown-menu-trigger-width) min-w-56'
-          }
-          side="bottom"
-          align="end"
-          sideOffset={8}
+    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          className="cursor-pointer border-1 relative"
+          variant="ghost"
+          disabled={disabled}
         >
-          <DropdownMenuGroup>
-            {isOwner
-              ? (
-                  <>
-                    <DropdownMenuItem asChild>
-                      <EditGroup
-                        currentUserMembership={currentUserMembership}
-                        className={dropdownMenuItemClass}
-                        onModalOpen={() => {
-                          setKeepMountedWhileModalOpen(true);
-                        }}
-                        onModalClose={() => {
-                          setMenuOpen(false);
-                          setTimeout(() => setKeepMountedWhileModalOpen(false), 200);
-                        }}
-                      />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <AddMember
-                        currentUserMembership={currentUserMembership}
-                        className={dropdownMenuItemClass}
-                        onModalOpen={() => {
-                          setKeepMountedWhileModalOpen(true);
-                        }}
-                        onModalClose={() => {
-                          setMenuOpen(false);
-                          setTimeout(() => setKeepMountedWhileModalOpen(false), 200);
-                        }}
-                      />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <ManageMembers
-                        currentUserMembership={currentUserMembership}
-                        className={dropdownMenuItemClass}
-                        onModalOpen={() => {
-                          setKeepMountedWhileModalOpen(true);
-                        }}
-                        onModalClose={() => {
-                          setMenuOpen(false);
-                          setTimeout(() => setKeepMountedWhileModalOpen(false), 200);
-                        }}
-                      />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <TransferOwnership
-                        currentUserMembership={currentUserMembership}
-                        className={dropdownMenuItemClass}
-                        onModalOpen={() => {
-                          setKeepMountedWhileModalOpen(true);
-                        }}
-                        onModalClose={() => {
-                          setMenuOpen(false);
-                          setTimeout(() => setKeepMountedWhileModalOpen(false), 200);
-                        }}
-                      />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <DeleteGroup
-                        currentUserMembership={currentUserMembership}
-                        className={dropdownMenuItemClass}
-                        onModalOpen={() => {
-                          setKeepMountedWhileModalOpen(true);
-                        }}
-                        onModalClose={() => {
-                          setMenuOpen(false);
-                          setTimeout(() => setKeepMountedWhileModalOpen(false), 200);
-                        }}
-                      />
-                    </DropdownMenuItem>
-                  </>
-                )
-              : (
-                  <>
-                    <DropdownMenuItem asChild>
-                      <ViewMembers
-                        currentUserMembership={currentUserMembership}
-                        className={dropdownMenuItemClass}
-                        onModalOpen={() => {
-                          setKeepMountedWhileModalOpen(true);
-                        }}
-                        onModalClose={() => {
-                          setMenuOpen(false);
-                          setTimeout(() => setKeepMountedWhileModalOpen(false), 200);
-                        }}
-                      />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <LeaveGroup
-                        currentUserMembership={currentUserMembership}
-                        className={dropdownMenuItemClass}
-                        onModalOpen={() => {
-                          setKeepMountedWhileModalOpen(true);
-                        }}
-                        onModalClose={() => {
-                          setMenuOpen(false);
-                          setTimeout(() => setKeepMountedWhileModalOpen(false), 200);
-                        }}
-                      />
-                    </DropdownMenuItem>
-                  </>
-                )}
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </>
+          <MoreHorizontal />
+          {isOwner && <Crown className="absolute -top-1 -right-1 w-3 h-3 text-amber-600" />}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-56 p-1"
+        side="bottom"
+        align="end"
+        sideOffset={8}
+
+      >
+        <div className="space-y-1">
+          {isOwner
+            ? (
+                <>
+                  <EditGroup
+                    currentUserMembership={currentUserMembership}
+                    className={menuItemClass}
+                    onClick={() => handleAction(onEditGroup)}
+                  />
+                  <AddMember
+                    className={menuItemClass}
+                    onClick={() => handleAction(onAddMember)}
+                  />
+                  <ManageMembers
+                    currentUserMembership={currentUserMembership}
+                    className={menuItemClass}
+                    onClick={() => handleAction(onManageMembers)}
+                  />
+                  <TransferOwnership
+                    className={menuItemClass}
+                    onClick={() => handleAction(onTransferOwnership)}
+                  />
+                  <DeleteGroup
+                    className={menuItemClass}
+                    onClick={() => handleAction(onDeleteGroup)}
+                  />
+                </>
+              )
+            : (
+                <>
+                  <ViewMembers
+                    className={menuItemClass}
+                    onClick={() => handleAction(onViewMembers)}
+                  />
+                  <LeaveGroup
+                    className={menuItemClass}
+                    onClick={() => handleAction(onLeaveGroup)}
+                  />
+                </>
+              )}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }

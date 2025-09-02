@@ -1,6 +1,11 @@
 import type { GroupMembershipDisplay } from '../../../schemas';
+import { useQueryClient } from '@tanstack/react-query';
+import { RotateCw } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '@/components/ui-modified/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { groupMembershipKeys } from '@/constants/query-keys';
+import { cn } from '@/lib/utils';
 import { GROUP_MEMBERSHIP_STATUS, GROUP_ROLES } from '../../../constants';
 import { MembershipStatusOverlay } from '../membership-status-overlay';
 import CancelInvite from './cancel-invite';
@@ -10,14 +15,46 @@ import TransferOwnership from './transfer-ownership';
 interface MemberListProps {
   memberships: GroupMembershipDisplay[];
   isLoading: boolean;
+  isFetching: boolean;
   error: Error | null;
   currentUserMembership: GroupMembershipDisplay;
   mode: 'manage' | 'transfer' | 'view';
   onTransfer?: () => void;
 }
 
-function MemberList({ memberships, isLoading, error, currentUserMembership, mode, onTransfer }: MemberListProps) {
+function MemberList({
+  memberships,
+  isLoading,
+  isFetching,
+  error,
+  currentUserMembership,
+  mode,
+  onTransfer,
+}: MemberListProps) {
   const [isOperationInProgress, setIsOperationInProgress] = useState(false);
+  const queryClient = useQueryClient();
+
+  const refreshMembers = () => {
+    switch (mode) {
+      case 'manage':
+        queryClient.refetchQueries({
+          queryKey: groupMembershipKeys.membershipsManagement(currentUserMembership.group.id),
+        });
+        break;
+
+      case 'transfer':
+        queryClient.refetchQueries({
+          queryKey: groupMembershipKeys.membershipsTransfer(currentUserMembership.group.id),
+        });
+        break;
+
+      case 'view':
+        queryClient.refetchQueries({
+          queryKey: groupMembershipKeys.membershipsView(currentUserMembership.group.id),
+        });
+        break;
+    }
+  };
 
   return (
     <>
@@ -25,17 +62,23 @@ function MemberList({ memberships, isLoading, error, currentUserMembership, mode
         <p className="truncate">
           {currentUserMembership.group.name}
         </p>
-        {isLoading
-          ? (
-              'Loading members...'
-            )
-          : (
-              <span className="text-xs">
-                {`${memberships?.length || 0} member${(memberships?.length || 0) !== 1 ? 's' : ''}`}
-              </span>
-            )}
+        <div className="flex items-center justify-between w-full">
+          {isLoading
+            ? (
+                'Loading members...'
+              )
+            : (
+                <span className="text-xs">
+                  {`${memberships?.length || 0} member${(memberships?.length || 0) !== 1 ? 's' : ''}`}
+                </span>
+              )}
+          <Button variant="outline" size="sm" onClick={refreshMembers}>
+            <RotateCw />
+          </Button>
+        </div>
+
       </div>
-      <div className="border rounded-lg overflow-hidden h-[400px] overflow-y-auto">
+      <div className={cn('border rounded-lg overflow-hidden h-[400px] overflow-y-auto', isFetching && 'opacity-50')}>
         {isLoading
           ? (
               <LoadingMembers />

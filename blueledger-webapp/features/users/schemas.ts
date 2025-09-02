@@ -58,7 +58,7 @@ export const patchUserSchema = z.object({
 
 export type PatchUserData = z.infer<typeof patchUserSchema>;
 
-const userDisplaySchema = z.object({
+export const userDisplaySchema = z.object({
   ...baseFields,
   id: idSchema,
   image: imageSchema,
