@@ -1,8 +1,7 @@
 'use client';
 
-import type { ColumnDef } from '@tanstack/react-table';
 import type { GroupMembershipDisplay } from '@/features/groups/schemas';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DraggableTable from '@/components/shared/data-table/draggable/draggable-table';
 import { Pagination } from '@/components/shared/data-table/pagination';
 import { TabsWithBadges } from '@/components/shared/tabs-with-badges';
@@ -36,13 +35,23 @@ export function DataTable({
     setColumnOrder: setPendingInvitesColumnOrder,
   } = usePendingGroupInvitesTable(pendingInvites);
 
+  // Reset pagination to page 1 when switching tabs
+  useEffect(() => {
+    if (activeTab === 'groups') {
+      activeGroupsTable.setPageIndex(0);
+    }
+    else {
+      pendingInvitesTable.setPageIndex(0);
+    }
+  }, [activeTab, activeGroupsTable, pendingInvitesTable]);
+
   const activeGroupsDraggableTable = (
     <DraggableTable
       table={activeGroupsTable}
       setColumnOrder={setActiveGroupsColumnOrder}
       isLoading={isLoading}
       isFetching={isFetching}
-      columns={activeGroupsColumns as unknown as ColumnDef<any>[]}
+      columns={activeGroupsColumns}
     />
   );
 
@@ -52,7 +61,7 @@ export function DataTable({
       setColumnOrder={setPendingInvitesColumnOrder}
       isLoading={isLoading}
       isFetching={isFetching}
-      columns={pendingInvitesColumns as unknown as ColumnDef<any>[]}
+      columns={pendingInvitesColumns}
     />
   );
 

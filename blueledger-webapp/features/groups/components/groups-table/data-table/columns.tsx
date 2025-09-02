@@ -67,13 +67,12 @@ export const activeGroupsColumns: ColumnDef<GroupMembershipDisplay>[] = [
   },
   {
     id: 'members',
-    accessorKey: 'members',
     header: columnHeader('Members'),
     size: 300,
     accessorFn: currentUserMembership => currentUserMembership.group.memberCount,
     cell: ({ getValue }) => (
       <span className="text-sm text-muted-foreground">
-        {getValue<string>()}
+        {getValue<number>()}
       </span>
     ),
   },

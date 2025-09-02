@@ -1,8 +1,7 @@
 'use client';
 
-import type { ColumnDef } from '@tanstack/react-table';
 import type { FriendshipDisplay } from '@/features/friendship/schemas';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DraggableTable from '@/components/shared/data-table/draggable/draggable-table';
 import { Pagination } from '@/components/shared/data-table/pagination';
 import { TabsWithBadges } from '@/components/shared/tabs-with-badges';
@@ -36,13 +35,23 @@ export function DataTable({
     setColumnOrder: setPendingFriendshipsColumnOrder,
   } = usePendingFriendshipsTable(pendingFriendships);
 
+  // Reset pagination to page 1 when switching tabs
+  useEffect(() => {
+    if (activeTab === 'friends') {
+      activeFriendshipsTable.setPageIndex(0);
+    }
+    else {
+      pendingFriendshipsTable.setPageIndex(0);
+    }
+  }, [activeTab, activeFriendshipsTable, pendingFriendshipsTable]);
+
   const activeFriendshipsDraggableTable = (
     <DraggableTable
       table={activeFriendshipsTable}
       setColumnOrder={setActiveFriendshipsColumnOrder}
       isLoading={isLoading}
       isFetching={isFetching}
-      columns={activeFriendshipsColumns as ColumnDef<FriendshipDisplay>[]}
+      columns={activeFriendshipsColumns}
     />
   );
   const pendingFriendshipsDraggableTable = (
@@ -51,7 +60,7 @@ export function DataTable({
       setColumnOrder={setPendingFriendshipsColumnOrder}
       isLoading={isLoading}
       isFetching={isFetching}
-      columns={pendingFriendshipsColumns as ColumnDef<FriendshipDisplay>[]}
+      columns={pendingFriendshipsColumns}
     />
   );
 
