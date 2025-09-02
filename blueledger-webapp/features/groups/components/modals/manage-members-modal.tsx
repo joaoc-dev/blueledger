@@ -1,8 +1,6 @@
 import type { GroupMembershipDisplay } from '../../schemas';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { RotateCw } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import Modal from '@/components/shared/modal';
-import { Button } from '@/components/ui/button';
 import { groupMembershipKeys } from '@/constants/query-keys';
 import { getGroupMemberships } from '../../client';
 import MemberList from './member-list/member-list';

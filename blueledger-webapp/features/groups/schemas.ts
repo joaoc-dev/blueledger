@@ -135,10 +135,10 @@ const _groupMembershipApiResponseSchema = groupMembershipDisplaySchema.extend({
 
 export type GroupMembershipApiResponse = z.infer<typeof _groupMembershipApiResponseSchema>;
 
-export const membershipCheckApiResponseSchema = z.object({
+const _membershipCheckApiResponseSchema = z.object({
   user: userDisplaySchema,
   membershipStatus: groupMembershipStatusSchema.optional(),
   canInvite: z.boolean(),
 });
 
-export type MembershipCheckApiResponse = z.infer<typeof membershipCheckApiResponseSchema>;
+export type MembershipCheckApiResponse = z.infer<typeof _membershipCheckApiResponseSchema>;
