@@ -9,7 +9,7 @@ A modern, performant, mobile-friendly expense-tracking web app with advanced UI/
 
 ### Built with:
 
-- ⏭️ Next.js 15.4.5 (App Router)
+- ⏭️ Next.js 15.5.2 (App Router)
 - ⚛️ App optimization with [React Compiler](https://react.dev/learn/react-compiler)
 - 🌐 RESTful API via Next.js App Router (`app/api`) — consumed with an Axios client wrapper
 - 🧩 Composable utility classes by Tailwind
@@ -276,7 +276,7 @@ Example:
 
 - `GET /api/users/me` - Get current user profile
 - `PATCH /api/users/me` - Update user profile
-- `GET /api/users/lookup/[email]` - Lookup user by email
+- `POST /api/users/lookup` - Lookup user by email
 - `POST /api/users/image` - Upload user avatar
 
 ### 💰 Expenses

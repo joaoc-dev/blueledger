@@ -10,9 +10,19 @@ export async function getUser(): Promise<UserDisplay> {
   return mapApiResponseToDisplay(response);
 }
 
-export async function lookupUserByEmail(email: string): Promise<UserDisplay> {
-  const response = await apiGet<UserApiResponse>(`/users/lookup/${email}`);
-  return mapApiResponseToDisplay(response);
+export async function lookupUserByEmail(email: string): Promise<UserDisplay | null> {
+  const response = await apiPost<{ success: boolean; message: string; user?: UserApiResponse }>(
+    '/users/lookup',
+    { email },
+  );
+
+  // Handle the new response format that prevents enumeration
+  if (response.success && response.user) {
+    return mapApiResponseToDisplay(response.user);
+  }
+
+  // Return null if user not found (generic response to prevent enumeration)
+  return null;
 }
 
 export async function updateUser(
