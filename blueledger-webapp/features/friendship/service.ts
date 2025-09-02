@@ -19,10 +19,16 @@ export async function sendFriendRequestWithNotification(
       let friendshipId: string;
 
       if (existingFriendship) {
-        // Update the friendship status
+        // Update the friendship with correct requester/recipient and status
         await Friendship.updateOne(
           { _id: existingFriendship.id },
-          { $set: { status: FRIENDSHIP_STATUS.PENDING } },
+          {
+            $set: {
+              requester: requesterId,
+              recipient: recipientId,
+              status: FRIENDSHIP_STATUS.PENDING,
+            },
+          },
           { session, runValidators: true },
         );
 

@@ -25,7 +25,7 @@ export function useFriendships() {
 
   function sortByDateDesc(friendships: FriendshipDisplay[]): FriendshipDisplay[] {
     return [...friendships].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
     );
   }
 

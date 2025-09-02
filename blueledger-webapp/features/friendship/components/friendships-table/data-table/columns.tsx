@@ -153,15 +153,15 @@ export const pendingFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
     ),
   },
   {
-    id: 'createdAt',
-    accessorKey: 'createdAt',
+    id: 'updatedAt',
+    accessorKey: 'updatedAt',
     header: columnHeader('Sent at'),
     size: 150,
     cell: ({ row }) => {
-      const { createdAt } = row.original;
+      const { updatedAt } = row.original;
       return (
         <span className="text-sm text-muted-foreground">
-          {createdAt ? new Date(createdAt).toLocaleDateString() : ''}
+          {updatedAt ? new Date(updatedAt).toLocaleDateString() : ''}
         </span>
       );
     },

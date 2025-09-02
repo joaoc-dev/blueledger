@@ -33,7 +33,7 @@ export function usePendingFriendshipsTable(
     defaultColumnOrder,
   });
 
-  const [sorting, setSorting] = useSortingWithUrl('createdAt', 'desc');
+  const [sorting, setSorting] = useSortingWithUrl('updatedAt', 'desc');
   const [pagination, setPagination] = usePaginationWithUrl();
   const [columnFilters, setColumnFilters] = useColumnFiltersWithUrl();
 
