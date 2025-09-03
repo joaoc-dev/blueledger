@@ -1,0 +1,60 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import posthog from 'posthog-js';
+import { AnalyticsEvents } from '@/constants/analytics-events';
+import { UserProfileLinks } from '@/features/users/components';
+
+interface MobileNavMenuProps {
+  links: { label: string; href: string }[];
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function MobileNavMenu({ links, isOpen, onClose }: MobileNavMenuProps) {
+  const pathname = usePathname();
+
+  return (
+    <>
+      <ul
+        className={`nav__sheet nav__sheet--links ${
+          isOpen ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
+        {links.map((link) => {
+          const isActive = pathname === link.href;
+
+          return (
+            <li key={link.label}>
+              <Link
+                onClick={() => {
+                  posthog.capture(AnalyticsEvents.NAV_LINK_CLICKED, { label: link.label, href: link.href });
+                  onClose();
+                }}
+                className={`nav__item px-6 py-2 hover:text-foreground ${
+                  isActive
+                    ? 'text-foreground border-l border-foreground'
+                    : 'text-muted-foreground'
+                }`}
+                href={link.href}
+              >
+                {link.label}
+              </Link>
+            </li>
+          );
+        })}
+
+        <UserProfileLinks onClose={onClose} pathname={pathname} />
+      </ul>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={onClose}
+        />
+      )}
+    </>
+  );
+}
+
+export default MobileNavMenu;

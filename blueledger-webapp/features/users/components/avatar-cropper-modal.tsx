@@ -1,0 +1,171 @@
+'use client';
+
+import type { Area } from 'react-easy-crop';
+import { useSession } from 'next-auth/react';
+import posthog from 'posthog-js';
+import { useCallback, useState } from 'react';
+import Cropper from 'react-easy-crop';
+import { toast } from 'sonner';
+import { useDebounceCallback } from 'usehooks-ts';
+import GenericDropzone from '@/components/shared/generic-dropzone';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { Slider } from '@/components/ui/slider';
+import { AnalyticsEvents } from '@/constants/analytics-events';
+import { updateUserImage } from '@/features/users/client';
+import { getCroppedImg } from '@/lib/utils/image';
+import AvatarPreviewPanel from './avatar-preview-panel';
+import { useUserStore } from './store';
+
+interface Props {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function AvatarCropperModal({ open, onClose }: Props) {
+  const { update } = useSession();
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedImage, setCroppedImage] = useState<Blob | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const setImage = useUserStore(state => state.setImage);
+
+  const createCroppedImage = useCallback(
+    async (imageSrc: string, croppedAreaPixels: Area) => {
+      const blob = await getCroppedImg(imageSrc, croppedAreaPixels);
+      setCroppedImage(blob);
+    },
+    [],
+  );
+
+  const debouncedCreateCroppedImage = useDebounceCallback(createCroppedImage, 250);
+
+  const handleCropComplete = async (_: Area, croppedPixels: Area) => {
+    if (!imageSrc)
+      return;
+    debouncedCreateCroppedImage(imageSrc, croppedPixels);
+  };
+
+  const handleDrop = (files: File[]) => {
+    const file = files[0];
+
+    if (!file)
+      return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setImageSrc(reader.result as string);
+      posthog.capture(AnalyticsEvents.AVATAR_FILE_DROPPED);
+    };
+  };
+
+  const closeModal = () => {
+    setImageSrc(null);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    onClose();
+  };
+
+  const onOpenChange = (open: boolean) => {
+    if (!open) {
+      closeModal();
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!croppedImage)
+      return;
+    setIsUploading(true);
+    try {
+      posthog.capture(AnalyticsEvents.AVATAR_UPLOAD_SUBMIT);
+      const updatedUser = await updateUserImage(croppedImage);
+      await update({
+        user: { image: updatedUser.image! },
+      });
+      setImage(updatedUser.image!);
+      closeModal();
+      toast.success('Profile picture uploaded successfully');
+      posthog.capture(AnalyticsEvents.AVATAR_UPLOAD_SUCCESS);
+    }
+    catch (error) {
+      console.error(error);
+      toast.error('Failed to upload profile picture');
+      posthog.capture(AnalyticsEvents.AVATAR_UPLOAD_ERROR);
+    }
+    finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md w-full h-[600px] flex flex-col gap-3">
+        {!imageSrc
+          ? (
+              <>
+                <DialogTitle>Upload your profile picture</DialogTitle>
+                <Separator />
+                <div className="h-full">
+                  <GenericDropzone
+                    onDrop={handleDrop}
+                    accept={{
+                      'image/jpeg': ['.jpg', '.jpeg'],
+                      'image/png': ['.png'],
+                    }}
+                    maxFileSize={1024 * 1024 * 4}
+                  />
+                </div>
+              </>
+            )
+          : (
+              <>
+                <DialogTitle>Crop your profile picture</DialogTitle>
+                <Separator />
+                <div className="relative w-full h-full rounded-sm overflow-hidden">
+                  <Cropper
+                    image={imageSrc}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1}
+                    cropShape="round"
+                    showGrid={false}
+                    onCropChange={setCrop}
+                    onZoomChange={setZoom}
+                    onCropComplete={handleCropComplete}
+                  />
+                </div>
+                <Separator />
+                <DialogFooter>
+                  <div className="flex flex-col gap-3 w-full">
+                    <Slider
+                      value={[zoom]}
+                      min={1}
+                      max={3}
+                      step={0.1}
+                      className="w-full"
+                      onValueChange={value => setZoom(value[0] ?? 1)}
+                    />
+                    <div className="flex items-center justify-center gap-12 w-full">
+                      <AvatarPreviewPanel croppedImage={croppedImage ?? undefined} />
+                    </div>
+                    <Separator />
+                    <Button onClick={handleUpload} disabled={isUploading}>
+                      {isUploading ? 'Uploading...' : 'Set new profile picture'}
+                    </Button>
+                  </div>
+                </DialogFooter>
+              </>
+            )}
+      </DialogContent>
+    </Dialog>
+  );
+}

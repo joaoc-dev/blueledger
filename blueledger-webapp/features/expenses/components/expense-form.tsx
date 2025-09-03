@@ -1,0 +1,227 @@
+'use client';
+
+import type { ExpenseDisplay, ExpenseFormData } from '../schemas';
+import type { NumericInputProps } from '@/components/shared/numeric-input';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
+import { toast } from 'sonner';
+import { v4 as uuidv4 } from 'uuid';
+import { DateTimePicker } from '@/components/shared/date-time-picker';
+import { NumericInput } from '@/components/shared/numeric-input';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { AnalyticsEvents } from '@/constants/analytics-events';
+import { useExpenseForm, useExpenses } from '../hooks';
+import { ExpenseCategorySelect } from './expense-category-select';
+
+interface ExpenseFormProps {
+  expense?: ExpenseDisplay;
+}
+
+function ExpenseForm({ expense }: ExpenseFormProps) {
+  const form = useExpenseForm(expense);
+  const router = useRouter();
+  const expenses = useExpenses();
+
+  const handleSubmit = async (data: ExpenseFormData) => {
+    const isUpdate = !!expense?.id;
+    const toastId = expense?.id ?? uuidv4();
+
+    toast.loading(`${isUpdate ? 'Updating' : 'Adding'} expense...`, {
+      id: toastId,
+    });
+
+    try {
+      posthog.capture(AnalyticsEvents.EXPENSE_SUBMIT, {
+        action: isUpdate ? 'update' : 'create',
+        category: data.category,
+      });
+
+      if (isUpdate) {
+        await expenses.updateExpenseMutation.mutateAsync({
+          id: expense.id!,
+          updatedExpense: data,
+        });
+      }
+      else {
+        await expenses.addExpenseMutation.mutateAsync(data);
+      }
+
+      toast.success(`${isUpdate ? 'Updated' : 'Added'} expense`, {
+        id: toastId,
+      });
+
+      router.back();
+    }
+    catch {
+      toast.error(`Failed to ${isUpdate ? 'update' : 'add'} expense`, {
+        id: toastId,
+      });
+    }
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        className="space-y-4 w-full max-w-sm mx-auto"
+        onSubmit={form.handleSubmit(handleSubmit)}
+      >
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="text"
+                  className="h-12 px-4 py-3 text-base touch-manipulation"
+                  style={{ fontSize: '16px' }} // Prevents zoom on iOS
+                  placeholder="What did you buy?"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="quantity"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Quantity</FormLabel>
+              <FormControl>
+                <QuantityInput
+                  value={field.value || undefined}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Price</FormLabel>
+              <FormControl>
+                <PriceInput
+                  value={field.value || undefined}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <FormControl>
+                <ExpenseCategorySelect
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Date</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          className="mt-6 w-full cursor-pointer hover:bg-primary/90
+            dark:hover:bg-primary/85 hover:shadow-sm focus-visible:ring-ring/40"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting
+            ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  {' '}
+                  Submitting...
+                </>
+              )
+            : (
+                'Submit'
+              )}
+        </Button>
+      </form>
+    </Form>
+  );
+}
+
+export default ExpenseForm;
+
+function PriceInput(props: Omit<NumericInputProps, 'decimalScale' | 'fixedDecimalScale' | 'thousandSeparator' | 'prefix' | 'ariaLabel' | 'decrementAriaLabel' | 'incrementAriaLabel'>) {
+  return (
+    <NumericInput
+      {...props}
+      decimalScale={2}
+      fixedDecimalScale
+      thousandSeparator=","
+      prefix="$"
+      step={1}
+      ariaLabel="Price in dollars"
+      decrementAriaLabel="Decrease price"
+      incrementAriaLabel="Increase price"
+      min={0}
+      max={999999}
+      placeholder="$0.00"
+    />
+  );
+}
+
+function QuantityInput(props: Omit<NumericInputProps, 'decimalScale' | 'thousandSeparator' | 'prefix' | 'ariaLabel' | 'decrementAriaLabel' | 'incrementAriaLabel'>) {
+  return (
+    <NumericInput
+      {...props}
+      decimalScale={2}
+      thousandSeparator={false}
+      prefix=""
+      step={0.5}
+      ariaLabel="Quantity"
+      decrementAriaLabel="Decrease quantity"
+      incrementAriaLabel="Increase quantity"
+      min={0}
+      max={999}
+      placeholder="0"
+    />
+  );
+}

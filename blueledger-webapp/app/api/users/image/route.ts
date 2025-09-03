@@ -1,0 +1,107 @@
+import type { NextAuthRequest } from 'next-auth';
+import * as Sentry from '@sentry/nextjs';
+import { NextResponse } from 'next/server';
+import { LogEvents } from '@/constants/log-events';
+import { getUserById, removeImageFromUser } from '@/features/users/data';
+import { withAuth } from '@/lib/api/withAuth';
+import {
+  destroyImage,
+  handleImageUploadAndUserUpdate,
+  removePreviousImageIfExists,
+} from '@/lib/cloudinary';
+import { createLogger } from '@/lib/logger';
+
+/**
+ * POST /api/users/image
+ *
+ * Uploads or removes a profile image for the authenticated user.
+ * If an image is provided, it uploads to Cloudinary and updates the user's profile.
+ * If no image or empty string is provided, it removes the current profile image.
+ * Automatically removes the previous image from Cloudinary when replaced.
+ *
+ * Return statuses:
+ * - 200 OK : Profile image successfully updated or removed.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 404 Not Found : User not found.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
+
+export const POST = withAuth(async (request: NextAuthRequest) => {
+  const logger = createLogger('api/users/image:post', request);
+  let publicId: string | null | undefined;
+  let imageUrl: string | null | undefined;
+
+  try {
+    const formData = await request.formData();
+    const image = formData.get('image') as Blob;
+
+    const userId = request.auth?.user?.id;
+    const user = await getUserById(userId!);
+    if (!user) {
+      logger.warn(LogEvents.USER_NOT_FOUND, {
+        userId,
+        status: 404,
+      });
+      await logger.flush();
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const originalImagePublicId = user.imagePublicId;
+
+    // Check if image is provided and not empty (handle empty string for removal)
+    if (
+      image
+      && (typeof image === 'string'
+        ? (image as string).trim() !== ''
+        : image.size > 0)
+    ) {
+      const updatedUser = await handleImageUploadAndUserUpdate(userId!, image);
+      publicId = updatedUser.imagePublicId;
+      imageUrl = updatedUser.image;
+
+      await removePreviousImageIfExists(originalImagePublicId);
+    }
+    else {
+      const updatedUser = await removeImageFromUser(userId!);
+      if (!updatedUser) {
+        logger.warn(LogEvents.USER_NOT_FOUND, {
+          userId,
+          status: 404,
+        });
+        await logger.flush();
+        return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      }
+
+      await removePreviousImageIfExists(originalImagePublicId);
+    }
+
+    logger.info(LogEvents.USER_IMAGE_UPDATED, {
+      userId,
+      status: 200,
+    });
+    await logger.flush();
+    return NextResponse.json({ image: imageUrl }, { status: 200 });
+  }
+  catch (error) {
+    Sentry.captureException(error);
+
+    logger.error(LogEvents.ERROR_UPDATING_USER_IMAGE, {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      status: 500,
+    });
+
+    if (publicId) {
+      const destroyResult = await destroyImage(publicId);
+      logger.warn('destroy_public_image_rollback', {
+        publicId,
+        destroyResult,
+      });
+    }
+
+    await logger.flush();
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
+  }
+});

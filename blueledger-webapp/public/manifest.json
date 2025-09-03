@@ -1,0 +1,21 @@
+{
+  "name": "Blue Ledger - Smart Expense Management",
+  "short_name": "Blue Ledger",
+  "description": "Track expenses, split bills, and manage group finances with ease.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "productivity", "utilities"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/hand-coins512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}
