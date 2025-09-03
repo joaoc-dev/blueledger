@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
 } from '@/components/ui/dialog';
 
@@ -34,15 +33,19 @@ export default function Modal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogOverlay>
-        <DialogContent className="w-full max-w-sm sm:max-w-md">
-          <DialogHeader className="mb-4">
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
-          {children}
-        </DialogContent>
-      </DialogOverlay>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen)
+          handleClose();
+      }}
+    >
+      <DialogContent className="w-full max-w-sm sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
+        {children}
+      </DialogContent>
     </Dialog>
   );
 }

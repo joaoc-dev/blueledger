@@ -19,7 +19,7 @@ function DeclineFriendship({ friendship, isCompact, disabled }: DeclineFriendshi
 
   const handleReject = async () => {
     try {
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINED_CLICKED, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_DECLINE_CLICKED, {
         id: friendship.id,
       });
 
@@ -29,7 +29,7 @@ function DeclineFriendship({ friendship, isCompact, disabled }: DeclineFriendshi
 
       await declineMutation.mutateAsync(friendship);
 
-      toast.success('Friend request declined successfully', {
+      toast.success('Friend request declined', {
         id: friendship.id,
       });
     }
@@ -72,12 +72,12 @@ function DeclineFriendship({ friendship, isCompact, disabled }: DeclineFriendshi
                 disabled={disabled}
                 size="sm"
               >
-                <span>Reject</span>
+                <span>Decline</span>
               </Button>
             )}
       </DialogTrigger>
       <ConfirmationDialog
-        title="Reject friend request?"
+        title="Decline friend request?"
         onConfirm={handleReject}
         confirmButtonText="Continue"
         cancelButtonText="Cancel"

@@ -97,16 +97,6 @@ export async function getFriendshipsForUser(
   return friendships.map(friendship => mapModelToDisplay(friendship, userId));
 }
 
-// export async function createFriendship(
-//   friendship: CreateFriendshipData,
-// ): Promise<FriendshipDisplay> {
-//   await dbConnect();
-
-//   const createdFriendship = await Friendship.create(friendship.data);
-
-//   return mapModelToDisplay(createdFriendship);
-// }
-
 async function updateFriendship(
   friendship: UpdateFriendshipData,
 ): Promise<FriendshipDisplay | null> {
@@ -121,19 +111,14 @@ async function updateFriendship(
   return updatedFriendship ? mapModelToDisplay(updatedFriendship) : null;
 }
 
-// export async function deleteFriendship(id: string): Promise<FriendshipDisplay | null> {
-//   await dbConnect();
-
-//   const deletedFriendship = await Friendship.findByIdAndDelete(id);
-
-//   return deletedFriendship ? mapModelToDisplay(deletedFriendship) : null;
-// }
-
 export async function updateFriendshipStatus(
   friendshipId: string,
   status: FriendshipStatus,
   acceptedAt?: Date,
 ): Promise<FriendshipDisplay | null> {
+  if (!mongoose.Types.ObjectId.isValid(friendshipId))
+    return null;
+
   const updateData: UpdateFriendshipData = {
     id: friendshipId,
     data: {

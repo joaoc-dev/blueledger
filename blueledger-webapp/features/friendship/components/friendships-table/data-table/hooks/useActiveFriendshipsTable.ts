@@ -7,7 +7,16 @@ import { ACTIVE_FRIENDSHIPS_TABLE_CONFIG } from '../../constants';
 import { useColumnFiltersWithUrl } from '../../hooks/useColumnFiltersWithUrl';
 import { activeFriendshipsColumns } from '../columns';
 
-export function useActiveFriendshipsTable(data: FriendshipDisplay[]) {
+interface UseActiveFriendshipsTableOptions {
+  enablePagination?: boolean;
+  enableSorting?: boolean;
+}
+
+export function useActiveFriendshipsTable(
+  data: FriendshipDisplay[],
+  options: UseActiveFriendshipsTableOptions = {},
+) {
+  const { enablePagination = true, enableSorting = true } = options;
   const defaultColumnOrder = activeFriendshipsColumns.map(c => c.id!).filter(Boolean);
 
   const localStorageKeys = ACTIVE_FRIENDSHIPS_TABLE_CONFIG.LOCAL_STORAGE_KEYS;
@@ -28,6 +37,10 @@ export function useActiveFriendshipsTable(data: FriendshipDisplay[]) {
   const [pagination, setPagination] = usePaginationWithUrl();
   const [columnFilters, setColumnFilters] = useColumnFiltersWithUrl();
 
+  // Only initialize sorting and pagination if enabled
+  const sortingState = enableSorting ? sorting : undefined;
+  const paginationState = enablePagination ? pagination : undefined;
+
   const mergedColumnVisibility = {
     query: false, // Always force this hidden
     ...columnVisibility, // Keep persisted visibility for other columns
@@ -43,26 +56,26 @@ export function useActiveFriendshipsTable(data: FriendshipDisplay[]) {
       columnPinning: {
         right: ['filler', 'actions'],
       },
-      // Set initial pagination state to prevent TanStack Table from overriding it
-      pagination,
+      // Set initial pagination state to prevent TanStack Table from overriding it (only if enabled)
+      ...(enablePagination && { pagination }),
     },
     // Prevent automatic page resets when data changes
     autoResetPageIndex: false,
     state: {
       columnVisibility: mergedColumnVisibility,
-      sorting,
+      ...(enableSorting && { sorting: sortingState }),
       columnFilters,
       columnOrder,
       columnSizing,
-      pagination,
+      ...(enablePagination && { pagination: paginationState }),
     },
     columnResizeMode: 'onChange',
-    onPaginationChange: setPagination,
+    ...(enablePagination && { onPaginationChange: setPagination }),
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
+    ...(enablePagination && { getPaginationRowModel: getPaginationRowModel() }),
+    ...(enableSorting && { onSortingChange: setSorting }),
+    ...(enableSorting && { getSortedRowModel: getSortedRowModel() }),
     onColumnOrderChange: setColumnOrder,
     onColumnFiltersChange: setColumnFilters,
     onColumnSizingChange: setColumnSizing,

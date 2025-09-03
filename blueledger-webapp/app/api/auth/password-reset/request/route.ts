@@ -9,8 +9,21 @@ import { emailPasswordResetSchema } from '@/features/auth/schemas';
 import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
+/**
+ * POST /api/auth/password-reset/request
+ *
+ * Initiates a password reset process by sending a reset code to the user's email.
+ * Validates the email address and issues a password reset code with the configured TTL.
+ * Rate limited to prevent abuse. Does not require authentication (public endpoint).
+ *
+ * Return statuses:
+ * - 200 OK : Password reset code sent successfully.
+ * - 400 Bad Request : Invalid email format or validation failed.
+ * - 429 Too Many Requests : Rate limit exceeded, please wait before requesting another reset.
+ * - 500 Internal Server Error : Unexpected error during password reset code generation or sending.
+ */
 export async function POST(request: NextRequest) {
-  const logger = createLogger('api/auth/password-reset/request', request);
+  const logger = createLogger('api/auth/password-reset/request:post', request);
 
   try {
     const body = await request.json();
@@ -27,7 +40,8 @@ export async function POST(request: NextRequest) {
     }
     const email = validationResult.data.email.toLowerCase();
 
-    const validateRateLimits = await validatePasswordResetRequestRateLimits(email);
+    const validateRateLimits
+      = await validatePasswordResetRequestRateLimits(email);
     if (!validateRateLimits.success) {
       logger.info(LogEvents.RATE_LIMIT_EXCEEDED, { email, status: 429 });
 
@@ -41,10 +55,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const success = await issuePasswordResetCodeForUser(email, PASSWORD_RESET_CODE_TTL_MS);
+    const success = await issuePasswordResetCodeForUser(
+      email,
+      PASSWORD_RESET_CODE_TTL_MS,
+    );
     if (!success) {
       await logger.flush();
-      return NextResponse.json({ error: 'Failed to send verification code' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Failed to send verification code' },
+        { status: 500 },
+      );
     }
 
     logger.info(LogEvents.EMAIL_PASSWORD_RESET_SENT, { email, status: 200 });
@@ -61,6 +81,9 @@ export async function POST(request: NextRequest) {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }

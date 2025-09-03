@@ -6,8 +6,21 @@ import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 import { authorizeChannel } from '@/lib/pusher/pusher-server';
 
+/**
+ * POST /api/pusher/auth
+ *
+ * Authorizes a user to connect to their private Pusher channel for real-time notifications.
+ * Only allows access to the user's own private channel (private-user-{userId}).
+ * Returns the Pusher authentication response containing auth signature and channel data.
+ *
+ * Return statuses:
+ * - 200 OK : Pusher channel authorization successful.
+ * - 401 Unauthorized : User is not authenticated or trying to access wrong channel.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
+
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/pusher/auth', request);
+  const logger = createLogger('api/pusher/auth:post', request);
 
   try {
     const formData = await request.text();
@@ -48,6 +61,9 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });

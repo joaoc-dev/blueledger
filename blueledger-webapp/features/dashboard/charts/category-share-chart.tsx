@@ -1,49 +1,41 @@
 'use client';
 
 import type { ChartConfig } from '@/components/ui/chart';
-import { useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import Spinner from '@/components/shared/spinner';
+import { ChartContainer, ChartTooltip } from '@/components/ui/chart';
+import { EXPENSE_CATEGORIES_VALUES, generateCategoryChartConfig } from '@/features/expenses/constants';
+import { useCategoryShareData } from '../hooks';
 import ChartCardContainer from './chart-card-container';
 
 function CategoryShareChart() {
-  const months = useMemo(() => ([
-    { date: '2024-01' },
-    { date: '2024-02' },
-    { date: '2024-03' },
-    { date: '2024-04' },
-    { date: '2024-05' },
-    { date: '2024-06' },
-    { date: '2024-07' },
-    { date: '2024-08' },
-  ]), []);
+  const { data: chartData = [], isLoading } = useCategoryShareData();
 
-  const chartData = months.map((m, i) => (
-    {
-      date: m.date,
-      groceries: 400 + 20 * i,
-      dining: 300 + 10 * i,
-      transport: 150 + 5 * i,
-    }));
+  const chartConfig = generateCategoryChartConfig() satisfies ChartConfig;
 
-  const chartConfig = {
-    groceries: {
-      label: 'Groceries',
-      color: 'var(--chart-1)',
-    },
-    dining: {
-      label: 'Dining',
-      color: 'var(--chart-2)',
-    },
-    transport: {
-      label: 'Transport',
-      color: 'var(--chart-3)',
-    },
-  } satisfies ChartConfig;
+  if (isLoading) {
+    return (
+      <ChartCardContainer title="Category Share per Month">
+        <div className="h-72 w-full flex items-center justify-center">
+          <Spinner className="size-8" />
+        </div>
+      </ChartCardContainer>
+    );
+  }
+
+  if (chartData.length === 0) {
+    return (
+      <ChartCardContainer title="Category Share per Month">
+        <div className="h-72 w-full flex items-center justify-center">
+          <div className="text-muted-foreground">No data available</div>
+        </div>
+      </ChartCardContainer>
+    );
+  }
 
   return (
     <ChartCardContainer title="Category Share per Month">
-      <ChartContainer config={chartConfig} className="h-64 w-full">
+      <ChartContainer config={chartConfig} className="h-72 w-full">
         <BarChart
           accessibilityLayer
           data={chartData}
@@ -52,10 +44,15 @@ function CategoryShareChart() {
           <CartesianGrid vertical={false} />
           <XAxis dataKey="date" tickMargin={10} />
           <YAxis tickLine={false} />
-          <ChartTooltip content={<ChartTooltipContent />} />
-          <Bar dataKey="groceries" stackId="1" fill="var(--chart-1)" />
-          <Bar dataKey="dining" stackId="1" fill="var(--chart-2)" />
-          <Bar dataKey="transport" stackId="1" fill="var(--chart-3)" />
+          <ChartTooltip content={<CustomTooltipContent />} />
+          {EXPENSE_CATEGORIES_VALUES.map(category => (
+            <Bar
+              key={category}
+              dataKey={category}
+              stackId="1"
+              fill={chartConfig[category]?.color}
+            />
+          ))}
         </BarChart>
       </ChartContainer>
     </ChartCardContainer>
@@ -63,3 +60,29 @@ function CategoryShareChart() {
 }
 
 export default CategoryShareChart;
+
+function CustomTooltipContent({ active, payload, label }: any) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-background border border-border rounded-lg shadow-md p-3">
+        <p className="font-medium text-sm mb-2">{label}</p>
+        {payload.map((entry: any) => (
+          <div key={entry.dataKey} className="flex items-center justify-between gap-6 text-sm mb-1 last:mb-0">
+            <div className="flex items-center gap-2">
+              <div
+                className="w-3 h-3 rounded-sm"
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-muted-foreground">{entry.dataKey}</span>
+            </div>
+            <span className="font-medium">
+              $
+              {entry.value?.toLocaleString()}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+}

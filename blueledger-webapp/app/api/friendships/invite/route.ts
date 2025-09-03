@@ -5,7 +5,10 @@ import { NextResponse } from 'next/server';
 import { LogEvents } from '@/constants/log-events';
 import { PusherEvents } from '@/constants/pusher-events';
 import { FRIENDSHIP_STATUS } from '@/features/friendship/constants';
-import { getFriendshipById, getFriendshipByUsers } from '@/features/friendship/data';
+import {
+  getFriendshipById,
+  getFriendshipByUsers,
+} from '@/features/friendship/data';
 import { sendFriendRequestSchema } from '@/features/friendship/schemas';
 import { sendFriendRequestWithNotification } from '@/features/friendship/service';
 import { getUserByEmail } from '@/features/users/data';
@@ -14,8 +17,23 @@ import { createLogger } from '@/lib/logger';
 import { sendToPusher } from '@/lib/pusher/pusher-server';
 import { validateSchema } from '@/lib/validate-schema';
 
+/**
+ * POST /api/friendships/invite
+ *
+ * Sends a friend request to another user by email.
+ * Creates a new friendship with pending status and sends a notification to the recipient.
+ * Cannot send friend requests to yourself or to users with existing friendships.
+ *
+ * Return statuses:
+ * - 201 Created : Friend request successfully sent.
+ * - 400 Bad Request : Invalid request data, cannot send to yourself, or validation failed.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 404 Not Found : Target user does not exist.
+ * - 409 Conflict : Friend request already exists or users are already friends.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/friendship/request:post', request);
+  const logger = createLogger('api/friendships/invite:post', request);
 
   try {
     const body = await request.json();
@@ -56,7 +74,10 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       );
     }
 
-    const existingFriendship = await getFriendshipByUsers(request.auth!.user!.id, recipientUser.id);
+    const existingFriendship = await getFriendshipByUsers(
+      request.auth!.user!.id,
+      recipientUser.id,
+    );
     if (existingFriendship) {
       if (existingFriendship.status === FRIENDSHIP_STATUS.PENDING) {
         logger.warn(LogEvents.FRIENDSHIP_INVITE_ALREADY_EXISTS, {
@@ -121,6 +142,9 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });

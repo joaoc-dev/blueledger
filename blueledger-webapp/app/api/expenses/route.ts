@@ -8,8 +8,20 @@ import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 import { validateSchema } from '@/lib/validate-schema';
 
+/**
+ * POST /api/expenses
+ *
+ * Creates a new expense for the authenticated user.
+ * Returns the created expense object.
+ *
+ * Return statuses:
+ * - 201 Created : Expense successfully created.
+ * - 400 Bad Request : Invalid request data or validation failed.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/expenses/create', request);
+  const logger = createLogger('api/expenses:post', request);
 
   try {
     const body = await request.json();
@@ -46,12 +58,26 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });
 
+/**
+ * GET /api/expenses
+ *
+ * Retrieves all expenses for the authenticated user.
+ * Returns an array of expense objects.
+ *
+ * Return statuses:
+ * - 200 OK : Expenses successfully retrieved.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
 export const GET = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/expenses/get', request);
+  const logger = createLogger('api/expenses:get', request);
 
   try {
     const userId = request.auth!.user!.id;
@@ -74,6 +100,9 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });

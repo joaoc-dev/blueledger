@@ -19,10 +19,16 @@ export async function sendFriendRequestWithNotification(
       let friendshipId: string;
 
       if (existingFriendship) {
-        // Update the friendship status
+        // Update the friendship with correct requester/recipient and status
         await Friendship.updateOne(
           { _id: existingFriendship.id },
-          { $set: { status: FRIENDSHIP_STATUS.PENDING } },
+          {
+            $set: {
+              requester: requesterId,
+              recipient: recipientId,
+              status: FRIENDSHIP_STATUS.PENDING,
+            },
+          },
           { session, runValidators: true },
         );
 
@@ -33,7 +39,7 @@ export async function sendFriendRequestWithNotification(
         const createdFriendships = await Friendship.create([{
           requester: requesterId,
           recipient: recipientId,
-          status: 'pending',
+          status: FRIENDSHIP_STATUS.PENDING,
         }], { session });
 
         friendshipId = (createdFriendships[0]!._id as mongoose.Types.ObjectId).toString();

@@ -12,8 +12,8 @@ function ChartCardContainer({
   headerOptions?: React.ReactNode;
 }) {
   return (
-    <Card className="rounded-lg">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0">
+    <Card className="rounded-lg h-96 overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0.5 px-3">
         <div>
           <CardTitle>{title}</CardTitle>
         </div>
@@ -23,7 +23,7 @@ function ChartCardContainer({
           </div>
         )}
       </CardHeader>
-      <CardContent className="pl-2 pr-2">
+      <CardContent className="px-3 h-full pb-1.5 pt-0.5">
         {children}
       </CardContent>
     </Card>

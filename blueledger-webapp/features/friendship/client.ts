@@ -1,6 +1,6 @@
 import type { FriendshipApiResponse, FriendshipDisplay } from './schemas';
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client';
-import { mapApiResponseListToDisplay } from './mapper-client';
+import { mapApiResponseListToDisplay, mapApiResponseToDisplay } from './mapper-client';
 
 const endpoint = '/friendships';
 
@@ -10,21 +10,26 @@ export async function getFriendships(): Promise<FriendshipDisplay[]> {
 }
 
 export async function sendFriendshipInvite(email: string): Promise<FriendshipDisplay> {
-  return await apiPost<FriendshipDisplay>(`${endpoint}/invite`, { email });
+  const response = await apiPost<FriendshipApiResponse>(`${endpoint}/invite`, { email });
+  return mapApiResponseToDisplay(response);
 }
 
 export async function acceptFriendshipInvite(friendshipId: string): Promise<FriendshipDisplay> {
-  return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/accept`);
+  const response = await apiPatch<FriendshipApiResponse>(`${endpoint}/${friendshipId}/accept`);
+  return mapApiResponseToDisplay(response);
 }
 
 export async function declineFriendshipInvite(friendshipId: string): Promise<FriendshipDisplay> {
-  return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/decline`);
+  const response = await apiPatch<FriendshipApiResponse>(`${endpoint}/${friendshipId}/decline`);
+  return mapApiResponseToDisplay(response);
 }
 
 export async function cancelFriendshipInvite(friendshipId: string): Promise<FriendshipDisplay> {
-  return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/cancel`);
+  const response = await apiPatch<FriendshipApiResponse>(`${endpoint}/${friendshipId}/cancel`);
+  return mapApiResponseToDisplay(response);
 }
 
 export async function removeFriendship(friendshipId: string): Promise<FriendshipDisplay> {
-  return await apiPatch<FriendshipDisplay>(`${endpoint}/${friendshipId}/remove`);
+  const response = await apiPatch<FriendshipApiResponse>(`${endpoint}/${friendshipId}/remove`);
+  return mapApiResponseToDisplay(response);
 }

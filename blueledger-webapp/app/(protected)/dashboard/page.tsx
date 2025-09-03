@@ -1,13 +1,19 @@
-'use client';
-
+import type { Metadata } from 'next';
 import CategoryShareChart from '@/features/dashboard/charts/category-share-chart';
 import CumulativeSpendYTD from '@/features/dashboard/charts/cumulative-spend-ytd-chart';
 import DayOfWeekChart from '@/features/dashboard/charts/day-of-week-chart';
-import GroupSpendingChart from '@/features/dashboard/charts/group-spending-chart';
 import HourOfDayChart from '@/features/dashboard/charts/hour-of-day-chart';
 import SeasonalSpendingChart from '@/features/dashboard/charts/seasonal-spending-chart';
-import ToReceiveVsToPayChart from '@/features/dashboard/charts/to-receive-vs-to-pay-chart';
-import TopCounterpartiesChart from '@/features/dashboard/charts/top-counterparties-chart';
+import { pageSeoConfigs } from '@/lib/seo';
+
+export const metadata: Metadata = {
+  title: pageSeoConfigs.dashboard.title,
+  description: pageSeoConfigs.dashboard.description,
+  robots: {
+    index: false, // Dashboard should not be indexed
+    follow: false,
+  },
+};
 
 function DashboardPage() {
   return (
@@ -16,9 +22,6 @@ function DashboardPage() {
       <DayOfWeekChart />
       <HourOfDayChart />
       <CategoryShareChart />
-      <ToReceiveVsToPayChart />
-      <TopCounterpartiesChart />
-      <GroupSpendingChart />
       <SeasonalSpendingChart />
     </div>
   );

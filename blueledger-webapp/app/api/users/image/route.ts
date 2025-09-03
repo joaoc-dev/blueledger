@@ -11,8 +11,23 @@ import {
 } from '@/lib/cloudinary';
 import { createLogger } from '@/lib/logger';
 
+/**
+ * POST /api/users/image
+ *
+ * Uploads or removes a profile image for the authenticated user.
+ * If an image is provided, it uploads to Cloudinary and updates the user's profile.
+ * If no image or empty string is provided, it removes the current profile image.
+ * Automatically removes the previous image from Cloudinary when replaced.
+ *
+ * Return statuses:
+ * - 200 OK : Profile image successfully updated or removed.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 404 Not Found : User not found.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
+
 export const POST = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/users/image/post', request);
+  const logger = createLogger('api/users/image:post', request);
   let publicId: string | null | undefined;
   let imageUrl: string | null | undefined;
 
@@ -34,7 +49,12 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     const originalImagePublicId = user.imagePublicId;
 
     // Check if image is provided and not empty (handle empty string for removal)
-    if (image && (typeof image === 'string' ? (image as string).trim() !== '' : image.size > 0)) {
+    if (
+      image
+      && (typeof image === 'string'
+        ? (image as string).trim() !== ''
+        : image.size > 0)
+    ) {
       const updatedUser = await handleImageUploadAndUserUpdate(userId!, image);
       publicId = updatedUser.imagePublicId;
       imageUrl = updatedUser.image;

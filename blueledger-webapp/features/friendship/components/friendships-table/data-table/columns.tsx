@@ -45,7 +45,7 @@ export const activeFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
 
       return (
         <div className="flex items-center gap-3">
-          <Avatar className="size-8">
+          <Avatar className="size-9">
             <AvatarImage src={friend?.image || undefined} alt={friend?.name || 'User'} />
             <AvatarFallback>{friend?.name?.[0]?.toUpperCase() ?? 'U'}</AvatarFallback>
           </Avatar>
@@ -131,7 +131,7 @@ export const pendingFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
 
       return (
         <div className="flex items-center gap-3">
-          <Avatar className="size-8">
+          <Avatar className="size-9">
             <AvatarImage src={friend?.image || undefined} alt={friend?.name || 'User'} />
             <AvatarFallback>{friend?.name?.[0]?.toUpperCase() ?? 'U'}</AvatarFallback>
           </Avatar>
@@ -153,15 +153,15 @@ export const pendingFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
     ),
   },
   {
-    id: 'createdAt',
-    accessorKey: 'createdAt',
+    id: 'updatedAt',
+    accessorKey: 'updatedAt',
     header: columnHeader('Sent at'),
     size: 150,
     cell: ({ row }) => {
-      const { createdAt } = row.original;
+      const { updatedAt } = row.original;
       return (
         <span className="text-sm text-muted-foreground">
-          {createdAt ? new Date(createdAt).toLocaleDateString() : ''}
+          {updatedAt ? new Date(updatedAt).toLocaleDateString() : ''}
         </span>
       );
     },
@@ -169,6 +169,8 @@ export const pendingFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
   fillerColumn,
   {
     id: 'actions',
+    size: 110,
+    maxSize: 110,
     cell: ({ row }) => {
       const friendship = row.original;
 
@@ -180,10 +182,7 @@ export const pendingFriendshipsColumns: ColumnDef<FriendshipDisplay>[] = [
     },
     enableSorting: false,
     enableHiding: false,
-    size: 110,
-    maxSize: 110,
     enableResizing: false,
     enablePinning: true,
   },
-
 ];

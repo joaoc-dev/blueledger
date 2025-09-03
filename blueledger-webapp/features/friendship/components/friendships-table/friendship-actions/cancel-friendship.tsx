@@ -19,7 +19,7 @@ function CancelFriendship({ friendship, isCompact, disabled }: CancelFriendshipP
 
   const handleCancel = async () => {
     try {
-      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCELLED_CLICKED, {
+      posthog.capture(AnalyticsEvents.FRIENDSHIP_INVITE_CANCEL_CLICKED, {
         id: friendship.id,
       });
 

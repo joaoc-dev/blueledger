@@ -6,8 +6,19 @@ import { getNotifications } from '@/features/notifications/data';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
 
+/**
+ * GET /api/notifications
+ *
+ * Retrieves all notifications for the authenticated user.
+ * Returns an array of notification objects with details about each notification.
+ *
+ * Return statuses:
+ * - 200 OK : Notifications successfully retrieved.
+ * - 401 Unauthorized : User is not authenticated.
+ * - 500 Internal Server Error : Unexpected error during processing.
+ */
 export const GET = withAuth(async (request: NextAuthRequest) => {
-  const logger = createLogger('api/notifications/get', request);
+  const logger = createLogger('api/notifications:get', request);
 
   try {
     const userId = request.auth!.user!.id!;
@@ -31,6 +42,9 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
     });
 
     await logger.flush();
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 });

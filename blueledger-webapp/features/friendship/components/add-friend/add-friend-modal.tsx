@@ -10,12 +10,12 @@ import { lookupUserByEmail } from '@/features/users/client';
 import { validateSchema } from '@/lib/validate-schema';
 import AddFriendPanel from './add-friend-panel';
 
-interface FriendRequestModalProps {
+interface AddFriendModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-function AddFriendModal({ isOpen, setIsOpen }: FriendRequestModalProps) {
+function AddFriendModal({ isOpen, setIsOpen }: AddFriendModalProps) {
   const [email, setEmail] = useState('');
   const [queryEmail, setQueryEmail] = useState('');
 

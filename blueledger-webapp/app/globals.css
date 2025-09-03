@@ -95,6 +95,14 @@
   --chart-4: hsl(38 70% 75%);
   --chart-5: hsl(343 65% 75%);
 
+  /* Category colors (matching pastel theme) */
+  --category-food: hsl(160 60% 65%);
+  --category-entertainment: hsl(38 70% 75%);
+  --category-shopping: hsl(270 45% 78%);
+  --category-travel: hsl(189 60% 70%);
+  --category-bills: hsl(14 80% 65%);
+  --category-other: hsl(25 20% 70%);
+
   /* Sidebar */
   --sidebar: hsl(0 0% 99%);
   --sidebar-foreground: hsl(0 0% 15%);
@@ -172,6 +180,14 @@
   --chart-3: hsl(270 45% 70%);
   --chart-4: hsl(38 70% 68%);
   --chart-5: hsl(343 65% 68%);
+
+  /* Category colors (matching pastel theme) */
+  --category-food: hsl(160 60% 60%);
+  --category-entertainment: hsl(38 70% 70%);
+  --category-shopping: hsl(270 45% 70%);
+  --category-travel: hsl(189 60% 65%);
+  --category-bills: hsl(14 80% 60%);
+  --category-other: hsl(25 20% 55%);
 
   --sidebar: hsl(0 0% 10%);
   --sidebar-foreground: hsl(0 0% 94%);

@@ -3,7 +3,7 @@ import type {
   FriendshipDisplay,
 } from './schemas';
 
-function mapApiResponseToDisplay(
+export function mapApiResponseToDisplay(
   apiResponse: FriendshipApiResponse,
 ): FriendshipDisplay {
   // Compute friend based on userIsRequester

@@ -75,8 +75,8 @@ export function StackedList({ data, isLoading, isFetching }: DataTableProps) {
               ))
             )
           : (
-              <div className="text-center text-sm text-muted-foreground">
-                No results.
+              <div className="text-center text-sm text-muted-foreground mt-32">
+                No results...
               </div>
             )}
       </div>
