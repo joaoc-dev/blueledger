@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { DesktopNavBar } from './desktop-nav-bar';
 import { MobileNavBar } from './mobile-nav-bar';
@@ -26,6 +27,12 @@ const links = [
 
 function NavBar() {
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    import('@/features/groups/components/groups-table');
+    import('@/features/friendship/components/friendships-table');
+  }, []);
+
   if (isMobile === undefined)
     return <NavBarLoading />;
 

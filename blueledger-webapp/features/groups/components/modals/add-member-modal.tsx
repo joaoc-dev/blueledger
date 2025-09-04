@@ -140,7 +140,6 @@ function AddMemberModal({ isOpen, setIsOpen, currentUserMembership }: AddMemberM
           </p>
           <AddMemberByEmail
             currentUserMembership={currentUserMembership}
-            onSuccess={handleClose}
             isInviting={isInviting}
             setIsInviting={setIsInviting}
           />
