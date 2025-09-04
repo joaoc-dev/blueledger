@@ -120,7 +120,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
 
     // Send pusher notification to recipient when created
     const privateChannel = `private-user-${recipientUser.id}`;
-    sendToPusher(privateChannel, PusherEvents.NOTIFICATION as PusherEvent, '');
+    await sendToPusher(privateChannel, PusherEvents.NOTIFICATION as PusherEvent, '');
 
     logger.info(LogEvents.FRIENDSHIP_INVITE_SENT, {
       fromUser,
