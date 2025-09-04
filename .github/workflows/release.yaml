@@ -25,18 +25,21 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Important for semantic-release to get full git history
+          fetch-depth: 0 # Important for semantic-release to get full git history
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
+          package_json_file: blueledger-webapp/package.json
+          run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+          cache-dependency-path: blueledger-webapp/pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install

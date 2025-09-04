@@ -202,7 +202,7 @@ export const POST = withAuth(async (
 
     // Send pusher notification to recipient when created
     const privateChannel = `private-user-${recipientUser.id}`;
-    sendToPusher(privateChannel, PusherEvents.NOTIFICATION as PusherEvent, '');
+    await sendToPusher(privateChannel, PusherEvents.NOTIFICATION as PusherEvent, '');
 
     logger.info(LogEvents.GROUP_MEMBERSHIP_INVITE, {
       fromUser: inviterId,

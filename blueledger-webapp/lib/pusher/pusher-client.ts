@@ -11,7 +11,9 @@ interface PusherClient {
 let pusherClient: PusherClient | undefined;
 
 function makePusherClient() {
-  Pusher.logToConsole = true;
+  if (process.env.NODE_ENV === 'development') {
+    Pusher.logToConsole = true;
+  }
 
   const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
     cluster: env.NEXT_PUBLIC_PUSHER_CLUSTER,
