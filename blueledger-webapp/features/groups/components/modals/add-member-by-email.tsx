@@ -14,12 +14,11 @@ import AddMemberPanel from './add-member-panel';
 
 interface AddMemberByEmailProps {
   currentUserMembership: GroupMembershipDisplay;
-  onSuccess: () => void;
   isInviting: boolean;
   setIsInviting: (inviting: boolean) => void;
 }
 
-function AddMemberByEmail({ currentUserMembership, onSuccess, isInviting, setIsInviting }: AddMemberByEmailProps) {
+function AddMemberByEmail({ currentUserMembership, isInviting, setIsInviting }: AddMemberByEmailProps) {
   const [email, setEmail] = useState('');
   const [queryEmail, setQueryEmail] = useState('');
 
@@ -42,6 +41,12 @@ function AddMemberByEmail({ currentUserMembership, onSuccess, isInviting, setIsI
     setEmail('');
     setQueryEmail('');
   }, []);
+
+  function handleSuccess() {
+    setIsInviting(false);
+    setEmail('');
+    setQueryEmail('');
+  }
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -131,7 +136,7 @@ function AddMemberByEmail({ currentUserMembership, onSuccess, isInviting, setIsI
           }
 
           // User can be invited - show the invite panel
-          return <AddMemberPanel user={data.user} currentUserMembership={currentUserMembership} onSuccess={onSuccess} isInviting={isInviting} setIsInviting={setIsInviting} />;
+          return <AddMemberPanel user={data.user} currentUserMembership={currentUserMembership} onSuccess={handleSuccess} isInviting={isInviting} setIsInviting={setIsInviting} />;
         })()}
       </div>
     </div>
