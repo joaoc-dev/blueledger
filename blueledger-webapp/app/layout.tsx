@@ -25,6 +25,7 @@ const inter = Inter({
 
 export const metadata: Metadata = generateMetadata({
   manifest: '/manifest.json',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://blueledger.production.joao-carvalho.com'),
   icons: {
     icon: '/favicon.ico',
     apple: '/hand-coins.png',
