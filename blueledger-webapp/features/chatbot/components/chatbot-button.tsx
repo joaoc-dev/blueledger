@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui-modified/button';
 
 interface ChatbotButtonProps {
-  onClick: () => void;
+	onClick?: () => void;
 }
 
 function ChatbotButton({ onClick }: ChatbotButtonProps) {
