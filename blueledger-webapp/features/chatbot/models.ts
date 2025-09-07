@@ -7,7 +7,6 @@ interface IMessage {
   content: string;
   role: ChatbotRole;
   user: ObjectId | string;
-  conversationId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,10 +33,6 @@ const MessageSchema = new Schema<MessageDocument>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'User ID is required'],
-      index: true,
-    },
-    conversationId: {
-      type: String,
       index: true,
     },
   },
