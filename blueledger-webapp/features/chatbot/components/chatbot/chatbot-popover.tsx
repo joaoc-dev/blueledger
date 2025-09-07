@@ -13,7 +13,7 @@ function ChatbotPopover({ isOpen, onOpenChange, children }: ChatbotPopoverProps)
       <PopoverTrigger asChild>
         {children}
       </PopoverTrigger>
-      <PopoverContent align="end" sideOffset={8} className="w-96 p-0">
+      <PopoverContent align="end" sideOffset={8} className="w-120 h-[calc(100svh-12rem)] p-0">
         <Chatbot />
       </PopoverContent>
     </Popover>
