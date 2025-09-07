@@ -40,6 +40,7 @@ const config: KnipConfig = {
     '@radix-ui/react-collapsible',
     '@radix-ui/react-hover-card',
     '@radix-ui/react-use-controllable-state',
+    'shiki',
   ],
   compilers: {
     css: (text: string) => [...text.matchAll(/(?<=@)import[^;]+/g)].join('\n'),
