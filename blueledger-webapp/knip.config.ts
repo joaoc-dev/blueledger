@@ -5,6 +5,7 @@ const config: KnipConfig = {
     'components/third-party/**',
     'components/ui/**',
     'components/ui-modified/**',
+    'components/ai-elements/**',
     'lib/auth/auth.ts',
     'lib/utils/**',
     'components/shared/data-table/rows/row-skeleton.tsx',
@@ -35,6 +36,10 @@ const config: KnipConfig = {
     'prettier',
     '@react-email/preview-server',
     'playwright',
+    'react-syntax-highlighter',
+    '@radix-ui/react-collapsible',
+    '@radix-ui/react-hover-card',
+    '@radix-ui/react-use-controllable-state',
   ],
   compilers: {
     css: (text: string) => [...text.matchAll(/(?<=@)import[^;]+/g)].join('\n'),

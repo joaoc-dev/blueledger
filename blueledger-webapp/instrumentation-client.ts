@@ -37,7 +37,9 @@ Sentry.init({
 });
 
 if (process.env.NODE_ENV === 'development') {
-  Spotlight.init();
+  Spotlight.init({
+    anchor: 'centerLeft',
+  });
 }
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
