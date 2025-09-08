@@ -9,6 +9,7 @@ import Group, { GroupMembership } from '@/features/groups/models';
 import { NOTIFICATION_TYPES } from '@/features/notifications/constants';
 import Notification from '@/features/notifications/models';
 import User from '@/features/users/models';
+import { generateTextEmbeddings } from '@/lib/ai/embeddings';
 import { dummyUsers } from '@/lib/data/dummy-users';
 
 // Custom database connection for seeding
@@ -391,6 +392,85 @@ async function main() {
 
   await Expense.insertMany(allExpenses);
   console.log(`✅ Created ${allExpenses.length} expenses`);
+
+  // Conservatively batch-generate embeddings for expense descriptions with dedup + backoff
+  console.log('🧠 Generating expense description embeddings (safe throttle + dedup)...');
+
+  const BATCH_SIZE = Number(process.env.SEED_EMBED_BATCH_SIZE ?? 5); // keep batches tiny
+  let requestsPerMinute = Number(process.env.SEED_EMBED_RPM ?? 5); // 5 rpm << 100 rpm
+  const MAX_BACKOFF_MS = 180_000; // cap backoff to 3 minutes
+  const WAIT_ON_429_MS = Number(process.env.SEED_EMBED_WAIT_429_MS ?? 90_000);
+  const PER_REQUEST_DELAY = () => Math.ceil(60_000 / Math.max(1, requestsPerMinute));
+
+  const descToIds = new Map<string, any[]>();
+  const cursor = Expense.find({}, { _id: 1, description: 1 }).cursor();
+  for await (const doc of cursor as any) {
+    const text = String(doc.description ?? '').trim();
+    if (!text)
+      continue;
+    const list = descToIds.get(text) ?? [];
+    list.push(doc._id);
+    descToIds.set(text, list);
+  }
+
+  const uniqueDescriptions = Array.from(descToIds.keys());
+  const LIMIT = process.env.SEED_EMBED_LIMIT ? Number(process.env.SEED_EMBED_LIMIT) : undefined;
+  const work = typeof LIMIT === 'number' ? uniqueDescriptions.slice(0, LIMIT) : uniqueDescriptions;
+
+  console.log(`ℹ️ Unique descriptions to embed: ${work.length} (from ${descToIds.size} total, ${allExpenses.length} expenses)`);
+
+  const toUpdate: Array<{ _id: any; embedding: number[] }> = [];
+
+  function isQuotaError(err: unknown): boolean {
+    const msg = String((err as any)?.message ?? '');
+    const status = (err as any)?.statusCode;
+    const body = String((err as any)?.responseBody ?? '');
+    return status === 429 || msg.includes('RESOURCE_EXHAUSTED') || body.includes('RESOURCE_EXHAUSTED');
+  }
+
+  for (let i = 0; i < work.length; i += BATCH_SIZE) {
+    const slice = work.slice(i, i + BATCH_SIZE);
+
+    let attempt = 0;
+    // retry loop for quota with growing backoff and more conservative rpm
+    while (true) {
+      try {
+        const vectors = await generateTextEmbeddings(slice);
+        for (let j = 0; j < slice.length; j += 1) {
+          const ids = descToIds.get(slice[j]!) ?? [];
+          const embedding = vectors[j] ?? [];
+          ids.forEach(_id => toUpdate.push({ _id, embedding }));
+        }
+        // Delay between requests based on current rpm
+        await new Promise(res => setTimeout(res, PER_REQUEST_DELAY()));
+        break; // done with this slice
+      }
+      catch (err) {
+        if (!isQuotaError(err))
+          throw err;
+        attempt += 1;
+        // Back off more and reduce rpm to be extra safe
+        requestsPerMinute = Math.max(1, Math.floor(requestsPerMinute / 2));
+        const backoff = Math.min(MAX_BACKOFF_MS, WAIT_ON_429_MS * attempt);
+        console.warn(`⏳ Quota hit. Backing off for ${Math.round(backoff / 1000)}s. New rpm=${requestsPerMinute}`);
+        await new Promise(res => setTimeout(res, backoff));
+        // retry same slice
+      }
+    }
+  }
+
+  if (toUpdate.length > 0) {
+    const bulk = Expense.collection.initializeUnorderedBulkOp();
+    toUpdate.forEach((u) => {
+      bulk.find({ _id: u._id }).updateOne({ $set: { embedding: u.embedding } });
+    });
+    const result = await bulk.execute();
+    const modified = (result as any).nModified ?? (result as any).nUpserted ?? toUpdate.length;
+    console.log(`✅ Updated ${modified} expense embeddings`);
+  }
+  else {
+    console.log('ℹ️ No expense embeddings to update');
+  }
 
   // Log category distribution for verification
   const categoryCount: Record<string, number> = {};

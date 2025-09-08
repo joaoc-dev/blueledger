@@ -24,20 +24,14 @@ import { getConversationPage } from './client';
  * @returns State and helpers for rendering a chatbot UI and handling I/O.
  */
 export function useChatbot(modelDefaultId: string) {
-  // Local UI state: current text input and currently selected model id
   const [input, setInput] = useState('');
   const [model, setModel] = useState<string>(modelDefaultId);
   const queryClient = useQueryClient();
 
-  // Paginated history fetched from the server API (newest page first from API).
   const query = useInfiniteQuery({
-    // Stable cache key for the chatbot conversation
     queryKey: ['chatbot-messages'],
-    // Server returns messages in reverse-chronological pages. We will reorder later.
     queryFn: ({ pageParam }) => getConversationPage({ limit: 8, cursor: pageParam as string | undefined }),
-    // If the API supplies a cursor, keep paginating; otherwise stop.
     getNextPageParam: lastPage => lastPage.nextCursor ?? undefined,
-    // Start from the first page (no cursor)
     initialPageParam: undefined as string | undefined,
   });
 
@@ -164,7 +158,7 @@ export function useChatbot(modelDefaultId: string) {
     e.preventDefault();
     if (!input.trim())
       return;
-    // Send the user's prompt and pass the selected model to the server
+
     sendMessage(
       { text: input },
       { body: { model } },
@@ -173,11 +167,9 @@ export function useChatbot(modelDefaultId: string) {
   };
 
   const handleRegenerate = () => {
-    // Ask the assistant to regenerate the last response using the current model
     regenerate({ body: { model } });
   };
 
-  // Expose state and helpers consumed by the chatbot UI
   return {
     input,
     setInput,

@@ -19,6 +19,7 @@ import Message from './models';
 // RECALL_TOP_K controls how many similar historical snippets are retrieved
 // SLIDING_WINDOW_SIZE limits how many of the most recent messages will be used
 const RECALL_TOP_K = 3;
+const RECALL_SCORE_THRESHOLD = 0.8;
 const SLIDING_WINDOW_SIZE = 10;
 
 /**
@@ -176,13 +177,17 @@ async function buildContextMessages(
     return windowed;
 
   const similar = await findSimilarMessages(userId, latestText, topK, logger);
+  console.warn('similar', similar);
   const expenseMatches = await findSimilarExpenses(userId, latestText, topK, logger);
+  console.warn('expenseMatches', expenseMatches);
 
   if ((!similar || similar.length === 0) && (!expenseMatches || expenseMatches.length === 0))
     return windowed;
 
   const contextLines = (similar ?? []).map((m): string => formatMessageContext(m).formatted);
+  console.warn('contextLines', contextLines);
   const expenseLines = (expenseMatches ?? []).map((e): string => formatExpenseContext(e).formatted);
+  console.warn('expenseLines', expenseLines);
 
   const contextHeader: UIMessage = {
     id: 'recall',
@@ -243,6 +248,7 @@ export async function updateHistoryAndGenerateResponse(
   trigger: 'submit-message' | 'regenerate-message',
   logger: RequestLogger,
 ): Promise<Response> {
+  console.warn('wow');
   // Persist user messages only on "submit"
   if (trigger === 'submit-message') {
     void persistUserMessage(messages, userId);
@@ -251,6 +257,7 @@ export async function updateHistoryAndGenerateResponse(
   // Always apply recall + sliding window for both submit and regenerate
   const preparedMessages = await buildContextMessages(messages, userId, logger);
 
+  // console.warn('preparedMessages', preparedMessages);
   const modelId = typeof model === 'string' ? model : model.id;
   const result = generateResponse(preparedMessages, modelId);
 
@@ -315,6 +322,7 @@ async function findSimilarMessages(
           score: { $meta: 'vectorSearchScore' },
         },
       },
+      { $match: { score: { $gte: RECALL_SCORE_THRESHOLD } } },
       { $limit: k },
     ]).exec();
 
@@ -373,6 +381,7 @@ async function findSimilarExpenses(
           score: { $meta: 'vectorSearchScore' },
         },
       },
+      { $match: { score: { $gte: RECALL_SCORE_THRESHOLD } } },
       { $limit: k },
     ]).exec();
 
