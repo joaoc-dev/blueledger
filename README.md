@@ -59,24 +59,13 @@ A modern, performant, mobile-friendly expense-tracking web app with advanced UI/
 
 ## 🚀 Getting Started (Development)
 
-We use **Docker** to run a local MongoDB replica set in development to enable support for [transactions](https://www.mongodb.com/docs/manual/core/transactions/).
+We use **MongoDB Atlas Local (via Docker)** in development to enable support for [transactions](https://www.mongodb.com/docs/manual/core/transactions/) and vector search.
 
-1. Start MongoDB in Docker:
+Start the local database with Docker Compose:
 
-   ```bash
-   docker-compose up -d
-   ```
-
-2. Initialize the replica set (only required the first time):
-
-   ```bash
-   docker exec blueledger-mongo-dev-rs mongosh --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'host.docker.internal:27030' }]})"
-   ```
-
-3. Start the dev server
-   ```bash
-   pnpm dev
-   ```
+```bash
+docker compose up -d
+```
 
 ### Features
 
