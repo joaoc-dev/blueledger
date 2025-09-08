@@ -51,10 +51,19 @@ Always be transparent about your analysis process.`;
  * Generate an AI response stream for the given messages and model.
  */
 // Stream a model response for the current UI messages, with a small token cap.
-function generateResponse(messages: UIMessage[], modelId: string, userId: string) {
+function generateResponse(
+  messages: UIMessage[],
+  modelId: string,
+  userId: string,
+  systemAppend?: string,
+) {
+  const system = systemAppend && systemAppend.trim().length > 0
+    ? `${systemConfiguration}\n\nContext:\n${systemAppend}`
+    : systemConfiguration;
+
   return streamText({
     model: groq(modelId),
-    system: systemConfiguration,
+    system,
     messages: convertToModelMessages(messages),
     stopWhen: stepCountIs(5),
     tools: getChatbotToolsForUser(userId),
@@ -174,56 +183,33 @@ async function buildContextMessages(
   logger: RequestLogger,
   topK: number = RECALL_TOP_K,
   windowSize: number = SLIDING_WINDOW_SIZE,
-): Promise<UIMessage[]> {
+): Promise<{ messages: UIMessage[]; systemAppend: string }> {
   // Apply sliding window over the raw messages first.
   const windowed = windowSize > 0 ? messages.slice(-windowSize) : messages;
 
   const latestText = getLatestUserText(windowed);
   if (!latestText)
-    return windowed;
+    return { messages: windowed, systemAppend: '' };
 
   const similar = await findSimilarMessages(userId, latestText, topK, logger);
   const expenseMatches = await findSimilarExpenses(userId, latestText, topK, logger);
 
   if ((!similar || similar.length === 0) && (!expenseMatches || expenseMatches.length === 0))
-    return windowed;
+    return { messages: windowed, systemAppend: '' };
 
   const contextLines = (similar ?? []).map((m): string => formatMessageContext(m).formatted);
   const expenseLines = (expenseMatches ?? []).map((e): string => formatExpenseContext(e).formatted);
 
-  const contextHeader: UIMessage = {
-    id: 'recall',
-    role: 'system',
-    parts: [{ type: 'text', text: 'Relevant prior conversation snippets:' }] as any,
-  } as UIMessage;
-
-  const contextBody: UIMessage = {
-    id: 'recall-context',
-    role: 'system',
-    parts: [{ type: 'text', text: contextLines.join('\n') }] as any,
-  } as UIMessage;
-
-  const blocks: UIMessage[] = [];
+  const blocks: string[] = [];
   if (contextLines.length)
-    blocks.push(contextHeader, contextBody);
+    blocks.push(['Relevant prior conversation snippets:', ...contextLines].join('\n'));
 
-  if (expenseLines.length) {
-    const expenseHeader: UIMessage = {
-      id: 'expense-recall',
-      role: 'system',
-      parts: [{ type: 'text', text: 'Relevant matching expenses:' }] as any,
-    } as UIMessage;
+  if (expenseLines.length)
+    blocks.push(['Relevant matching expenses:', ...expenseLines].join('\n'));
 
-    const expenseBody: UIMessage = {
-      id: 'expense-recall-context',
-      role: 'system',
-      parts: [{ type: 'text', text: expenseLines.join('\n') }] as any,
-    } as UIMessage;
+  const systemAppend = blocks.join('\n\n');
 
-    blocks.push(expenseHeader, expenseBody);
-  }
-
-  return [...blocks, ...windowed];
+  return { messages: windowed, systemAppend };
 }
 
 /**
@@ -256,10 +242,10 @@ export async function updateHistoryAndGenerateResponse(
   }
 
   // Always apply recall + sliding window for both submit and regenerate
-  const preparedMessages = await buildContextMessages(messages, userId, logger);
+  const { messages: preparedMessages, systemAppend } = await buildContextMessages(messages, userId, logger);
 
   const modelId = typeof model === 'string' ? model : model.id;
-  const result = generateResponse(preparedMessages, modelId, userId);
+  const result = generateResponse(preparedMessages, modelId, userId, systemAppend);
 
   // Collect and persist assistant response
   void (async () => {

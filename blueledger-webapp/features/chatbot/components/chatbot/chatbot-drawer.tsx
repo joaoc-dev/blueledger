@@ -1,13 +1,25 @@
-import React from 'react';
+'use client';
+import type { ChatbotController } from '@/features/chatbot/hooks';
+import { useQueryClient } from '@tanstack/react-query';
+import React, { useEffect } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import { chatbotKeys } from '@/constants/query-keys';
 import Chatbot from './chatbot';
 
 interface ChatbotSheetProps {
   isOpen: boolean;
   onClose: () => void;
+  controller?: ChatbotController;
 }
 
-function ChatbotSheet({ isOpen, onClose }: ChatbotSheetProps) {
+function ChatbotSheet({ isOpen, onClose, controller }: ChatbotSheetProps) {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (isOpen)
+      queryClient.invalidateQueries({ queryKey: chatbotKeys.messages });
+  }, [isOpen, queryClient]);
+
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent className="p-0 overflow-hidden h-[85svh] max-h-[85svh]">
@@ -16,7 +28,7 @@ function ChatbotSheet({ isOpen, onClose }: ChatbotSheetProps) {
             <DrawerTitle>Chatbot</DrawerTitle>
           </div>
           <div className="flex-1 min-h-0">
-            <Chatbot />
+            {controller && <Chatbot controller={controller} />}
           </div>
         </div>
       </DrawerContent>

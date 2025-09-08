@@ -1,6 +1,6 @@
 'use client';
 
-// (unused imports removed)
+import type { ChatbotController } from '@/features/chatbot/hooks';
 import { format } from 'date-fns';
 import { Bot, Brain, Check, CopyIcon, RefreshCcwIcon } from 'lucide-react';
 import React, { Fragment } from 'react';
@@ -23,11 +23,8 @@ import { Response } from '@/components/ai-elements/response';
 import { Button } from '@/components/ui-modified/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { CHATBOT_MODELS } from '@/features/chatbot/constants';
-import { useChatbot } from '@/features/chatbot/hooks';
 
-function ChatBot() {
-  const chatbot = useChatbot(CHATBOT_MODELS[0]?.id || '');
-
+function ChatBot({ controller: chatbot }: { controller: ChatbotController }) {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <Conversation className="flex-1 min-h-0">

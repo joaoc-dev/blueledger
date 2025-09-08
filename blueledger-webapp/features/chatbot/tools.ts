@@ -41,7 +41,6 @@ export function getChatbotToolsForUser(userId: string) {
       inputSchema: z.object({}),
       execute: async () => {
         const date = new Date();
-        console.warn('gettin current date', date);
         return { date } as const;
       },
     }),
