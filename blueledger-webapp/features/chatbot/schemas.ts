@@ -35,7 +35,7 @@ export interface ChatBotApiResponse {
 }
 
 // Context item returned from vector recall for messages
-export const MessageContextSchema = z.object({
+const MessageContextSchema = z.object({
   id: z.string(),
   content: contentSchema,
   role: roleSchema,
@@ -46,7 +46,7 @@ export const MessageContextSchema = z.object({
 export type MessageContext = z.infer<typeof MessageContextSchema>;
 
 // Context item returned from vector recall for expenses
-export const ExpenseContextSchema = z.object({
+const ExpenseContextSchema = z.object({
   id: z.string(),
   description: z.string().min(1),
   date: z.date(),
@@ -59,12 +59,12 @@ export const ExpenseContextSchema = z.object({
 export type ExpenseContext = z.infer<typeof ExpenseContextSchema>;
 
 // Pre-formatted context variants used directly in prompts
-export const MessageContextFormattedSchema = MessageContextSchema.extend({
+const _MessageContextFormattedSchema = MessageContextSchema.extend({
   formatted: z.string(),
 });
-export type MessageContextFormatted = z.infer<typeof MessageContextFormattedSchema>;
+export type MessageContextFormatted = z.infer<typeof _MessageContextFormattedSchema>;
 
-export const ExpenseContextFormattedSchema = ExpenseContextSchema.extend({
+const _ExpenseContextFormattedSchema = ExpenseContextSchema.extend({
   formatted: z.string(),
 });
-export type ExpenseContextFormatted = z.infer<typeof ExpenseContextFormattedSchema>;
+export type ExpenseContextFormatted = z.infer<typeof _ExpenseContextFormattedSchema>;

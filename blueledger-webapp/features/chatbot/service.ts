@@ -1,20 +1,17 @@
-// Type-only imports first
 import type { UIMessage } from 'ai';
 import type { ChatbotModel } from './constants';
 import type { ExpenseContext, MessageContext } from './schemas';
 import type { RequestLogger } from '@/lib/logger';
-// Value imports
 import { groq } from '@ai-sdk/groq';
-
-import { convertToModelMessages, streamText } from 'ai';
+import { convertToModelMessages, stepCountIs, streamText } from 'ai';
 import { Types } from 'mongoose';
 import Expense from '@/features/expenses/models';
 import { generateTextEmbedding } from '@/lib/ai/embeddings';
 import dbConnect from '@/lib/db/mongoose-client';
 import { saveMessage } from './data';
 import { formatExpenseContext, formatMessageContext } from './mapper-server';
-// no mappers needed for contexts; aggregation returns shaped objects
 import Message from './models';
+import { getChatbotToolsForUser } from './tools';
 
 // RECALL_TOP_K controls how many similar historical snippets are retrieved
 // SLIDING_WINDOW_SIZE limits how many of the most recent messages will be used
@@ -41,17 +38,26 @@ Be light-hearted, witty, warm and friendly.
 Remember your purpose is to help the user with their expenses, 
 don't be verbose or answer unrelated questions and requests unless the answer is part of the provided context.
 
+Whenever you call a tool:
+- Use its return value to generate a natural-language reply.
+- If the tool returns a field named 'message', use it directly or rephrase it.
+- Never return empty output.
+
+If you're unable to keep calling tools, you should stop and answer the best you can.
+
 Always be transparent about your analysis process.`;
 
 /**
  * Generate an AI response stream for the given messages and model.
  */
 // Stream a model response for the current UI messages, with a small token cap.
-function generateResponse(messages: UIMessage[], modelId: string) {
+function generateResponse(messages: UIMessage[], modelId: string, userId: string) {
   return streamText({
     model: groq(modelId),
     system: systemConfiguration,
     messages: convertToModelMessages(messages),
+    stopWhen: stepCountIs(5),
+    tools: getChatbotToolsForUser(userId),
     maxOutputTokens: 500,
   });
 }
@@ -177,17 +183,13 @@ async function buildContextMessages(
     return windowed;
 
   const similar = await findSimilarMessages(userId, latestText, topK, logger);
-  console.warn('similar', similar);
   const expenseMatches = await findSimilarExpenses(userId, latestText, topK, logger);
-  console.warn('expenseMatches', expenseMatches);
 
   if ((!similar || similar.length === 0) && (!expenseMatches || expenseMatches.length === 0))
     return windowed;
 
   const contextLines = (similar ?? []).map((m): string => formatMessageContext(m).formatted);
-  console.warn('contextLines', contextLines);
   const expenseLines = (expenseMatches ?? []).map((e): string => formatExpenseContext(e).formatted);
-  console.warn('expenseLines', expenseLines);
 
   const contextHeader: UIMessage = {
     id: 'recall',
@@ -248,7 +250,6 @@ export async function updateHistoryAndGenerateResponse(
   trigger: 'submit-message' | 'regenerate-message',
   logger: RequestLogger,
 ): Promise<Response> {
-  console.warn('wow');
   // Persist user messages only on "submit"
   if (trigger === 'submit-message') {
     void persistUserMessage(messages, userId);
@@ -257,9 +258,8 @@ export async function updateHistoryAndGenerateResponse(
   // Always apply recall + sliding window for both submit and regenerate
   const preparedMessages = await buildContextMessages(messages, userId, logger);
 
-  // console.warn('preparedMessages', preparedMessages);
   const modelId = typeof model === 'string' ? model : model.id;
-  const result = generateResponse(preparedMessages, modelId);
+  const result = generateResponse(preparedMessages, modelId, userId);
 
   // Collect and persist assistant response
   void (async () => {

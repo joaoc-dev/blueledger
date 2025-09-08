@@ -103,3 +103,77 @@ export async function deleteExpense(
 
   return deletedExpense ? mapModelToDisplay(deletedExpense) : null;
 }
+
+export interface TotalSpentArgs {
+  userId: string;
+  startDate?: Date;
+  endDate?: Date;
+  category?: string;
+}
+
+export async function getTotalSpentForUser(args: TotalSpentArgs): Promise<number> {
+  const { userId, startDate, endDate, category } = args;
+  console.warn('getTotalSpentForUser', args);
+  await dbConnect();
+
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    return 0;
+
+  const userObjectId = new mongoose.Types.ObjectId(userId);
+
+  const match: Record<string, any> = { user: userObjectId };
+  if (startDate || endDate) {
+    match.date = {} as any;
+    if (startDate)
+      match.date.$gte = startDate;
+    if (endDate)
+      match.date.$lte = endDate;
+  }
+  if (category)
+    match.category = category;
+
+  const result = await Expense.aggregate([
+    { $match: match },
+    { $group: { _id: null, total: { $sum: '$totalPrice' } } },
+  ]).exec();
+
+  console.warn('result', result);
+  return (result?.[0]?.total as number | undefined) ?? 0;
+}
+
+export interface CategoryTotalsArgs {
+  userId: string;
+  startDate?: Date;
+  endDate?: Date;
+  limit?: number;
+}
+
+export async function getTotalsByCategoryForUser(
+  args: CategoryTotalsArgs,
+): Promise<Array<{ category: string; total: number }>> {
+  const { userId, startDate, endDate, limit = 5 } = args;
+  await dbConnect();
+
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    return [];
+
+  const userObjectId = new mongoose.Types.ObjectId(userId);
+
+  const match: Record<string, any> = { user: userObjectId };
+  if (startDate || endDate) {
+    match.date = {} as any;
+    if (startDate)
+      match.date.$gte = startDate;
+    if (endDate)
+      match.date.$lte = endDate;
+  }
+
+  const result = await Expense.aggregate([
+    { $match: match },
+    { $group: { _id: '$category', total: { $sum: '$totalPrice' } } },
+    { $sort: { total: -1 } },
+    { $limit: limit },
+  ]).exec();
+
+  return result.map(r => ({ category: r._id as string, total: r.total as number }));
+}
