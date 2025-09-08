@@ -33,3 +33,38 @@ export interface ChatBotApiResponse {
   messages: UIMessage<UIMessageMetadata>[];
   nextCursor: string | null;
 }
+
+// Context item returned from vector recall for messages
+export const MessageContextSchema = z.object({
+  id: z.string(),
+  content: contentSchema,
+  role: roleSchema,
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export type MessageContext = z.infer<typeof MessageContextSchema>;
+
+// Context item returned from vector recall for expenses
+export const ExpenseContextSchema = z.object({
+  id: z.string(),
+  description: z.string().min(1),
+  date: z.date(),
+  category: z.string(),
+  price: z.number(),
+  quantity: z.number(),
+  totalPrice: z.number(),
+});
+
+export type ExpenseContext = z.infer<typeof ExpenseContextSchema>;
+
+// Pre-formatted context variants used directly in prompts
+export const MessageContextFormattedSchema = MessageContextSchema.extend({
+  formatted: z.string(),
+});
+export type MessageContextFormatted = z.infer<typeof MessageContextFormattedSchema>;
+
+export const ExpenseContextFormattedSchema = ExpenseContextSchema.extend({
+  formatted: z.string(),
+});
+export type ExpenseContextFormatted = z.infer<typeof ExpenseContextFormattedSchema>;

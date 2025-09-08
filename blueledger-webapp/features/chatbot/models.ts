@@ -40,7 +40,7 @@ const MessageSchema = new Schema<MessageDocument>(
     // Ensure a Search index named "message_embedding_index" targets this path.
     embedding: {
       type: [Number],
-      default: undefined,
+      default: [],
     },
   },
   {

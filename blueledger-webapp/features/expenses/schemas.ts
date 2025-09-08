@@ -21,11 +21,14 @@ const dateSchema = z.date({
   invalid_type_error: 'Date must be a valid date',
 });
 
+const embeddingSchema = z.array(z.number());
+
 const expenseBaseSchema = {
   description: descriptionSchema,
   price: priceSchema,
   quantity: quantitySchema,
   category: categorySchema,
+  embedding: embeddingSchema.optional(),
 };
 
 export const expenseFormSchema = z.object({
@@ -59,6 +62,7 @@ export const patchExpenseSchema = z.object({
       quantity: quantitySchema.optional(),
       category: categorySchema.optional(),
       date: dateStringToDateSchema.optional(),
+      embedding: embeddingSchema.optional(),
     })
     .refine(
       data => Object.values(data).some(value => value !== undefined),
@@ -84,6 +88,7 @@ export const expenseDisplaySchema = z.object({
   totalPrice: z.number(),
   category: z.enum(EXPENSE_CATEGORIES_VALUES),
   date: z.date(),
+  embedding: z.array(z.number()).optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

@@ -1,6 +1,7 @@
 import type { ExpenseDocument } from './models';
 import type { CreateExpenseData, ExpenseDisplay, PatchExpenseData } from './schemas';
 import mongoose from 'mongoose';
+import { generateTextEmbedding } from '@/lib/ai/embeddings';
 import dbConnect from '@/lib/db/mongoose-client';
 import { mapModelToDisplay } from './mapper-server';
 import Expense from './models';
@@ -22,6 +23,16 @@ export async function createExpense(
     ...expense.data,
     totalPrice: expense.data.price! * expense.data.quantity!,
   };
+
+  // Generate embedding only if description is present
+  try {
+    if (expenseModel.description)
+      expenseModel.embedding = await generateTextEmbedding(expenseModel.description);
+  }
+  catch {
+    // Best effort embedding; continue without blocking create
+    expenseModel.embedding = [];
+  }
 
   const newExpense = await Expense.create(expenseModel);
 
@@ -58,6 +69,17 @@ export async function updateExpense(
   };
 
   updatedData.totalPrice = updatedData.price! * updatedData.quantity!;
+
+  // Re-embed only when description value actually differs
+  if (expense.data.description !== undefined && expense.data.description !== existing.description) {
+    try {
+      updatedData.embedding = await generateTextEmbedding(expense.data.description);
+    }
+    catch {
+      // keep previous embedding on failure
+      updatedData.embedding = existing.embedding;
+    }
+  }
 
   const updatedExpense = await Expense.findByIdAndUpdate(
     expense.id,

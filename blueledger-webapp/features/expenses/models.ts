@@ -12,6 +12,7 @@ interface IExpense {
   category: ExpenseCategory;
   date: Date;
   user: ObjectId | string;
+  embedding: number[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,6 +64,12 @@ const ExpenseSchema = new Schema<ExpenseDocument>(
       ref: 'User',
       required: [true, 'User ID is required'],
       index: true,
+    },
+    // Vector embedding of the message content for semantic search.
+    // Ensure a Search index named "expense_description_embedding_index" targets this path.
+    embedding: {
+      type: [Number],
+      default: [],
     },
   },
   {

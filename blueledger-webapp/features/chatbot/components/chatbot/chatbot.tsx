@@ -44,6 +44,11 @@ function ChatBot() {
     queryFn: ({ pageParam }) => getConversationPage({ limit: 8, cursor: pageParam as string | undefined }),
     getNextPageParam: lastPage => lastPage.nextCursor ?? undefined,
     initialPageParam: undefined as string | undefined,
+    // Ensure we always fetch fresh history when the chat opens
+    staleTime: 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
+    refetchOnReconnect: 'always',
   });
 
   /**
