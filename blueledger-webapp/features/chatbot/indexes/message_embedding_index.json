@@ -1,0 +1,15 @@
+{
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "embedding": {
+        "type": "vector",
+        "dimensions": 3072,
+        "similarity": "cosine"
+      },
+      "user": {
+        "type": "filter"
+      }
+    }
+  }
+}

@@ -11,11 +11,12 @@ const contentSchema = z
   .min(1, { message: 'Content is required' })
   .max(10000, { message: 'Content must be less than 10000 characters' });
 
-export const _createMessageSchema = z.strictObject({
+const _createMessageSchema = z.strictObject({
   data: z.strictObject({
     content: contentSchema,
     role: roleSchema,
     user: z.string().refine(Types.ObjectId.isValid, { message: 'Invalid ID' }),
+    embedding: z.array(z.number()).optional(),
   }),
 });
 

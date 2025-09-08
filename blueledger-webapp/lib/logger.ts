@@ -12,7 +12,7 @@ interface RequestLogData {
   userId?: string;
 }
 
-class RequestLogger {
+export class RequestLogger {
   private logger: Logger;
   private requestId: string;
   private startTime: number;
@@ -84,6 +84,6 @@ class RequestLogger {
   }
 }
 
-export function createLogger(source: string, request?: NextAuthRequest | NextRequest) {
+export function createLogger(source: string, request?: NextAuthRequest | NextRequest): RequestLogger {
   return new RequestLogger(source, request);
 }

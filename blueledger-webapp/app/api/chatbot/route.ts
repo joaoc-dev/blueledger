@@ -12,11 +12,11 @@ import { createLogger } from '@/lib/logger';
  * POST /api/chatbot
  *
  * Processes a chatbot message and generates a response.
- * Updates conversation history and streams the AI-generated response.
+ * Delegates recall (vector-based similar messages) and a sliding window over recent messages
+ * to the service, which updates conversation history and streams the AI-generated response.
  *
  * Return statuses:
  * - 200 OK : Message processed and response generated successfully.
- * - 400 Bad Request : Invalid request data or validation failed.
  * - 401 Unauthorized : User is not authenticated.
  * - 500 Internal Server Error : Unexpected error during processing.
  */
@@ -33,11 +33,12 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     });
     await logger.flush();
 
-    return updateHistoryAndGenerateResponse(
+    return await updateHistoryAndGenerateResponse(
       messages,
       body.model,
       request.auth!.user!.id,
       body.trigger,
+      logger,
     );
   }
   catch (error) {

@@ -67,6 +67,34 @@ Start the local database with Docker Compose:
 docker compose up -d
 ```
 
+Create the required Atlas Search vector indexes:
+
+- Name each index the same as the JSON file name
+- In MongoDB Atlas (or Compass): go to your collection → Indexes → Create Search Index → JSON Editor → paste the contents from `features/chatbot/indexes/<file>.json` and save
+
+
+Then set up and run the app:
+
+1. Install dependencies
+
+```bash
+pnpm install
+```
+
+2. Configure environment variables (use `.env.example` as a template and fill in values)
+
+3. Seed the database
+
+```bash
+pnpm seed
+```
+
+4. Start the development server
+
+```bash
+pnpm dev
+```
+
 ### Features
 
 ## 🏠 Landing Page

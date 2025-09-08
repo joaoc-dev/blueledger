@@ -7,6 +7,7 @@ interface IMessage {
   content: string;
   role: ChatbotRole;
   user: ObjectId | string;
+  embedding?: number[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,6 +35,12 @@ const MessageSchema = new Schema<MessageDocument>(
       ref: 'User',
       required: [true, 'User ID is required'],
       index: true,
+    },
+    // Vector embedding of the message content for semantic search.
+    // Ensure a Search index named "message_embedding_index" targets this path.
+    embedding: {
+      type: [Number],
+      default: undefined,
     },
   },
   {
