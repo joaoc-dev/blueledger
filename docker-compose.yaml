@@ -1,0 +1,10 @@
+services:
+  blueledger-mongo-atlas:
+    image: mongodb/mongodb-atlas-local
+    container_name: blueledger-mongo-atlas
+    ports:
+      - 27030:27017
+    volumes:
+      - ./data/db:/data/db
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'

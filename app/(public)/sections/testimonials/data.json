@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "image": "/placeholder_avatars/women/women-avatar-03.jpg",
+      "name": "Maria G.",
+      "title": "Digital Nomad",
+      "quote": "I used to dread splitting costs on group trips — now it's automatic. The receipt scanner is insanely accurate, and the chatbot gives amazing insights."
+    },
+    {
+      "image": "/placeholder_avatars/men/men-avatar-09.jpg",
+      "name": "Victor C.",
+      "title": "Co-Living in Berlin",
+      "quote": "We used to argue over bills. Now everyone knows exactly who owes what, and we settle in seconds. Honestly, this app saved our house dynamic."
+    },
+    {
+      "image": "/placeholder_avatars/women/women-avatar-04.jpg",
+      "name": "Mia J.",
+      "title": "Product Manager",
+      "quote": "The AI insights are a game changer. It flagged patterns I hadn’t noticed in my spending and helped me cut back. More than just bill splitting — it’s a smart financial assistant."
+    },
+    {
+      "image": "/placeholder_avatars/men/men-avatar-02.jpg",
+      "name": "John O.",
+      "title": "Senior Architect",
+      "quote": "I’m often out with clients or my project team. Being able to scan a receipt and instantly split it saves so much time — and the interface is beautiful."
+    }
+  ]
+}

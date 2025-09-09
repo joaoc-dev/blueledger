@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "name": "Free",
+      "price": "$0",
+      "features": ["Groups and Friends", "Basic splits", "Basic Analytics"]
+    },
+    {
+      "name": "Pro",
+      "price": "$4.99",
+      "features": ["Ad-free", "Advanced splits", "50 scans", "AI insights"]
+    },
+    {
+      "name": "Ultimate",
+      "price": "$9.99",
+      "features": ["Advanced analytics", "Priority support", "Unlimited scans", "Exports & reports"]
+    }
+  ]
+}
