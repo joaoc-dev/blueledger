@@ -1,3 +1,30 @@
+# [1.1.0](https://github.com/joaoc-dev/blueledger/compare/v1.0.0...v1.1.0) (2025-09-09)
+
+
+### Bug Fixes
+
+* move chatbot query to parent component to facilitate management of data ([c79e62d](https://github.com/joaoc-dev/blueledger/commit/c79e62d54bff6d2d85f25f26126227a100675243))
+
+
+### Features
+
+* add chatbot api endpoints ([4155538](https://github.com/joaoc-dev/blueledger/commit/41555383e1e581b1b4e3d146d7ecb7fda144a72e))
+* add chatbot data layer ([11cb88e](https://github.com/joaoc-dev/blueledger/commit/11cb88e1fd6081e67e265bd20e35fa06718f8484))
+* add chatbot hooks for cleaner separation ([60af1d9](https://github.com/joaoc-dev/blueledger/commit/60af1d90ad9700f6cc6978e406d7d61b4cb6810b))
+* add chatbot messages model ([0129038](https://github.com/joaoc-dev/blueledger/commit/0129038f87563c43937cff8bdc02bd5333cdc00c))
+* add chatbot schemas and server mapper ([0996c65](https://github.com/joaoc-dev/blueledger/commit/0996c655eae0468efb7d64280e86ab0dc4948089))
+* add chatbot service layer ([2d8bc93](https://github.com/joaoc-dev/blueledger/commit/2d8bc93eb09c4487d08c3107c29b8ed1f4852216))
+* add chatbot ui component ([08ab3ee](https://github.com/joaoc-dev/blueledger/commit/08ab3ee968f4b993d755ebf7f053f0331baeb409))
+* add chatbot-container ([20cb664](https://github.com/joaoc-dev/blueledger/commit/20cb66439f3a095c15b7023e2ec7c561dcb7e3fa))
+* add handling for reaching embedding api limit ([db6b82e](https://github.com/joaoc-dev/blueledger/commit/db6b82ecf517eb43d90a5e18c567974b776d3417))
+* add rate limit protected to the chatbot ([b73c97d](https://github.com/joaoc-dev/blueledger/commit/b73c97d8d76ea3b74ede295bccfa5207ef31b976))
+* add shiki ([bfb32c5](https://github.com/joaoc-dev/blueledger/commit/bfb32c527ded27cf20fdd56e99925c3b28716bfe))
+* add tools the model can use to answer a broader range of questions ([5cd8f59](https://github.com/joaoc-dev/blueledger/commit/5cd8f59a640df6b3755d0636a582c4807dcc40de))
+* add vector search + embeddings and a sliding window to manage chatbot recall ([ed5dcc7](https://github.com/joaoc-dev/blueledger/commit/ed5dcc79f01a092c3105ec7987b177af6429f94d))
+* add vector search + embeddings to expenses description and include it in chatbot context ([9d7393c](https://github.com/joaoc-dev/blueledger/commit/9d7393cdd95594ab1f60e004e10dff35f1b5c4b1))
+* replace chatbot modal with popover for positioning above button ([ce27f01](https://github.com/joaoc-dev/blueledger/commit/ce27f01d0a49a75e19410e2e3fd798f196b8d212))
+* update seed script to generate description embeddings ([eb4bbcf](https://github.com/joaoc-dev/blueledger/commit/eb4bbcfb854cda83575e1e1ca885954cad57d3ce))
+
 # 1.0.0 (2025-09-04)
 
 
