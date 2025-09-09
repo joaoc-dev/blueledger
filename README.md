@@ -32,7 +32,7 @@ A modern, performant, mobile-friendly expense-tracking web app with advanced UI/
 - 📜 Smooth rendering of large data sets powered by TanStack Virtual
 - 🧲 Drag and drop by dndkit
 - 🔔 Real time notifications by Pusher
-- 🤖 Chatbot powered by 
+- 🤖 Chatbot powered by
   - Vercel AI(SDK + UI)
   - Groq api for LLMs
   - Google Gemini for embeddings
@@ -76,7 +76,6 @@ Create the required Atlas Search vector indexes:
 
 - Name each index the same as the JSON file name
 - In MongoDB Atlas (or Compass): go to your collection → Indexes → Create Search Index → JSON Editor → paste the contents from `features/chatbot/indexes/<file>.json` and save
-
 
 Then set up and run the app:
 
