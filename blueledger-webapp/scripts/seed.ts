@@ -396,8 +396,8 @@ async function main() {
   // Conservatively batch-generate embeddings for expense descriptions with dedup + backoff
   console.log('🧠 Generating expense description embeddings (safe throttle + dedup)...');
 
-  const BATCH_SIZE = Number(process.env.SEED_EMBED_BATCH_SIZE ?? 5); // keep batches tiny
-  let requestsPerMinute = Number(process.env.SEED_EMBED_RPM ?? 5); // 5 rpm << 100 rpm
+  const BATCH_SIZE = 5;
+  let requestsPerMinute = 5;
   const MAX_BACKOFF_MS = 180_000; // cap backoff to 3 minutes
   const WAIT_ON_429_MS = Number(process.env.SEED_EMBED_WAIT_429_MS ?? 90_000);
   const PER_REQUEST_DELAY = () => Math.ceil(60_000 / Math.max(1, requestsPerMinute));

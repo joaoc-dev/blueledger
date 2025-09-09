@@ -96,7 +96,7 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
   catch (error) {
     Sentry.captureException(error);
 
-    logger.error(LogEvents.ERROR_GETTING_EXPENSES, {
+    logger.error(LogEvents.ERROR_GETTING_CHATBOT_MESSAGES, {
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
     });

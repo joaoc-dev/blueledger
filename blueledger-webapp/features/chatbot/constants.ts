@@ -14,12 +14,12 @@ export type ChatbotRole = (typeof CHATBOT_ROLES_VALUES)[number];
 
 export const CHATBOT_MODELS = [
   {
-    id: 'openai/gpt-oss-20b',
-    name: 'OpenAI GPT-OSS 20B',
-  },
-  {
     id: 'openai/gpt-oss-120b',
     name: 'OpenAI GPT-OSS 120B',
+  },
+  {
+    id: 'openai/gpt-oss-20b',
+    name: 'OpenAI GPT-OSS 20B',
   },
 ] as const;
 

@@ -26,6 +26,8 @@ import { getConversationPage } from './client';
 export function useChatbot(modelDefaultId: string) {
   const [input, setInput] = useState('');
   const [model, setModel] = useState<string>(modelDefaultId);
+  const [fallbackMessages, setFallbackMessages]
+    = useState<UIMessage<UIMessageMetadata>[]>([]);
 
   const query = useInfiniteQuery({
     queryKey: chatbotKeys.messages,
@@ -58,6 +60,18 @@ export function useChatbot(modelDefaultId: string) {
   // Live chat session: handles streaming assistant responses and local message list
   const { messages, sendMessage, status, regenerate } = useChat<UIMessage<UIMessageMetadata>>({
     transport: new DefaultChatTransport({ api: '/api/chatbot' }),
+    onError: () => {
+      const apology = 'Sorry! Seems like I\'ve reached my limits :( Please come back later!';
+      setFallbackMessages(prev => ([
+        ...prev,
+        {
+          id: `${Date.now()}`,
+          role: 'assistant',
+          parts: [{ type: 'text', text: apology }] as any,
+          metadata: { createdAt: Date.now() } as any,
+        } as UIMessage<UIMessageMetadata>,
+      ]));
+    },
   });
 
   // Render-only combination of persisted history and current live session
@@ -72,14 +86,15 @@ export function useChatbot(modelDefaultId: string) {
 
     const seededKeys = new Set(seededHistory.map(m => `${m.role}:${getFullText(m)}`));
     const liveOnly = messages.filter(m => !seededKeys.has(`${m.role}:${getFullText(m as any)}`));
-    return [...seededHistory, ...liveOnly] as UIMessage<UIMessageMetadata>[];
-  }, [seededHistory, messages]);
+    return [...seededHistory, ...liveOnly, ...fallbackMessages] as UIMessage<UIMessageMetadata>[];
+  }, [seededHistory, messages, fallbackMessages]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim())
       return;
 
+    setFallbackMessages([]);
     sendMessage(
       { text: input },
       { body: { model } },
@@ -88,6 +103,7 @@ export function useChatbot(modelDefaultId: string) {
   };
 
   const handleRegenerate = () => {
+    setFallbackMessages([]);
     regenerate({ body: { model } });
   };
 

@@ -6,7 +6,7 @@ import { groq } from '@ai-sdk/groq';
 import { convertToModelMessages, stepCountIs, streamText } from 'ai';
 import { Types } from 'mongoose';
 import Expense from '@/features/expenses/models';
-import { generateTextEmbedding } from '@/lib/ai/embeddings';
+import { EmbeddingQuotaError, generateTextEmbedding } from '@/lib/ai/embeddings';
 import dbConnect from '@/lib/db/mongoose-client';
 import { saveMessage } from './data';
 import { formatExpenseContext, formatMessageContext } from './mapper-server';
@@ -90,7 +90,16 @@ async function persistUserMessage(messages: UIMessage[], userId: string) {
   if (!content.trim())
     return;
 
-  const embedding = await generateTextEmbedding(content);
+  let embedding: number[] = [];
+  try {
+    embedding = await generateTextEmbedding(content);
+  }
+  catch (error) {
+    if (!(error instanceof EmbeddingQuotaError))
+      throw error;
+    // Skip embedding on quota issues; still persist the message
+    embedding = [];
+  }
 
   await saveMessage({
     data: {
@@ -118,7 +127,16 @@ async function persistAssistantMessage(
     return;
 
   // Embed the final concatenated assistant output once the stream completes.
-  const embedding = await generateTextEmbedding(collected);
+  let embedding: number[] = [];
+  try {
+    embedding = await generateTextEmbedding(collected);
+  }
+  catch (error) {
+    if (!(error instanceof EmbeddingQuotaError))
+      throw error;
+    // On quota issues, omit embedding but still save message content
+    embedding = [];
+  }
   await dbConnect();
 
   if (trigger === 'regenerate-message') {
@@ -242,7 +260,20 @@ export async function updateHistoryAndGenerateResponse(
   }
 
   // Always apply recall + sliding window for both submit and regenerate
-  const { messages: preparedMessages, systemAppend } = await buildContextMessages(messages, userId, logger);
+  let preparedMessages: UIMessage[];
+  let systemAppend: string;
+  try {
+    ({ messages: preparedMessages, systemAppend } = await buildContextMessages(messages, userId, logger));
+  }
+  catch (error) {
+    if (error instanceof EmbeddingQuotaError) {
+      logger.warn('Embedding quota exceeded', { userId });
+    }
+    else {
+      logger.error('Context build failed', { error: error instanceof Error ? error.message : String(error) });
+    }
+    throw error;
+  }
 
   const modelId = typeof model === 'string' ? model : model.id;
   const result = generateResponse(preparedMessages, modelId, userId, systemAppend);
