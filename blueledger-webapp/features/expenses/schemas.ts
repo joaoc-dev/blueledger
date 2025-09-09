@@ -84,6 +84,7 @@ export const expenseDisplaySchema = z.object({
   totalPrice: z.number(),
   category: z.enum(EXPENSE_CATEGORIES_VALUES),
   date: z.date(),
+  embedding: z.array(z.number()).optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

@@ -23,3 +23,7 @@ export const groupMembershipKeys = {
   membershipsView: (groupId: string) => ['groups', groupId, 'memberships', 'view'] as const,
   invitableFriends: (groupId: string) => ['groups', groupId, 'invitable-friends'] as const,
 };
+
+export const chatbotKeys = {
+  messages: ['chatbot', 'messages'] as const,
+};

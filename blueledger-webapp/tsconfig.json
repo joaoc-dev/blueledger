@@ -45,6 +45,7 @@
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": [
+    "components/ai-elements/**",
     "node_modules",
     ".next"
     // Add test folders/files here later, e.g. "**/*.spec.ts", "**/*.test.ts"

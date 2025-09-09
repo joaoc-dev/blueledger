@@ -159,4 +159,10 @@ export const LogEvents = {
   // Dashboard
   DASHBOARD_DATA_FETCHED: 'dashboard_data_fetched',
   ERROR_GETTING_DASHBOARD_DATA: 'error_getting_dashboard_data',
+
+  // Chatbot
+  CHATBOT_MESSAGE_PROCESSING: 'chatbot_message_processing',
+  CHATBOT_MESSAGES_FETCHED: 'chatbot_messages_fetched',
+  ERROR_PROCESSING_CHATBOT_MESSAGE: 'error_processing_chatbot_message',
+  ERROR_GETTING_CHATBOT_MESSAGES: 'error_getting_chatbot_messages',
 } as const;

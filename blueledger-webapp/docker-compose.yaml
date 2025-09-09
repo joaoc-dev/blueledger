@@ -1,8 +1,7 @@
 services:
-  blueledger-mongo-dev-rs:
-    image: mongo:8.0.13-noble
-    container_name: blueledger-mongo-dev-rs
-    command: ['--replSet', 'rs0', '--bind_ip_all', '--port', '27017']
+  blueledger-mongo-atlas:
+    image: mongodb/mongodb-atlas-local
+    container_name: blueledger-mongo-atlas
     ports:
       - 27030:27017
     volumes:

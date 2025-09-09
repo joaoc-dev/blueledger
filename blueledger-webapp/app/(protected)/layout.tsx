@@ -4,6 +4,7 @@ import NavBar from '@/components/layout/nav-bar';
 import AuthRedirectClient from '@/components/shared/auth-redirect-client';
 import PostHogIdentify from '@/components/shared/posthog-identify';
 import { LogEvents } from '@/constants/log-events';
+import ChatbotContainer from '@/features/chatbot/components/chatbot-container';
 import NotificationsStoreInitializer from '@/features/notifications/components/store/store-initializer';
 import UserProfileStoreInitializer from '@/features/users/components/store/store-initializer';
 import { auth } from '@/lib/auth/auth';
@@ -40,6 +41,7 @@ async function ProtectedLayout({ children }: { children: React.ReactNode }) {
         <NavBar />
       </header>
       <main className="px-6 py-10 max-w-screen-xl md:mt-16">{children}</main>
+      <ChatbotContainer />
     </div>
   );
 }

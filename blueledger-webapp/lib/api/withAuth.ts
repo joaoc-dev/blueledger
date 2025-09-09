@@ -4,12 +4,12 @@ import { LogEvents } from '@/constants/log-events';
 import { auth } from '@/lib/auth/auth';
 import { createLogger } from '@/lib/logger';
 
-type Handler<P = undefined> = (
+type Handler<P = undefined, R extends NextResponse | Response = NextResponse> = (
   request: NextAuthRequest,
   context: P extends undefined ? Record<string, never> : { params: P }
-) => Promise<NextResponse>;
+) => Promise<R>;
 
-export function withAuth<P = undefined>(handler: Handler<P>) {
+export function withAuth<P = undefined, R extends NextResponse | Response = NextResponse>(handler: Handler<P, R>) {
   return auth(async (request: NextAuthRequest, context) => {
     if (!request.auth || !request.auth.user) {
       const logger = createLogger('api/auth', request);
