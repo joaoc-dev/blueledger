@@ -57,7 +57,7 @@
     "@upstash/redis": "^1.35.3",
     "ai": "^5.0.34",
     "axios": "^1.9.0",
-    "babel-plugin-react-compiler": "19.1.0-rc.2",
+    "babel-plugin-react-compiler": "19.1.0-rc.3",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.6.1",
