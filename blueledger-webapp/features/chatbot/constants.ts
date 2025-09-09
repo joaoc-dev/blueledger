@@ -24,3 +24,8 @@ export const CHATBOT_MODELS = [
 ] as const;
 
 export type ChatbotModel = (typeof CHATBOT_MODELS)[number];
+
+// Rate limits for chatbot POST requests
+// Short window to prevent bursts; daily cap to prevent abuse
+export const CHATBOT_POST_LIMIT_SHORT = { max: 7, windowSec: 30 };
+export const CHATBOT_POST_LIMIT_DAILY = { max: 200, windowSec: 86400 };

@@ -3,10 +3,12 @@ import type { NextAuthRequest } from 'next-auth';
 import * as Sentry from '@sentry/nextjs';
 import { NextResponse } from 'next/server';
 import { LogEvents } from '@/constants/log-events';
+import { CHATBOT_POST_LIMIT_DAILY, CHATBOT_POST_LIMIT_SHORT } from '@/features/chatbot/constants';
 import { getConversationHistory } from '@/features/chatbot/data';
 import { updateHistoryAndGenerateResponse } from '@/features/chatbot/service';
 import { withAuth } from '@/lib/api/withAuth';
 import { createLogger } from '@/lib/logger';
+import { validateRateLimit } from '@/lib/rate-limit';
 
 /**
  * POST /api/chatbot
@@ -26,6 +28,28 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
   try {
     const body = await request.json();
     const { messages }: { messages: UIMessage[] } = body;
+    const userId = request.auth!.user!.id;
+
+    const rate = await validateRateLimit(
+      `chatbot:${userId}`,
+      CHATBOT_POST_LIMIT_SHORT,
+      CHATBOT_POST_LIMIT_DAILY,
+    );
+    if (!rate.success) {
+      logger.info(LogEvents.RATE_LIMIT_EXCEEDED, {
+        userId,
+        status: 429,
+      });
+
+      await logger.flush();
+      return NextResponse.json(
+        {
+          error: 'Please wait before sending another message.',
+          retryAfter: rate.retryAfterSeconds,
+        },
+        { status: 429 },
+      );
+    }
 
     logger.info(LogEvents.CHATBOT_MESSAGE_PROCESSING, {
       messages: messages.length,
@@ -36,7 +60,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     return await updateHistoryAndGenerateResponse(
       messages,
       body.model,
-      request.auth!.user!.id,
+      userId,
       body.trigger,
       logger,
     );
