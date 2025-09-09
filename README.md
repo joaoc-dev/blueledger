@@ -32,6 +32,11 @@ A modern, performant, mobile-friendly expense-tracking web app with advanced UI/
 - 📜 Smooth rendering of large data sets powered by TanStack Virtual
 - 🧲 Drag and drop by dndkit
 - 🔔 Real time notifications by Pusher
+- 🤖 Chatbot powered by 
+  - Vercel AI(SDK + UI)
+  - Groq api for LLMs
+  - Google Gemini for embeddings
+  - MongoDb Atlas for vector search
 - 🎞️ Smooth UI animations by Motion
 - 🖼️ Image hosting via Cloudinary + 🧑 Custom avatar crop & upload widget
 - 🐻 Seamless user profile updates and notifications by Zustand
@@ -49,7 +54,7 @@ A modern, performant, mobile-friendly expense-tracking web app with advanced UI/
 - 🧹 Code Linting with ESLint (Antfu configuration)
 - 🛡️ Strict Typescript configuration
 - ✂️ Declutter of unused files and dependencies by Knip
-- 🤖 Automated dependency updates by Dependabot
+- 🛠️ Automated dependency updates by Dependabot
 - 🚀 Automated versioning and changelog generation by semantic-release
 - 🐰 AI Code Reviews by CodeRabbit
 - ⚙️ Continuous Integration powered by GitHub Actions
@@ -144,6 +149,25 @@ Secure, multi-provider authentication with email verification and password reset
 - Secure password update with strength validation
 
 ![Auth OTP Demo](clips/auth-otp.gif)
+
+## 🧠 Chatbot (Blue)
+
+- Vercel AI SDK + Vercel AI UI
+  - LLM (Powered by Groq)
+    - OpenAI GPT-OSS 20B
+    - OpenAI GPT-OSS 120B
+  - Embedding
+    - Google Gemini Embedding 001
+- RAG (Retrieval-Augmented Generation)
+  - Embeds chat messages and expense descriptions (Gemini) and stores vectors in MongoDB
+  - Grounds the model with vector search results as additional context (MongoDB Atlas)
+- Sliding window context
+  - Limits recent messages to keep prompts small, fast and focused
+- Tools (Vercel AI SDK function-calling), multi-step flow:
+  - Build context: apply sliding window, run vector recall, inject recalled snippets into the system prompt (so they persist across steps), and pass windowed messages.
+  - Call streamText with tools, stopWhen, and the composed system prompt.
+
+![Chatbot Demo](clips/chatbot.gif)
 
 ## 👤 Profile Management
 
@@ -288,6 +312,11 @@ Example:
 - `POST /api/auth/password-reset/request` - Request password reset
 - `POST /api/auth/password-reset/confirm` - Confirm password reset
 - `POST /api/pusher/auth` - Pusher authentication
+
+### 🤖 Chatbot
+
+- `POST /api/chatbot` – Stream a response for a new message
+- `GET /api/chatbot?limit=20&cursor=...` – Paginated conversation history
 
 ### 👤 Users
 
