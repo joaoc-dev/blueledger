@@ -35,7 +35,6 @@ const config: KnipConfig = {
     'import-in-the-middle',
     'prettier',
     '@react-email/preview-server',
-    'playwright',
     'react-syntax-highlighter',
     '@radix-ui/react-collapsible',
     '@radix-ui/react-hover-card',
