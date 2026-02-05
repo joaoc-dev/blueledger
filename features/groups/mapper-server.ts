@@ -1,7 +1,18 @@
+import type { FlattenMaps } from 'mongoose';
 import type { GroupDocument, GroupMembershipDocument } from './models';
 import type { GroupDisplay, GroupMembershipDisplay } from './schemas';
 
-export function mapGroupModelToDisplay(group: GroupDocument): GroupDisplay {
+/** Group as returned by .lean() — plain object, not a full Document. */
+type GroupLean = FlattenMaps<GroupDocument>
+  & Required<{ _id: GroupDocument['_id'] }> & { __v?: number };
+
+/** GroupMembership as returned by .lean() (or aggregated) — plain object. */
+type GroupMembershipLean = FlattenMaps<GroupMembershipDocument>
+  & Required<{ _id: GroupMembershipDocument['_id'] }> & { __v?: number };
+
+export function mapGroupModelToDisplay(
+  group: GroupDocument | GroupLean,
+): GroupDisplay {
   const obj = group.toObject ? group.toObject() : group;
   const owner = obj.owner?.toObject ? obj.owner.toObject() : obj.owner;
 
@@ -17,7 +28,7 @@ export function mapGroupModelToDisplay(group: GroupDocument): GroupDisplay {
 }
 
 export function mapGroupMembershipToDisplay(
-  membership: GroupMembershipDocument,
+  membership: GroupMembershipDocument | GroupMembershipLean,
 ): GroupMembershipDisplay {
   const obj = membership.toObject ? membership.toObject() : membership;
   const group = obj.group.toObject ? obj.group.toObject() : obj.group;

@@ -13,16 +13,11 @@ import './env/client';
  * @see https://github.com/TanStack/table/issues/5567
  */
 const nextConfig: NextConfig = {
-  experimental: {
-    reactCompiler: {
-      compilationMode: 'annotation',
-    },
+  reactCompiler: {
+    compilationMode: 'annotation',
   },
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   async rewrites() {
     return [

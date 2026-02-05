@@ -6,7 +6,7 @@ import { createLogger } from '@/lib/logger';
 
 type Handler<P = undefined, R extends NextResponse | Response = NextResponse> = (
   request: NextAuthRequest,
-  context: P extends undefined ? Record<string, never> : { params: P }
+  context: P extends undefined ? Record<string, never> : { params: P },
 ) => Promise<R>;
 
 export function withAuth<P = undefined, R extends NextResponse | Response = NextResponse>(handler: Handler<P, R>) {
