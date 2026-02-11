@@ -56,7 +56,7 @@
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.1",
     "ai": "^5.0.125",
-    "axios": "^1.13.4",
+    "axios": "^1.13.5",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
